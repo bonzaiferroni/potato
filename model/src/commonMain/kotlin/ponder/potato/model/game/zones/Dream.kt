@@ -1,30 +1,29 @@
-package ponder.potato.model.game
+package ponder.potato.model.game.zones
 
 import kotlinx.serialization.Serializable
+import ponder.potato.model.game.factorValue
 
 class Dream(
-    initialState: DreamState
-) : StateEngine<DreamState>(initialState) {
+    state: DreamState
+) : StateZone<DreamState>(state) {
     override fun update(delta: Double) {
-        val totalProgress = stateNow.progress + stateNow.progressUnit * delta
-        if (totalProgress > stateNow.progressGoal) {
-            setState { it.copy(
-                progress = 0.0,
-                count = stateNow.count + 1,
-                aether = stateNow.aether + stateNow.aetherGrowth
-            ) }
+        val totalProgress = state.progress + state.progressUnit * delta
+        if (totalProgress > state.progressGoal) {
+            state.progress = 0.0
+            state.count++
+            state.aether += state.aetherGrowth
         } else {
-            setState { it.copy(progress = totalProgress) }
+            state.progress = totalProgress
         }
     }
 }
 
 @Serializable
 data class DreamState(
-    val level: Int = 1,
-    val count: Int = 0,
-    val progress: Double = 0.0,
-    val aether: Double = 0.0,
+    var level: Int = 1,
+    var count: Int = 0,
+    var progress: Double = 0.0,
+    var aether: Double = 0.0,
 ) {
     val progressUnit get() = factorValue(DREAM_PROGRESS_BASE, level, DREAM_PROGRESS_POWER)
     val progressGoal get() = factorValue(DREAM_GOAL_BASE, level, DREAM_GOAL_POWER)

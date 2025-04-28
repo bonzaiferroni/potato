@@ -16,11 +16,14 @@ fun App(
 ) {
     ProvideTheme {
         ProvideUserContext {
-            PondApp(
-                config = appConfig,
-                changeRoute = changeRoute,
-                exitApp = exitApp
-            )
+            ProvideGame {
+                PondApp(
+                    config = appConfig,
+                    changeRoute = changeRoute,
+                    exitApp = exitApp
+                )
+            }
         }
     }
 }
+

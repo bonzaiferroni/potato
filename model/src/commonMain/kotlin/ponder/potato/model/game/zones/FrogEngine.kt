@@ -1,4 +1,4 @@
-package ponder.potato.model.game
+package ponder.potato.model.game.zones
 
 class FrogEngine {
 }
