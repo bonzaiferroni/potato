@@ -11,8 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import contemplate.app.generated.resources.Res
-import contemplate.app.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
 import ponder.potato.Greeting
 import ponder.potato.HelloRoute
@@ -21,6 +19,8 @@ import pondui.ui.controls.RouteButton
 import pondui.ui.controls.Text
 import pondui.ui.nav.Scaffold
 import pondui.ui.theme.Pond
+import potato.app.generated.resources.Res
+import potato.app.generated.resources.compose_multiplatform
 
 @Composable
 fun StartScreen() {

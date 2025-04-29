@@ -1,5 +1,12 @@
 package ponder.potato.model.game.zones
 
-data class CaveState(
-    val aether: Double = 0.0,
-)
+import kotlinx.serialization.Serializable
+import ponder.potato.model.game.LocalPoint
+
+class Cave(
+    dream: Dream,
+    // state: CaveState,
+) : GameZone() {
+
+    val dream = add(dream, LocalPoint(0f, 0f))
+}

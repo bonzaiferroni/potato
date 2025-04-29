@@ -15,14 +15,12 @@ fun App(
     exitApp: (() -> Unit)?,
 ) {
     ProvideTheme {
-        ProvideUserContext {
-            ProvideGame {
-                PondApp(
-                    config = appConfig,
-                    changeRoute = changeRoute,
-                    exitApp = exitApp
-                )
-            }
+        ProvideGame {
+            PondApp(
+                config = appConfig,
+                changeRoute = changeRoute,
+                exitApp = exitApp
+            )
         }
     }
 }

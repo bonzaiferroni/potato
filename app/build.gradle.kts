@@ -108,11 +108,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "ponder.contemplate.MainKt"
+        mainClass = "ponder.potato.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "ponder.contemplate"
+            packageName = "ponder.potato"
             packageVersion = "1.0.0"
         }
     }

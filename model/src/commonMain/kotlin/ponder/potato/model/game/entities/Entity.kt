@@ -1,24 +1,42 @@
 package ponder.potato.model.game.entities
 
-import ponder.potato.model.game.components.Component
+import ponder.potato.model.game.components.Position
+import ponder.potato.model.game.components.StateComponent
+import ponder.potato.model.game.zones.GameZone
 import ponder.potato.model.game.zones.Zone
 
 interface Entity {
+    val id: Long
     val zone: Zone
     val state: EntityState
+
+    val game get() = zone.game
 }
 
-abstract class StateEntity<T: EntityState>(
-    override var zone: Zone,
-    override var state: T
+abstract class StateEntity<out T: EntityState>(
+    override val state: T
 ): Entity {
-    val components = mutableListOf<Component>()
+    private var _zone: GameZone? = null
+    override val zone get() = _zone ?: error("zone not initialized")
 
-    internal fun add(component: Component) {
+    val components = mutableListOf<StateComponent<*>>()
+    override var id = 0L
+
+    internal fun add(component: StateComponent<*>) {
         components.add(component)
     }
 
-    inline fun <reified T> get() = components.firstOrNull { it is T }
+    fun enter(zone: GameZone) {
+        _zone = zone
+    }
+
+    open fun init(id: Long) {
+        this.id = id
+        enter(zone)
+        for (component in components) {
+            component.init()
+        }
+    }
 
     open fun update(delta: Double) {
         for (component in components) {
@@ -28,5 +46,6 @@ abstract class StateEntity<T: EntityState>(
 }
 
 interface EntityState {
-
+    val isAlive: Boolean
+    val position: Position
 }

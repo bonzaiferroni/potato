@@ -11,6 +11,9 @@ object StartRoute : AppRoute("Start")
 object HelloRoute : AppRoute("Hello")
 
 @Serializable
+object DreamRoute : AppRoute("Dream")
+
+@Serializable
 object ExampleListRoute : AppRoute("Examples")
 
 @Serializable

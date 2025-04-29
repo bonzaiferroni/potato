@@ -1,41 +1,35 @@
 package ponder.potato.model.game.zones
 
-import ponder.potato.model.game.entities.Entity
-import ponder.potato.model.game.entities.StateEntity
+import ponder.potato.model.game.Vector
 
 interface Zone {
-    val id: String
+    val id: Int
     val portals: List<Portal>
-    val entities: List<Entity>
+    val game: Game
 }
 
-sealed class StateZone<State>(
-    override val id: String,
-    val state: State,
-): Zone {
+sealed class GameZone(): Zone {
+
+    private var _id: Int? = null
+    private var _game: GameEngine? = null
+
+    override val id: Int get() = _id ?: error("id not initialized")
+    override val game: GameEngine get() = _game ?: error("game not initialized")
+
     override val portals = mutableListOf<Portal>()
-    override val entities = mutableListOf<StateEntity<*>>()
 
-    private val zones = mutableListOf<StateZone<*>>()
-
-    fun <S, Z : StateZone<S>> add(zone: Z, x: Float, y: Float): Portal {
-        zones.add(zone)
-        val portal = ZonePortal(zone, x, y)
-        portals.add(portal)
-        return portal
-    }
-
-    internal fun add(entity: StateEntity<*>) {
-        entities.add(entity)
-        entity.zone = this
+    open fun init(id: Int, game: GameEngine) {
+        _id = id
+        _game = game
     }
 
     open fun update(delta: Double) {
-        for (zone in zones) {
-            zone.update(delta)
-        }
-        for (entity in entities) {
-            entity.update(delta)
-        }
+
+    }
+
+    fun <Z : GameZone> add(zone: Z, local: Vector): Z {
+        val portal = ZonePortal(zone, local.x, local.y)
+        portals.add(portal)
+        return zone
     }
 }

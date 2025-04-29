@@ -1,28 +1,25 @@
 package ponder.potato.model.game.components
 
 import kotlinx.serialization.Serializable
-import ponder.potato.model.game.Point
+import ponder.potato.model.game.Vector
+import ponder.potato.model.game.entities.EntityState
 import ponder.potato.model.game.entities.StateEntity
 import kotlin.math.sqrt
 
-interface Position : Point {
-    val zoneId: String
+interface Position : Vector {
+    val zoneId: Int
 
     fun atPosition(position: Position) = x == position.x && y == position.y && zoneId == position.zoneId
 }
 
 class PositionComponent(
-    entity: StateEntity<*>,
-    val state: PositionState
-) : Component(entity), Position {
-    override val x get() = state.x
-    override val y get() = state.y
-    override val zoneId get() = state.zoneId
+    entity: StateEntity<PositionState>,
+) : StateComponent<PositionState>(entity) {
 }
 
 @Serializable
-data class PositionState(
-    override var zoneId: String = "",
+data class MutablePosition(
+    override var zoneId: Int = 0,
     override var x: Float = 0.0f,
     override var y: Float = 0.0f
 ) : Position {
@@ -42,4 +39,8 @@ data class PositionState(
         x = (dx * ratio).toFloat()
         y = (dy * ratio).toFloat()
     }
+}
+
+interface PositionState: EntityState {
+    override val position: MutablePosition
 }
