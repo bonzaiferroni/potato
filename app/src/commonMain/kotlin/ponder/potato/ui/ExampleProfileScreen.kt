@@ -27,7 +27,7 @@ fun ExampleProfileScreen(
                 Button("Done", onClick = viewModel::finalizeEdit)
             } else {
                 Text(example.symtrix)
-                Button("Edit", onClick = viewModel::toggleEdit, background = Pond.colors.secondary)
+                Button("Edit", onClick = viewModel::toggleEdit, background = Pond.colors.tertiary)
             }
         }
     }

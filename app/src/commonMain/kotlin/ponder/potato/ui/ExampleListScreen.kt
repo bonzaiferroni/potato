@@ -34,7 +34,7 @@ fun ExampleListScreen(
                 ) {
                     Text(it.symtrix)
                     Controls {
-                        Button("Delete", background = Pond.colors.secondary, onClick = { viewModel.deleteItem(it) })
+                        Button("Delete", background = Pond.colors.tertiary, onClick = { viewModel.deleteItem(it) })
                         RouteButton("View") { ExampleProfileRoute(it.id) }
                     }
                 }

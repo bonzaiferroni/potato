@@ -12,7 +12,6 @@ class Dream(
         val totalProgress = state.progress + state.progressUnit * delta
         if (totalProgress > state.progressGoal) {
             state.progress = 0.0
-            state.count++
             resources.aether += state.aetherGrowth
         } else {
             state.progress = totalProgress
@@ -29,11 +28,14 @@ data class DreamState(
     val progressUnit get() = factorValue(DREAM_PROGRESS_BASE, level, DREAM_PROGRESS_POWER)
     val progressGoal get() = factorValue(DREAM_GOAL_BASE, level, DREAM_GOAL_POWER)
     val aetherGrowth get() = factorValue(AETHER_GROWTH_BASE, level, AETHER_GROWTH_POWER)
+    val levelCost get() = factorValue(LEVEL_COST_BASE, level, LEVEL_COST_POWER)
 }
 
-const val DREAM_PROGRESS_BASE = 100
+const val DREAM_PROGRESS_BASE = 30
 const val DREAM_PROGRESS_POWER = 1.2
-const val DREAM_GOAL_BASE = 1000
+const val DREAM_GOAL_BASE = 100
 const val DREAM_GOAL_POWER = 1.4
 const val AETHER_GROWTH_BASE = 10
 const val AETHER_GROWTH_POWER = 1.0
+const val LEVEL_COST_BASE = 100
+const val LEVEL_COST_POWER = 1.2
