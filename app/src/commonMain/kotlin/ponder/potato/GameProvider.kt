@@ -31,17 +31,16 @@ val LocalGame = staticCompositionLocalOf<GameModel> {
     error("no game provided")
 }
 
-class GameModel: StateModel<GameState>(GameState()) {
-
-    val data = GameData()
-    val engine = generateGame(data)
+class GameModel(
+    private val service: GameService = GameService()
+) : StateModel<GameState>(GameState()) {
 
     init {
         viewModelScope.launch {
             while (true) {
                 delay(1.seconds)
-                engine.update(1.0)
-                setState { engine.state.copy() }
+                service.update(1.0)
+                setState { service.game.state.copy() }
             }
         }
     }

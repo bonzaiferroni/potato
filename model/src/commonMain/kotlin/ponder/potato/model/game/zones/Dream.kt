@@ -33,7 +33,7 @@ data class DreamState(
 
 const val DREAM_PROGRESS_BASE = 100
 const val DREAM_PROGRESS_POWER = 1.2
-const val DREAM_GOAL_BASE = 10000
+const val DREAM_GOAL_BASE = 1000
 const val DREAM_GOAL_POWER = 1.4
 const val AETHER_GROWTH_BASE = 10
 const val AETHER_GROWTH_POWER = 1.0
