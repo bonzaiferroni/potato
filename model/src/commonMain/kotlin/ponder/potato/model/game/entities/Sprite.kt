@@ -9,7 +9,7 @@ import ponder.potato.model.game.components.VitalityComponent
 import ponder.potato.model.game.components.VitalityState
 import ponder.potato.model.game.factorValue
 
-class Broom(state: BroomState) : StateEntity<BroomState>(state) {
+class Sprite(state: SpriteState = SpriteState()) : StateEntity<SpriteState>(state) {
     init {
         add(PositionComponent(this))
         add(MoverComponent(this))
@@ -18,7 +18,7 @@ class Broom(state: BroomState) : StateEntity<BroomState>(state) {
 }
 
 @Serializable
-data class BroomState(
+data class SpriteState(
     override val level: Int = 1,
     override var health: Int = 0,
     override var isAlive: Boolean = false,

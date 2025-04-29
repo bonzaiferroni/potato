@@ -5,9 +5,12 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,7 +31,10 @@ import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kabinet.utils.toMetricString
 import ponder.potato.LocalGame
+import pondui.ui.controls.Button
+import pondui.ui.controls.Card
 import pondui.ui.controls.Divider
 import pondui.ui.controls.ProgressBar
 import pondui.ui.controls.Text
@@ -48,14 +54,45 @@ fun DreamScreen(
     }
 
     Scaffold {
-        Text("Level: ${state.level}")
-        ProgressBar(state.progressRatio)
-        LevelButton(
-            levelRatio = state.levelProgress,
-            aether = state.aether,
-            cost = state.levelCost,
-            levelUp =  viewModel::dive
-        )
+        Column(
+            verticalArrangement = Pond.ruler.columnTight,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Dreaming...")
+            ProgressBar(state.progressRatio)
+        }
+        ProgressBar(state.aetherRatio) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Aether: ${state.aether.toMetricString()}")
+                Text(state.aetherMax.toMetricString())
+            }
+        }
+        PurchaseBar("Sprite", state.spriteCost, state.aether > state.spriteCost, purchase = viewModel::manifestSprite)
+        Text("Sprite Count: ${state.spriteCount}")
+        Text("Dream Level: ${state.level}")
+    }
+}
+
+@Composable
+fun PurchaseBar(
+    label: String,
+    cost: Double,
+    canPurchase: Boolean,
+    purchase: () -> Unit
+) {
+    Card {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("$label: ${cost.toMetricString()}")
+            Button("Buy", canPurchase, onClick = purchase)
+        }
     }
 }
 

@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 import ponder.potato.model.game.Vector
 import ponder.potato.model.game.entities.EntityState
 import ponder.potato.model.game.entities.StateEntity
+import ponder.potato.model.game.zones.GameZone
 import kotlin.math.sqrt
 
 interface Position : Vector {
@@ -15,6 +16,10 @@ interface Position : Vector {
 class PositionComponent(
     entity: StateEntity<PositionState>,
 ) : StateComponent<PositionState>(entity) {
+    override fun enter(zone: GameZone) {
+        super.enter(zone)
+        entity.state.position.zoneId = zone.id
+    }
 }
 
 @Serializable

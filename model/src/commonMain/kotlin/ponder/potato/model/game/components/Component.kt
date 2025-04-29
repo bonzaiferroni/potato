@@ -4,6 +4,7 @@ import ponder.potato.model.game.entities.Entity
 import ponder.potato.model.game.entities.EntityState
 import ponder.potato.model.game.entities.StateEntity
 import ponder.potato.model.game.zones.Game
+import ponder.potato.model.game.zones.GameZone
 import ponder.potato.model.game.zones.Zone
 
 interface Component {
@@ -22,4 +23,5 @@ abstract class StateComponent<T: EntityState>(
 
     open fun init() { }
     open fun update(delta: Double) { }
+    open fun enter(zone: GameZone) { }
 }

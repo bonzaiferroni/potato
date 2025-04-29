@@ -1,5 +1,6 @@
 package ponder.potato.model.game.entities
 
+import ponder.potato.model.game.components.MutablePosition
 import ponder.potato.model.game.components.Position
 import ponder.potato.model.game.components.StateComponent
 import ponder.potato.model.game.zones.GameZone
@@ -28,11 +29,13 @@ abstract class StateEntity<out T: EntityState>(
 
     fun enter(zone: GameZone) {
         _zone = zone
+        for (component in components) {
+            component.enter(zone)
+        }
     }
 
     open fun init(id: Long) {
         this.id = id
-        enter(zone)
         for (component in components) {
             component.init()
         }

@@ -19,7 +19,7 @@ class GameEngine(
     override var state: GameState = GameState(),
     override var resources: GameResources = GameResources(),
     override val map: GameMap
-): Game {
+) : Game {
 
     override val zones = mutableListOf<GameZone>()
     override val entities = mutableMapOf<Long, StateEntity<*>>()
@@ -34,16 +34,23 @@ class GameEngine(
         zone.init(zoneIdSource++, this)
     }
 
-    inline fun <reified S, reified E: StateEntity<S>> spawn(create: () -> E) {
+    inline fun <reified S, reified E : StateEntity<S>> spawn(
+        zone: GameZone,
+        create: () -> E,
+    ) {
         val ghost = graveyard.firstNotNullOfOrNull {
             it as? E ?: return@firstNotNullOfOrNull null
         } ?: create()
-        spawn(ghost)
+        spawn(zone, ghost)
     }
 
-    fun spawn(entity: StateEntity<*>) {
+    fun spawn(
+        zone: GameZone,
+        entity: StateEntity<*>,
+    ) {
         entity.init(entityIdSource++)
         entities[entity.id] = entity
+        entity.enter(zone)
     }
 
     fun update(delta: Double) {
