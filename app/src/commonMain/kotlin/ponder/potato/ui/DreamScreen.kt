@@ -4,10 +4,13 @@ import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -24,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ponder.potato.LocalGame
+import pondui.ui.controls.Divider
 import pondui.ui.controls.ProgressBar
 import pondui.ui.controls.Text
 import pondui.ui.nav.Scaffold
@@ -40,21 +44,21 @@ fun DreamScreen(
         viewModel.update(gameState)
     }
 
-    LaunchedEffect(state.levelRatio) {
-        println(state.levelRatio)
-    }
-
     Scaffold {
         Text("Aether: ${state.aether}")
         ProgressBar(state.progressRatio)
-        LevelButton(state.levelRatio)
+        LevelButton(state.levelProgress, state.aether, state.levelCost)
     }
 }
 
 @Composable
-fun LevelButton(levelRatio: Float) {
+fun LevelButton(levelRatio: Float, aether: Double, cost: Double) {
     val animatedRatio by animateFloatAsState(levelRatio)
-    val color = Pond.colors.secondary
+    val color = when {
+        levelRatio >= 1f -> Pond.colors.secondary
+        else -> Pond.colors.tertiary
+    }
+
     val animatedColor = remember { Animatable(color) }
     var previousRatio by remember { mutableStateOf(levelRatio) }
     LaunchedEffect(levelRatio) {
@@ -64,7 +68,6 @@ fun LevelButton(levelRatio: Float) {
         }
         previousRatio = levelRatio
     }
-
 
     Box(
         contentAlignment = Alignment.Center,
@@ -90,6 +93,14 @@ fun LevelButton(levelRatio: Float) {
                         )
                     }
             )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.width(IntrinsicSize.Max)
+            ) {
+                AnimatedQuantity(aether)
+                Divider(modifier = Modifier.fillMaxWidth())
+                AnimatedQuantity(cost)
+            }
         }
     }
 }

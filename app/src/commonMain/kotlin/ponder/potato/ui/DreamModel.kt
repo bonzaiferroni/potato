@@ -16,19 +16,20 @@ class DreamScreenModel(
         setState {
             it.copy(
                 aether = resources.aether,
-                tick = gameState.tick,
-                progress = dream.state.progress,
-                progressRatio = (dream.state.progress / dream.state.progressGoal).toFloat(),
-                levelRatio = minOf(1.0, resources.aether / dream.state.levelCost).toFloat()
+                dreamProgress = dream.state.progress,
+                dreamProgressMax = dream.state.progressMax,
+                levelCost = dream.state.levelCost
             )
         }
     }
 }
 
 data class DreamScreenState(
-    val tick: Long = 0,
     val aether: Double = 0.0,
-    val progress: Double = 0.0,
-    val progressRatio: Float = 0f,
-    val levelRatio: Float = 0f,
-)
+    val dreamProgress: Double = 0.0,
+    val dreamProgressMax: Double = 0.0,
+    val levelCost: Double = 0.0,
+) {
+    val progressRatio get() = minOf(1.0, dreamProgress / dreamProgressMax).toFloat()
+    val levelProgress get() = minOf(1.0, aether / levelCost).toFloat()
+}

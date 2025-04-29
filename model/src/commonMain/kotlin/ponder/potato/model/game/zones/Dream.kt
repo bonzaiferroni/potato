@@ -10,7 +10,7 @@ class Dream(
 ) : GameZone() {
     override fun update(delta: Double) {
         val totalProgress = state.progress + state.progressUnit * delta
-        if (totalProgress > state.progressGoal) {
+        if (totalProgress > state.progressMax) {
             state.progress = 0.0
             resources.aether += state.aetherGrowth
         } else {
@@ -26,7 +26,7 @@ data class DreamState(
     var progress: Double = 0.0,
 ) {
     val progressUnit get() = factorValue(DREAM_PROGRESS_BASE, level, DREAM_PROGRESS_POWER)
-    val progressGoal get() = factorValue(DREAM_GOAL_BASE, level, DREAM_GOAL_POWER)
+    val progressMax get() = factorValue(DREAM_GOAL_BASE, level, DREAM_GOAL_POWER)
     val aetherGrowth get() = factorValue(AETHER_GROWTH_BASE, level, AETHER_GROWTH_POWER)
     val levelCost get() = factorValue(LEVEL_COST_BASE, level, LEVEL_COST_POWER)
 }
