@@ -49,6 +49,7 @@ class GameEngine(
     fun update(delta: Double) {
         state.time += delta
         state.tick++
+        state.delta = delta
         for (zone in zones) {
             zone.update(delta)
         }
@@ -62,5 +63,6 @@ class GameEngine(
 @Serializable
 data class GameState(
     var tick: Long = 0L,
-    var time: Double = 0.0
+    var time: Double = 0.0,
+    var delta: Double = 1.0,
 )

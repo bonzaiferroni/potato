@@ -1,7 +1,9 @@
 package ponder.potato.ui
 
 import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +32,7 @@ import ponder.potato.LocalGame
 import pondui.ui.controls.Divider
 import pondui.ui.controls.ProgressBar
 import pondui.ui.controls.Text
+import pondui.ui.controls.actionable
 import pondui.ui.nav.Scaffold
 import pondui.ui.theme.Pond
 
@@ -45,14 +48,24 @@ fun DreamScreen(
     }
 
     Scaffold {
-        Text("Aether: ${state.aether}")
+        Text("Level: ${state.level}")
         ProgressBar(state.progressRatio)
-        LevelButton(state.levelProgress, state.aether, state.levelCost)
+        LevelButton(
+            levelRatio = state.levelProgress,
+            aether = state.aether,
+            cost = state.levelCost,
+            levelUp =  viewModel::dive
+        )
     }
 }
 
 @Composable
-fun LevelButton(levelRatio: Float, aether: Double, cost: Double) {
+fun LevelButton(
+    levelRatio: Float,
+    aether: Double,
+    cost: Double,
+    levelUp: () -> Unit,
+) {
     val animatedRatio by animateFloatAsState(levelRatio)
     val color = when {
         levelRatio >= 1f -> Pond.colors.secondary
@@ -80,6 +93,7 @@ fun LevelButton(levelRatio: Float, aether: Double, cost: Double) {
                 .aspectRatio(1f)
                 .clip(Pond.ruler.round)
                 .border(1.dp, color, Pond.ruler.round)
+                .actionable("Level up", aether >= cost, onClick = levelUp)
         ) {
             Box(
                 modifier = Modifier.fillMaxSize()

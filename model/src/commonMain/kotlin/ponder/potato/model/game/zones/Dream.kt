@@ -8,6 +8,9 @@ class Dream(
     val state: DreamState,
     val resources: GameResources
 ) : GameZone() {
+
+    val canDive get() = resources.aether > state.levelCost
+
     override fun update(delta: Double) {
         val totalProgress = state.progress + state.progressUnit * delta
         if (totalProgress > state.progressMax) {
@@ -16,6 +19,12 @@ class Dream(
         } else {
             state.progress = totalProgress
         }
+    }
+
+    fun dive() {
+        if (!canDive) return
+        resources.aether -= state.levelCost
+        state.level ++
     }
 }
 
@@ -35,7 +44,7 @@ const val DREAM_PROGRESS_BASE = 30
 const val DREAM_PROGRESS_POWER = 1.2
 const val DREAM_GOAL_BASE = 100
 const val DREAM_GOAL_POWER = 1.4
-const val AETHER_GROWTH_BASE = 10
+const val AETHER_GROWTH_BASE = 30
 const val AETHER_GROWTH_POWER = 1.0
 const val LEVEL_COST_BASE = 100
 const val LEVEL_COST_POWER = 1.2
