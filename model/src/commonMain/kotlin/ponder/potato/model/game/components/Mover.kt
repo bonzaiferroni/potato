@@ -10,7 +10,7 @@ interface MoverState: EntityState {
     override val position: MutablePosition
 }
 
-class MoverComponent(
+class Mover(
     override val entity: StateEntity<MoverState>,
 ): StateComponent<MoverState>() {
 

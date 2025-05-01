@@ -1,11 +1,17 @@
 package ponder.potato.model.game.zones
 
 import kotlinx.serialization.Serializable
+import ponder.potato.model.game.Despirit
 import ponder.potato.model.game.GameResources
+import ponder.potato.model.game.OpposeEffect
+import ponder.potato.model.game.RaiseGhost
 import ponder.potato.model.game.Resources
+import ponder.potato.model.game.components.OpposerState
+import ponder.potato.model.game.components.SpiritState
 import ponder.potato.model.game.entities.Entity
 import ponder.potato.model.game.entities.Potato
 import ponder.potato.model.game.entities.StateEntity
+import ponder.potato.model.game.oppose
 
 interface Game {
     val state: GameState
@@ -28,6 +34,7 @@ class GameEngine(
     var zoneIdSource = 1
 
     val graveyard = mutableListOf<StateEntity<*>>()
+    val ghostIds = mutableListOf<Long>()
 
     fun add(zone: GameZone) {
         zones.add(zone)
@@ -53,6 +60,7 @@ class GameEngine(
         entity.enter(zone)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun update(delta: Double) {
         state.time += delta
         state.tick++
@@ -63,6 +71,20 @@ class GameEngine(
         for ((_, entity) in entities) {
             entity.update(delta)
         }
+        for ((_, entity) in entities) {
+            val opposer = entity as? StateEntity<OpposerState> ?: continue
+            val target = opposer.state.oppositionId?.let { entities[it] as? StateEntity<SpiritState> } ?: continue
+            entity.oppose(target)
+        }
+        for ((_, entity) in entities) {
+            if (entity.state.isAlive) continue
+            ghostIds.add(entity.id)
+            entity.showEffect { RaiseGhost() }
+        }
+        for (id in ghostIds) {
+            entities.remove(id)
+        }
+        ghostIds.clear()
     }
 
 }

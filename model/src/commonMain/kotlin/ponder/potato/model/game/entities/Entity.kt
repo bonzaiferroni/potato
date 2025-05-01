@@ -1,5 +1,7 @@
 package ponder.potato.model.game.entities
 
+import kotlinx.coroutines.flow.MutableSharedFlow
+import ponder.potato.model.game.Effect
 import ponder.potato.model.game.MutablePosition
 import ponder.potato.model.game.Position
 import ponder.potato.model.game.components.Component
@@ -21,6 +23,8 @@ abstract class StateEntity<out T: EntityState>: Entity {
 
     abstract override val state: T
     abstract override val components: List<StateComponent<*>>
+
+    val effects = MutableSharedFlow<Effect>()
 
     override var id = 0L
 
@@ -46,6 +50,11 @@ abstract class StateEntity<out T: EntityState>: Entity {
         for (component in components) {
             component.update(delta)
         }
+    }
+
+    fun showEffect(createEffect: () -> Effect) {
+        if (effects.subscriptionCount.value == 0) return
+        effects.tryEmit(createEffect())
     }
 }
 

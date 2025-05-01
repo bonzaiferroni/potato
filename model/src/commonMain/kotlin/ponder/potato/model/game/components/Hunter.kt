@@ -17,8 +17,6 @@ class Hunter(
         val squaredDistance = entity.position.squaredDistanceTo(target.position)
         if (squaredDistance > 1) {
             entity.moveToward(target.position, delta)
-        } else {
-            entity.oppose(target)
         }
     }
 }

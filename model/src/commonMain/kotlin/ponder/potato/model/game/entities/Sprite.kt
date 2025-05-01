@@ -9,7 +9,7 @@ class Sprite(
 ) : StateEntity<SpriteState>() {
 
     override val components = listOf(
-        MoverComponent(this),
+        Meander(this),
         Spirit(this),
     )
 }
@@ -19,7 +19,7 @@ data class SpriteState(
     override val level: Int = 1,
     override var spirit: Int = 0,
     override val position: MutablePosition = MutablePosition(),
-    override var destination: Position? = null,
+    override var destination: MutablePosition = MutablePosition(),
 ) : SpiritState, ProgressState, MoverState {
     override val maxSpirit get() = factorValue(100, level, 1.2).toInt()
 }
