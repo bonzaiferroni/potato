@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ponder.potato.LocalGame
@@ -39,6 +40,7 @@ fun <T: Zone> ZoneView(
             modifier = modifier.fillMaxWidth()
                 .aspectRatio(2f)
                 .background(Color.Blue.copy(.1f))
+                .clipToBounds()
         ) {
             for (entityId in state.entityIds) {
                 EntityView(entityId)

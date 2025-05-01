@@ -1,5 +1,8 @@
 package ponder.potato.ui
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,10 +21,13 @@ import ponder.potato.model.game.zones.GameState
 @Composable
 fun EntityView(
     entityId: Long,
-    viewModel: EntityViewModel = viewModel { EntityViewModel(entityId) }
+    viewModel: EntityViewModel = viewModel(key = entityId.toString()) { EntityViewModel(entityId) }
 ) {
     val state by viewModel.state.collectAsState()
     val gameState by LocalGame.current.state.collectAsState()
+
+    val animatedX by animateFloatAsState(state.x, tween((state.delta * 1000).toInt(), easing = LinearEasing))
+    val animatedY by animateFloatAsState(state.y, tween((state.delta * 1000).toInt(), easing = LinearEasing))
 
     LaunchedEffect(gameState) {
         viewModel.update(gameState)
@@ -29,11 +35,10 @@ fun EntityView(
 
     Box(
         modifier = Modifier.fillMaxSize()
-            .background(Color.Blue.copy(.1f))
             .drawBehind {
                 val radiusPx = 10.dp.toPx()
-                val centerX = size.width * (state.x + BOUNDARY_X) / (BOUNDARY_X * 2)
-                val centerY = size.height * (state.y + BOUNDARY_Y) / (BOUNDARY_Y * 2)
+                val centerX = size.width * (animatedX + BOUNDARY_X) / (BOUNDARY_X * 2)
+                val centerY = size.height * (animatedY + BOUNDARY_Y) / (BOUNDARY_Y * 2)
                 drawCircle(
                     color = state.color, // or whatever hue ye fancy
                     radius = radiusPx,
