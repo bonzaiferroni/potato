@@ -1,14 +1,15 @@
 package ponder.potato.model.game.entities
 
 import kotlinx.serialization.Serializable
-import ponder.potato.model.game.components.MutablePosition
+import ponder.potato.model.game.MutablePosition
 import ponder.potato.model.game.components.SpiritState
+import ponder.potato.model.game.components.StateComponent
 import ponder.potato.model.game.factorValue
 
-class Potato(state: PotatoState = PotatoState()): StateEntity<PotatoState>(state) {
-    init {
-
-    }
+class Potato(
+    override val state: PotatoState = PotatoState()
+) : StateEntity<PotatoState>() {
+    override val components = emptyList<StateComponent<*>>()
 }
 
 @Serializable

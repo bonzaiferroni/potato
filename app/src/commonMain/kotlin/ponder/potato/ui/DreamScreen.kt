@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kabinet.utils.toMetricString
 import ponder.potato.LocalGame
+import ponder.potato.model.game.zones.Cave
 import pondui.ui.controls.Button
 import pondui.ui.controls.Card
 import pondui.ui.controls.Divider
@@ -74,6 +75,7 @@ fun DreamScreen(
         PurchaseBar("Sprite", state.spriteCost, state.aether > state.spriteCost, purchase = viewModel::manifestSprite)
         Text("Sprite Count: ${state.spriteCount}")
         Text("Dream Level: ${state.level}")
+        ZoneView(Cave::class)
     }
 }
 

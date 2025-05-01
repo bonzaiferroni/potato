@@ -5,5 +5,5 @@ interface Resources {
 }
 
 data class GameResources(
-    override var aether: Double = 0.0
+    override var aether: Double = 100.0
 ): Resources

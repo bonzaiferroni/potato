@@ -1,6 +1,7 @@
 package ponder.potato.model.game.zones
 
-import ponder.potato.model.game.components.Position
+import ponder.potato.model.game.Position
+
 
 interface Portal {
     val zone: Zone
