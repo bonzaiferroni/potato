@@ -2,15 +2,17 @@ package ponder.potato.model.game.zones
 
 import ponder.potato.model.game.Position
 
+//interface Portal: Position {
+//    val zone: Zone
+//    override val x: Float
+//    override val y: Float
+//    override val zoneId get() = zone.id
+//}
 
-interface Portal {
-    val zone: Zone
-}
-
-class ZonePortal(
-    override val zone: GameZone,
+class Portal(
+    val zone: GameZone,
     override val x: Float,
     override val y: Float,
-): Portal, Position {
+): Position {
     override val zoneId get() = zone.id
 }

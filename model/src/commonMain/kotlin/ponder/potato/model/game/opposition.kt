@@ -7,6 +7,9 @@ import ponder.potato.model.game.entities.StateEntity
 
 @Suppress("UNCHECKED_CAST")
 fun StateEntity<OpposerState>.oppose(target: StateEntity<SpiritState>) {
+    val distance = this.position.squaredWorldDistanceTo(target.position)
+    if (distance > 1) return
+
     target.state.spirit -= this.state.power
     this.showEffect { OpposeEffect(target, this.state.power) }
     target.showEffect { Despirit(this.state.power) }

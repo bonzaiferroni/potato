@@ -6,6 +6,7 @@ import ponder.potato.model.game.zones.DreamState
 import ponder.potato.model.game.zones.GameEngine
 import ponder.potato.model.game.zones.GameMap
 import ponder.potato.model.game.zones.GameState
+import ponder.potato.model.game.zones.Village
 
 class GameBuilder {
 }
@@ -15,9 +16,11 @@ fun generateGame(data: GameData): GameEngine {
     val dream = Dream(data.dream, data.resources, cave)
     val map = GameMap(dream)
     val game = GameEngine(data.game, data.resources, map)
+    val village = Village(cave)
     // val cave = Cave(dream)
     game.add(dream)
     game.add(cave)
+    game.add(village)
     return game
 }
 

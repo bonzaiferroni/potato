@@ -28,7 +28,7 @@ sealed class GameZone(): Zone {
     }
 
     fun <Z : GameZone> addPortal(zone: Z, local: Vector): Z {
-        val portal = ZonePortal(zone, local.x, local.y)
+        val portal = Portal(zone, local.x, local.y)
         portals.add(portal)
         return zone
     }
