@@ -1,29 +1,25 @@
 package ponder.potato.model.game.entities
 
 import kotlinx.serialization.Serializable
-import ponder.potato.model.game.components.MoverComponent
-import ponder.potato.model.game.components.MoverState
-import ponder.potato.model.game.components.PositionComponent
-import ponder.potato.model.game.components.MutablePosition
-import ponder.potato.model.game.components.VitalityComponent
-import ponder.potato.model.game.components.VitalityState
-import ponder.potato.model.game.factorValue
+import ponder.potato.model.game.components.*
+import ponder.potato.model.game.*
 
-class Sprite(state: SpriteState = SpriteState()) : StateEntity<SpriteState>(state) {
-    init {
-        add(PositionComponent(this))
-        add(MoverComponent(this))
-        add(VitalityComponent(this))
-    }
+class Sprite(
+    override val state: SpriteState = SpriteState()
+) : StateEntity<SpriteState>() {
+
+    override val components = listOf(
+        MoverComponent(this),
+        Spirit(this),
+    )
 }
 
 @Serializable
 data class SpriteState(
     override val level: Int = 1,
-    override var health: Int = 0,
-    override var isAlive: Boolean = false,
+    override var spirit: Int = 0,
     override val position: MutablePosition = MutablePosition(),
-    override val target: MutablePosition = MutablePosition(),
-): VitalityState, ProgressState, MoverState {
-    override val maxHealth get() = factorValue(100, level, 1.2).toInt()
+    override var destination: Position? = null,
+) : SpiritState, ProgressState, MoverState {
+    override val maxSpirit get() = factorValue(100, level, 1.2).toInt()
 }

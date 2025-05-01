@@ -1,0 +1,27 @@
+package ponder.potato.model.game.entities
+
+import ponder.potato.model.game.MutablePosition
+import ponder.potato.model.game.components.*
+import ponder.potato.model.game.factorValue
+
+class Imp(
+    override val state: ImpState = ImpState()
+) : StateEntity<ImpState>() {
+
+    override val components = listOf(
+        Spirit(this),
+        Hunter(this) {
+            game.entities.firstNotNullOfOrNull { it.value as? Sprite }
+        }
+    )
+}
+
+data class ImpState(
+    override var oppositionId: Long? = null,
+    override var spirit: Int = 0,
+    override val level: Int = 1,
+    override val position: MutablePosition = MutablePosition(),
+) : SpiritState, ProgressState, OpposerState {
+    override val maxSpirit get() = factorValue(100, level, 1.2).toInt()
+    override val power get() = factorValue(10, level, 1.2).toInt()
+}
