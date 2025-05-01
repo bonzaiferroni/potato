@@ -43,7 +43,9 @@ fun <T: Zone> ZoneView(
                 .clipToBounds()
         ) {
             for (entityId in state.entityIds) {
-                EntityView(entityId)
+                key(entityId) {
+                    EntityView(entityId)
+                }
             }
         }
     }

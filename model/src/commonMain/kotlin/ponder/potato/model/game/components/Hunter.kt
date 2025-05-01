@@ -20,7 +20,7 @@ class Hunter(
             if (distance > 0) {
                 entity.moveToward(portal, delta)
             } else {
-                entity.enter(portal.zone)
+                portal.transport(entity)
             }
             return
         }

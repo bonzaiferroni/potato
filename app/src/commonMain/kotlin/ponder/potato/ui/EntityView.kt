@@ -2,6 +2,7 @@ package ponder.potato.ui
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -26,8 +27,8 @@ fun EntityView(
     val state by viewModel.state.collectAsState()
     val gameState by LocalGame.current.state.collectAsState()
 
-    val animatedX by animateFloatAsState(state.x, tween((state.delta * 1000).toInt(), easing = LinearEasing))
-    val animatedY by animateFloatAsState(state.y, tween((state.delta * 1000).toInt(), easing = LinearEasing))
+    val animatedX by animatePosition(state.x, state.delta, state.isTeleported)
+    val animatedY by animatePosition(state.y, state.delta, state.isTeleported)
 
     LaunchedEffect(gameState) {
         viewModel.update(gameState)
@@ -36,6 +37,7 @@ fun EntityView(
     Box(
         modifier = Modifier.fillMaxSize()
             .drawBehind {
+                if (!state.isVisible || state.isTeleported) return@drawBehind
                 val radiusPx = 10.dp.toPx()
                 val centerX = size.width * (animatedX + BOUNDARY_X) / (BOUNDARY_X * 2)
                 val centerY = size.height * (animatedY + BOUNDARY_Y) / (BOUNDARY_Y * 2)
@@ -47,3 +49,13 @@ fun EntityView(
             }
     )
 }
+
+@Composable
+fun animatePosition(
+    value: Float,
+    delta: Double,
+    snap: Boolean
+) = animateFloatAsState(
+    targetValue = value,
+    animationSpec = if (snap) snap() else tween((delta * 1000).toInt(), easing = LinearEasing)
+)

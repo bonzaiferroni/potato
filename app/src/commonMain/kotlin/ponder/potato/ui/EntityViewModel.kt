@@ -23,7 +23,8 @@ class EntityViewModel(
                 color = when {
                     e is Sprite -> Color.Cyan
                     else -> Color.Magenta
-                }
+                },
+                isTeleported = !stateNow.isVisible
             ) }
         }
     }
@@ -34,5 +35,6 @@ data class EntityViewState(
     val y: Float = 0f,
     val isVisible: Boolean = false,
     val delta: Double = 1.0,
-    val color: Color = Color.DarkGray
+    val color: Color = Color.DarkGray,
+    val isTeleported: Boolean = false
 )
