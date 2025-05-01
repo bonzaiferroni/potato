@@ -20,11 +20,8 @@ class EntityViewModel(
                 y = e.position.y,
                 isVisible = true,
                 delta = gameState.delta,
-                color = when {
-                    e is Sprite -> Color.Cyan
-                    else -> Color.Magenta
-                },
-                isTeleported = !stateNow.isVisible
+                isTeleported = !stateNow.isVisible,
+                type = e::class.simpleName ?: "Unknown"
             ) }
         }
     }
@@ -35,6 +32,6 @@ data class EntityViewState(
     val y: Float = 0f,
     val isVisible: Boolean = false,
     val delta: Double = 1.0,
-    val color: Color = Color.DarkGray,
-    val isTeleported: Boolean = false
+    val isTeleported: Boolean = false,
+    val type: String = "",
 )
