@@ -75,6 +75,14 @@ fun EntityView(
         viewModel.update(gameState)
     }
 
+    LaunchedEffect(state.isMoving) {
+        if (state.isMoving) {
+            spriteState.start()
+        } else {
+            spriteState.stop()
+        }
+    }
+
     DisposableEffect(Unit) {
         onDispose {
             viewModel.dispose()
@@ -84,8 +92,6 @@ fun EntityView(
     }
 
     if (!state.isVisible || boxSize == IntSize.Zero) return
-
-    val animationRunning by spriteState.isRunning.collectAsState()
 
     val animatedX by animatePosition(state.x, state.delta, false)
     val animatedY by animatePosition(state.y, state.delta, false)
