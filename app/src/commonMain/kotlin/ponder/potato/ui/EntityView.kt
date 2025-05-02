@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
@@ -51,7 +52,7 @@ fun EntityView(
         viewModel.update(gameState)
     }
 
-    if (!state.isVisible || state.isTeleported || boxSize == IntSize.Zero) return
+    if (!state.isVisible || boxSize == IntSize.Zero) return
 
     val myImageVector = getImage(viewModel.type)
     val centerX = boxSize.width * (animatedX + BOUNDARY_X) / (BOUNDARY_X * 2)
@@ -66,29 +67,29 @@ fun EntityView(
                 translationY = centerY - radiusPx
             }
     ) {
-        for (o in state.effects) {
+        for (o in viewModel.effects) {
             val text = getText(o.effect) ?: continue
-            val effectTime = remember { Animatable(0f) }
-            val offset = 15f
+            key(o.key) {
 
-            LaunchedEffect(Unit) {
-                println("${o.time}: ${viewModel.type} $text (${state.spirit} / ${state.spiritMax})")
-                effectTime.animateTo(
-                    targetValue = EFFECT_DISPLAY_SECONDS.toFloat(),
-                    animationSpec = tween(durationMillis = 1000 * EFFECT_DISPLAY_SECONDS, easing = LinearEasing)
+                val effectTime = remember (o.key) { Animatable(0f) }
+                val offset = 15f
+
+                LaunchedEffect(Unit) {
+                    effectTime.animateTo(
+                        targetValue = EFFECT_DISPLAY_SECONDS.toFloat(),
+                        animationSpec = tween(durationMillis = 1000 * EFFECT_DISPLAY_SECONDS, easing = LinearEasing)
+                    )
+                }
+
+                Text(
+                    text = text,
+                    style = TextStyle(fontSize = Pond.typo.label.fontSize),
+                    modifier = Modifier.graphicsLayer {
+                        translationY = -(effectTime.value * 13f + offset)
+                        alpha = minOf(1f, EFFECT_DISPLAY_SECONDS - effectTime.value)
+                    }
                 )
             }
-
-            if (effectTime.value >= EFFECT_DISPLAY_SECONDS) continue
-
-            Text(
-                text = text,
-                style = TextStyle(fontSize = Pond.typo.label.fontSize),
-                modifier = Modifier.graphicsLayer {
-                    translationY = -(effectTime.value * 13f + offset)
-                    alpha = minOf(1f, EFFECT_DISPLAY_SECONDS - effectTime.value)
-                }
-            )
         }
 
         Column(
