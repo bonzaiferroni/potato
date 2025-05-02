@@ -15,16 +15,16 @@ class Dream(
 
     override fun update(delta: Double) {
         state.spriteCount = cave.sprites
-        val totalProgress = state.progress + state.power * delta + state.power * state.spriteCount * .5f
-        if (totalProgress > state.resolution) {
-            if (resources.aether >= state.aetherMax) {
-                state.progress = state.resolution
-                return
-            }
-
-            state.progress = 0.0
+        if (state.progress >= state.resolution) {
+            if (resources.aether >= state.aetherMax) return
             val totalAether = resources.aether + state.reward
             resources.aether = minOf(totalAether, state.aetherMax)
+            state.progress = 0.0
+        }
+
+        val totalProgress = state.progress + state.power * delta + state.power * state.spriteCount * .5f
+        if (totalProgress > state.resolution) {
+            state.progress = state.resolution
         } else {
             state.progress = totalProgress
         }

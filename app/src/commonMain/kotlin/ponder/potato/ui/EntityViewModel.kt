@@ -26,7 +26,6 @@ class EntityViewModel(
     val effects: SnapshotStateList<ObservedEffect> = _effects
 
     init {
-        println("position: ${entity?.state?.position}")
         viewModelScope.launch {
             entity?.effects?.collect { effect ->
                 val now = Clock.System.now()
