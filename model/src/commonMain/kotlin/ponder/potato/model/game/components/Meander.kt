@@ -17,6 +17,9 @@ class Meander(
     override fun update(delta: Double) {
         super.update(delta)
 
+        val opposerState = entity.state as? OpposerState
+        if (opposerState?.oppositionId != null) return
+
         val squaredDistance = entity.position.squaredDistanceTo(state.destination)
         if (squaredDistance > 0) {
             entity.moveToward(state.destination, delta)

@@ -24,7 +24,7 @@ abstract class StateEntity<out T: EntityState>: Entity {
     abstract override val state: T
     abstract override val components: List<StateComponent<*>>
 
-    val effects = MutableSharedFlow<Effect>()
+    val effects = MutableSharedFlow<Effect>(extraBufferCapacity = 1)
 
     override var id = 0L
 

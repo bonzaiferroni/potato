@@ -14,6 +14,6 @@ fun StateEntity<OpposerState>.oppose(target: StateEntity<SpiritState>) {
     this.showEffect { OpposeEffect(target, this.state.power) }
     target.showEffect { Despirit(this.state.power) }
     (target as? StateEntity<OpposerState>)?.takeIf { it.state.oppositionId == null }?.let {
-        it.state.oppositionId = target.id
+        it.state.oppositionId = this.id
     }
 }
