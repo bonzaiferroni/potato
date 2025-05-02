@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
@@ -52,6 +53,12 @@ fun EntityView(
         viewModel.update(gameState)
     }
 
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.dispose()
+        }
+    }
+
     if (!state.isVisible || boxSize == IntSize.Zero) return
 
     val myImageVector = getImage(viewModel.type)
@@ -60,6 +67,7 @@ fun EntityView(
     val radiusPx = with(LocalDensity.current) { 20.dp.toPx() }
 
     Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
             .width(20.dp)
             .graphicsLayer {

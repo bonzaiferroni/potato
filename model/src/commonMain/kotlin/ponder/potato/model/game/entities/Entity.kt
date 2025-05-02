@@ -61,4 +61,5 @@ abstract class StateEntity<out T: EntityState>: Entity {
 interface EntityState {
     val isAlive: Boolean
     val position: MutablePosition
+    val speed get() = 1f
 }

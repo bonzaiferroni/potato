@@ -21,7 +21,6 @@ class ZoneViewModel<T : Zone>(
 
     fun update(gameState: GameState) {
         val entityIds = game.entities.values.filter { it.position.zoneId == zone.id }.map{ it.id }.toImmutableList()
-        println("zoneviewmodel: ${entityIds.size}")
         setState { it.copy(entityIds = entityIds) }
     }
 }

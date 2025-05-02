@@ -1,5 +1,6 @@
 package ponder.potato.ui
 
+import androidx.compose.runtime.DisposableEffectResult
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.viewModelScope
@@ -25,6 +26,7 @@ class EntityViewModel(
     val effects: SnapshotStateList<ObservedEffect> = _effects
 
     init {
+        println("position: ${entity?.state?.position}")
         viewModelScope.launch {
             entity?.effects?.collect { effect ->
                 val now = Clock.System.now()
@@ -34,7 +36,7 @@ class EntityViewModel(
     }
 
     fun update(gameState: GameState) {
-        if (effects.all { (Clock.System.now() - it.time) > (EFFECT_DISPLAY_SECONDS + 2).seconds }) {
+        if (effects.isNotEmpty() && effects.all { (Clock.System.now() - it.time) > (EFFECT_DISPLAY_SECONDS + 2).seconds }) {
             effects.clear()
         }
 
@@ -49,6 +51,12 @@ class EntityViewModel(
                 spirit = spiritState?.spirit,
                 spiritMax = spiritState?.maxSpirit
             ) }
+        }
+    }
+
+    fun dispose() {
+        setState {
+            it.copy(isVisible = false)
         }
     }
 }

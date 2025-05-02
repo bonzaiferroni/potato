@@ -69,12 +69,12 @@ class GameEngine(
             zone.update(delta)
         }
         for ((_, entity) in entities) {
-            entity.update(delta)
-        }
-        for ((_, entity) in entities) {
             val opposer = entity as? StateEntity<OpposerState> ?: continue
             val target = opposer.state.oppositionId?.let { entities[it] as? StateEntity<SpiritState> } ?: continue
             entity.oppose(target)
+        }
+        for ((_, entity) in entities) {
+            entity.update(delta)
         }
         for ((_, entity) in entities) {
             if (entity.state.isAlive) continue

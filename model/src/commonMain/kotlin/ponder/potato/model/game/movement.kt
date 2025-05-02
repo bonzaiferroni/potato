@@ -6,8 +6,8 @@ import ponder.potato.model.game.entities.StateEntity
 import kotlin.math.sqrt
 import kotlin.random.Random
 
-fun Entity.moveToward(position: Position, delta: Double, speed: Double = 1.0) {
-    val potential = delta * speed
+fun Entity.moveToward(position: Position, delta: Double) {
+    val potential = delta * state.speed
     val dx = position.x - state.position.x
     val dy = position.y - state.position.y
     val distance = sqrt(dx * dx + dy * dy)
