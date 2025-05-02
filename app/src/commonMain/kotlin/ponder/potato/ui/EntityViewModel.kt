@@ -32,21 +32,25 @@ class EntityViewModel(
                 _effects.add(ObservedEffect(effect, now, "$${effect::class.simpleName}-${now.toEpochMilliseconds()}"))
             }
         }
+        refreshState()
+        println("created: $type")
     }
 
     fun update(gameState: GameState) {
         if (effects.isNotEmpty() && effects.all { (Clock.System.now() - it.time) > (EFFECT_DISPLAY_SECONDS + 2).seconds }) {
             effects.clear()
         }
+        refreshState(gameState.delta)
+    }
 
+    fun refreshState(delta: Double = 0.0) {
         entity?.let { e ->
             val spiritState = e.state as? SpiritState
             setState { it.copy(
                 x = e.position.x,
                 y = e.position.y,
-                isVisible = true,
-                delta = gameState.delta,
-                isTeleported = !stateNow.isVisible,
+                isVisible = delta > 0,
+                delta = delta,
                 spirit = spiritState?.spirit,
                 spiritMax = spiritState?.maxSpirit
             ) }
@@ -65,7 +69,6 @@ data class EntityViewState(
     val y: Float = 0f,
     val isVisible: Boolean = false,
     val delta: Double = 1.0,
-    val isTeleported: Boolean = false,
     val spirit: Int? = null,
     val spiritMax: Int? = null,
 ) {

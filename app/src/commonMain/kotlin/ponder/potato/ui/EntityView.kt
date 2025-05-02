@@ -45,10 +45,6 @@ fun EntityView(
     val state by viewModel.state.collectAsState()
     val gameState by LocalGame.current.state.collectAsState()
 
-    val animatedX by animatePosition(state.x, state.delta, state.isTeleported)
-    val animatedY by animatePosition(state.y, state.delta, state.isTeleported)
-    val animatedSpirit by animateFloatAsState(state.spiritRatio)
-
     LaunchedEffect(gameState) {
         viewModel.update(gameState)
     }
@@ -60,6 +56,10 @@ fun EntityView(
     }
 
     if (!state.isVisible || boxSize == IntSize.Zero) return
+
+    val animatedX by animatePosition(state.x, state.delta, false)
+    val animatedY by animatePosition(state.y, state.delta, false)
+    val animatedSpirit by animateFloatAsState(state.spiritRatio)
 
     val myImageVector = getImage(viewModel.type)
     val centerX = boxSize.width * (animatedX + BOUNDARY_X) / (BOUNDARY_X * 2)

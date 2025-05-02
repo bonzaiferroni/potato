@@ -35,6 +35,7 @@ class GameEngine(
 
     val graveyard = mutableListOf<StateEntity<*>>()
     val ghostIds = mutableListOf<Long>()
+    val manifesting = mutableListOf<StateEntity<*>>()
 
     fun add(zone: GameZone) {
         zones.add(zone)
@@ -55,8 +56,8 @@ class GameEngine(
         zone: GameZone,
         entity: StateEntity<*>,
     ) {
+        manifesting.add(entity)
         entity.init(entityIdSource++)
-        entities[entity.id] = entity
         entity.enter(zone)
     }
 
@@ -68,15 +69,19 @@ class GameEngine(
         for (zone in zones) {
             zone.update(delta)
         }
-        for ((_, entity) in entities) {
+        for (entity in manifesting) {
+            entities[entity.id] = entity
+        }
+        manifesting.clear()
+        for (entity in entities.values) {
             val opposer = entity as? StateEntity<OpposerState> ?: continue
             val target = opposer.state.oppositionId?.let { entities[it] as? StateEntity<SpiritState> } ?: continue
             entity.oppose(target)
         }
-        for ((_, entity) in entities) {
+        for (entity in entities.values) {
             entity.update(delta)
         }
-        for ((_, entity) in entities) {
+        for (entity in entities.values) {
             if (entity.state.isAlive) continue
             ghostIds.add(entity.id)
             entity.showEffect { RaiseGhost() }
