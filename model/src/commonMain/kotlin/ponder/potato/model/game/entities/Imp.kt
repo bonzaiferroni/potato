@@ -10,9 +10,7 @@ class Imp(
 
     override val components = listOf(
         Spirit(this),
-        Hunter(this) {
-            game.entities.firstNotNullOfOrNull { it.value as? Sprite }
-        }
+        Hunter(this) { it is Sprite }
     )
 }
 
