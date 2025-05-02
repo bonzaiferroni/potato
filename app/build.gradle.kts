@@ -63,6 +63,8 @@ kotlin {
 
             implementation(project(":pondui"))
             implementation(project(":model"))
+
+            implementation("com.stevdza-san:sprite:1.1.0")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

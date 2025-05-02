@@ -52,7 +52,12 @@ class EntityViewModel(
                 isVisible = delta > 0,
                 delta = delta,
                 spirit = spiritState?.spirit,
-                spiritMax = spiritState?.maxSpirit
+                spiritMax = spiritState?.maxSpirit,
+                facingRight = when {
+                    e.position.x == stateNow.x -> stateNow.facingRight
+                    e.position.x > stateNow.x -> true
+                    else -> false
+                }
             ) }
         }
     }
@@ -71,6 +76,7 @@ data class EntityViewState(
     val delta: Double = 1.0,
     val spirit: Int? = null,
     val spiritMax: Int? = null,
+    val facingRight: Boolean = true
 ) {
     val spiritRatio = if (spiritMax == null || spirit == null || spiritMax == 0) 1f else spirit / spiritMax.toFloat()
 }

@@ -24,10 +24,16 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.stevdza_san.sprite.component.SpriteView
+import com.stevdza_san.sprite.domain.SpriteSheet
+import com.stevdza_san.sprite.domain.SpriteSpec
+import com.stevdza_san.sprite.domain.rememberSpriteState
+import com.stevdza_san.sprite.util.getScreenWidth
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Ghost
 import compose.icons.tablericons.Man
 import compose.icons.tablericons.QuestionMark
+import io.ktor.client.plugins.observer.ResponseObserver
 import ponder.potato.LocalGame
 import ponder.potato.model.game.*
 import ponder.potato.model.game.entities.Imp
@@ -35,6 +41,15 @@ import ponder.potato.model.game.entities.Sprite
 import pondui.ui.controls.Icon
 import pondui.ui.controls.Text
 import pondui.ui.theme.Pond
+import potato.app.generated.resources.Res
+import potato.app.generated.resources.fairy_40
+import potato.app.generated.resources.fairy_52
+import potato.app.generated.resources.fairy_tiny
+import potato.app.generated.resources.imp_30
+import potato.app.generated.resources.imp_40
+import potato.app.generated.resources.imp_52
+import potato.app.generated.resources.sprite_small
+import potato.app.generated.resources.sprite_tiny
 
 @Composable
 fun EntityView(
@@ -45,6 +60,17 @@ fun EntityView(
     val state by viewModel.state.collectAsState()
     val gameState by LocalGame.current.state.collectAsState()
 
+    val screenWidth = getScreenWidth()
+    val spriteState = rememberSpriteState(
+        totalFrames = 9,
+        framesPerRow = 3,
+        animationSpeed = 50
+    )
+
+    LaunchedEffect(Unit) {
+        spriteState.start()
+    }
+
     LaunchedEffect(gameState) {
         viewModel.update(gameState)
     }
@@ -52,24 +78,29 @@ fun EntityView(
     DisposableEffect(Unit) {
         onDispose {
             viewModel.dispose()
+            spriteState.stop()
+            spriteState.cleanup()
         }
     }
 
     if (!state.isVisible || boxSize == IntSize.Zero) return
 
+    val animationRunning by spriteState.isRunning.collectAsState()
+
     val animatedX by animatePosition(state.x, state.delta, false)
     val animatedY by animatePosition(state.y, state.delta, false)
     val animatedSpirit by animateFloatAsState(state.spiritRatio)
 
-    val myImageVector = getImage(viewModel.type)
+    val (image, imageSize) = getImage(viewModel.type)
     val centerX = boxSize.width * (animatedX + BOUNDARY_X) / (BOUNDARY_X * 2)
     val centerY = boxSize.height * (animatedY + BOUNDARY_Y) / (BOUNDARY_Y * 2)
-    val radiusPx = with(LocalDensity.current) { 20.dp.toPx() }
+    val radius = imageSize / 2
+    val radiusPx = with(LocalDensity.current) { radius.dp.toPx() }
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .width(20.dp)
+            .width((radius * 2).dp)
             .graphicsLayer {
                 translationX = centerX - radiusPx
                 translationY = centerY - radiusPx
@@ -103,11 +134,21 @@ fun EntityView(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Icon(
-                imageVector = myImageVector,
-                tint = Color.White,
+            SpriteView(
+                spriteState = spriteState,
+                spriteSpec = SpriteSpec(
+                    screenWidth = screenWidth.value,
+                    default = SpriteSheet(
+                        frameWidth = imageSize,
+                        frameHeight = imageSize,
+                        image = image
+                    )
+                ),
                 modifier = Modifier.fillMaxWidth()
                     .aspectRatio(1f)
+                    .graphicsLayer {
+                        scaleX = if (state.facingRight) 1f else -1f
+                    }
             )
             Box(
                 modifier = Modifier.fillMaxWidth()
@@ -128,9 +169,9 @@ fun EntityView(
 }
 
 fun getImage(type: String) = when (type) {
-    Sprite::class.simpleName -> TablerIcons.Ghost
-    Imp::class.simpleName -> TablerIcons.Man
-    else -> TablerIcons.QuestionMark
+    Sprite::class.simpleName -> Res.drawable.fairy_tiny to 20
+    Imp::class.simpleName -> Res.drawable.imp_30 to 30
+    else -> Res.drawable.imp_40 to 40
 }
 
 fun getText(effect: Effect) = when {
