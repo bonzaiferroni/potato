@@ -7,11 +7,18 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.graphicsLayer
@@ -44,29 +51,47 @@ fun EntityView(
 
     val animatedX by animatePosition(state.x, state.delta, state.isTeleported)
     val animatedY by animatePosition(state.y, state.delta, state.isTeleported)
+    val animatedSpirit by animateFloatAsState(state.spiritRatio)
 
     LaunchedEffect(gameState) {
         viewModel.update(gameState)
     }
 
-    val myImageVector = getImage(state.type)
+    val myImageVector = getImage(viewModel.type)
 
     if (state.isVisible && !state.isTeleported && boxSize != IntSize.Zero) {
         val centerX = boxSize.width * (animatedX + BOUNDARY_X) / (BOUNDARY_X * 2)
         val centerY = boxSize.height * (animatedY + BOUNDARY_Y) / (BOUNDARY_Y * 2)
         val radiusPx = with(LocalDensity.current) { 20.dp.toPx() }
 
-        Icon(
-            imageVector = myImageVector,
-            tint = Color.White,
+        Column(
             modifier = Modifier
+                .width(20.dp)
                 .graphicsLayer {
                     translationX = centerX - radiusPx
                     translationY = centerY - radiusPx
-                    scaleX = (radiusPx * 2) / myImageVector.defaultWidth.value
-                    scaleY = (radiusPx * 2) / myImageVector.defaultHeight.value
                 }
-        )
+        ) {
+            Icon(
+                imageVector = myImageVector,
+                tint = Color.White,
+                modifier = Modifier.fillMaxWidth()
+                    .aspectRatio(1f)
+            )
+            Box(
+                modifier = Modifier.fillMaxWidth()
+                    .height(2.dp)
+                    .drawBehind {
+                        drawRect(
+                            color = Color.Red
+                        )
+                        drawRect(
+                            color = Color.Green,
+                            size = Size(size.width * animatedSpirit, size.height)
+                        )
+                    }
+            )
+        }
     }
 }
 
