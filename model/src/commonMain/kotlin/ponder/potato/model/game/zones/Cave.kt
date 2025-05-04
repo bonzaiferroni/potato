@@ -12,6 +12,7 @@ class Cave : GameZone() {
 
     override fun init(id: Int, game: GameEngine) {
         super.init(id, game)
+        game.spawn(this) { Potato() }
 //        game.spawn(this) { Imp() }
 //        game.spawn(this, BOUNDARY_X, BOUNDARY_Y) { Potato() }
 //        game.spawn(this, -BOUNDARY_X, BOUNDARY_Y) { Potato() }

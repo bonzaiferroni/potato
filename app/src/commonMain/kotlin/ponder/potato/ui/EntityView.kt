@@ -95,7 +95,7 @@ fun EntityView(
         }
     }
 
-    if (!state.isVisible || boxSize == IntSize.Zero) return
+    if (!state.isVisible || boxSize == IntSize.Zero || state.x == Float.NaN || state.y == Float.NaN) return
 
     val animatedX by animatePosition(state.x, state.delta)
     val animatedY by animatePosition(state.y, state.delta)
@@ -125,7 +125,7 @@ fun EntityView(
             key(o.key) {
 
                 val effectTime = remember (o.key) { Animatable(0f) }
-                val offset = 25f
+                val offset = 30f
 
                 LaunchedEffect(Unit) {
                     effectTime.animateTo(

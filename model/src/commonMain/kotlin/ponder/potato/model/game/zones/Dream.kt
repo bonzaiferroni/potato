@@ -3,8 +3,12 @@ package ponder.potato.model.game.zones
 import kotlinx.serialization.Serializable
 import ponder.potato.model.game.AetherReward
 import ponder.potato.model.game.GameResources
+import ponder.potato.model.game.components.AetherStorage
+import ponder.potato.model.game.components.AetherStorageState
 import ponder.potato.model.game.components.DreamerState
+import ponder.potato.model.game.components.readAetherMax
 import ponder.potato.model.game.factorValue
+import ponder.potato.model.game.sumOf
 
 class Dream(
     val state: DreamState,
@@ -17,8 +21,10 @@ class Dream(
 
     override fun update(delta: Double) {
         state.spriteCount = cave.sprites
+        val aetherMax = game.entities.readAetherMax()
+
         if (state.progress >= state.resolution) {
-            if (resources.aether >= state.aetherMax) return
+            if (resources.aether >= aetherMax) return
             var dreamerReward = 0.0
             for (entity in game.entities.values) {
                 val dreamer = entity.castIfState<DreamerState>() ?: continue
@@ -26,8 +32,8 @@ class Dream(
                 dreamer.showEffect { AetherReward(dreamer.state.aetherReward) }
             }
 
-            val totalAether = resources.aether + state.reward + dreamerReward
-            resources.aether = minOf(totalAether, state.aetherMax)
+            val totalAether = resources.aether + dreamerReward
+            resources.aether = minOf(totalAether, aetherMax)
             state.progress = 0.0
         }
 
@@ -57,21 +63,10 @@ data class DreamState(
     var level: Int = 1,
     var count: Int = 0,
     var progress: Double = 0.0,
-    var aetherMax: Double = 1000.0,
     var spriteCount: Int = 0
 ) {
-    val power get() = factorValue(DREAM_PROGRESS_BASE, level, DREAM_PROGRESS_POWER)
-    val resolution get() = factorValue(DREAM_GOAL_BASE, level, DREAM_GOAL_POWER)
-    val reward get() = factorValue(AETHER_GROWTH_BASE, level, AETHER_GROWTH_POWER)
-    val levelCost get() = factorValue(LEVEL_COST_BASE, level, LEVEL_COST_POWER)
+    val power get() = factorValue(30, level, 1.2)
+    val resolution get() = factorValue(100, level, 1.4)
+    val levelCost get() = factorValue(100, level, 1.2)
     val spriteCost get() = 100.0
 }
-
-const val DREAM_PROGRESS_BASE = 30
-const val DREAM_PROGRESS_POWER = 1.2
-const val DREAM_GOAL_BASE = 100
-const val DREAM_GOAL_POWER = 1.4
-const val AETHER_GROWTH_BASE = 30
-const val AETHER_GROWTH_POWER = 1.0
-const val LEVEL_COST_BASE = 100
-const val LEVEL_COST_POWER = 1.2

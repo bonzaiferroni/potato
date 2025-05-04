@@ -1,6 +1,7 @@
 package ponder.potato.ui
 
 import ponder.potato.GameService
+import ponder.potato.model.game.components.readAetherMax
 import ponder.potato.model.game.zones.GameState
 import pondui.ui.core.StateModel
 
@@ -17,10 +18,11 @@ class DreamScreenModel(
 
     fun refreshState(delta: Double = 1.0) {
         val resources = game.resources
+        val aetherMax = game.entities.readAetherMax()
         setState {
             it.copy(
                 aether = resources.aether,
-                aetherMax = dream.state.aetherMax,
+                aetherMax = aetherMax,
                 level = dream.state.level,
                 dreamProgress = dream.state.progress,
                 dreamProgressMax = dream.state.resolution,
@@ -54,7 +56,7 @@ data class DreamScreenState(
     val spriteCost: Double = 0.0,
     val spriteCount: Int = 0,
 ) {
-    val progressRatio get() = minOf(1.0, dreamProgress / dreamProgressMax).toFloat()
-    val aetherRatio get() = minOf(1.0, aether / aetherMax).toFloat()
+    val progressRatio get() = minOf(1.0, dreamProgress / dreamProgressMax).toFloat().takeIf { it != Float.NaN } ?: 0f
+    val aetherRatio get() = aetherMax.takeIf { it > 0 }?.let { minOf(1.0, aether / aetherMax).toFloat() } ?: 0f
     val levelProgress get() = minOf(1.0, aether / levelCost).toFloat()
 }
