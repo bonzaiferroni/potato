@@ -9,6 +9,7 @@ import ponder.potato.model.game.Resources
 import ponder.potato.model.game.components.OpposerState
 import ponder.potato.model.game.components.SpiritState
 import ponder.potato.model.game.entities.Entity
+import ponder.potato.model.game.entities.EntityState
 import ponder.potato.model.game.entities.Potato
 import ponder.potato.model.game.entities.StateEntity
 import ponder.potato.model.game.oppose
@@ -44,24 +45,29 @@ class GameEngine(
 
     inline fun <reified S, reified E : StateEntity<S>> spawn(
         zone: GameZone,
+        x: Float = 0f,
+        y: Float = 0f,
         create: () -> E,
     ) {
         val ghost = graveyard.firstNotNullOfOrNull {
             it as? E ?: return@firstNotNullOfOrNull null
         } ?: create()
-        spawn(zone, ghost)
+        spawn(zone, ghost, x, y)
     }
 
     fun spawn(
         zone: GameZone,
         entity: StateEntity<*>,
+        x: Float = 0f,
+        y: Float = 0f,
     ) {
         manifesting.add(entity)
         entity.init(entityIdSource++)
         entity.enter(zone)
+        entity.state.position.x = x
+        entity.state.position.y = y
     }
 
-    @Suppress("UNCHECKED_CAST")
     fun update(delta: Double) {
         state.time += delta
         state.tick++
@@ -74,9 +80,9 @@ class GameEngine(
         }
         manifesting.clear()
         for (entity in entities.values) {
-            val opposer = entity as? StateEntity<OpposerState> ?: continue
-            val target = opposer.state.oppositionId?.let { entities[it] as? StateEntity<SpiritState> } ?: continue
-            entity.oppose(target)
+            val opposer = entity.castIfState<OpposerState>() ?: continue
+            val target = opposer.state.oppositionId?.let { entities[it]?.castIfState<SpiritState>() } ?: continue
+            opposer.oppose(target)
         }
         for (entity in entities.values) {
             entity.update(delta)
@@ -100,3 +106,8 @@ data class GameState(
     var time: Double = 0.0,
     var delta: Double = 1.0,
 )
+
+@Suppress("UNCHECKED_CAST")
+inline fun <reified T : EntityState> StateEntity<*>.castIfState(): StateEntity<T>? {
+    return if (state is T) this as StateEntity<T> else null
+}

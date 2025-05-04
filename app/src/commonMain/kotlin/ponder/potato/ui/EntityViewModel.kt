@@ -1,6 +1,5 @@
 package ponder.potato.ui
 
-import androidx.compose.runtime.DisposableEffectResult
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.viewModelScope
@@ -13,6 +12,10 @@ import ponder.potato.model.game.components.SpiritState
 import ponder.potato.model.game.entities.StateEntity
 import ponder.potato.model.game.zones.GameState
 import pondui.ui.core.StateModel
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 import kotlin.time.Duration.Companion.seconds
 
 class EntityViewModel(
@@ -33,7 +36,6 @@ class EntityViewModel(
             }
         }
         refreshState()
-        println("created: $type")
     }
 
     fun update(gameState: GameState) {
@@ -46,9 +48,11 @@ class EntityViewModel(
     fun refreshState(delta: Double = 0.0) {
         entity?.let { e ->
             val spiritState = e.state as? SpiritState
+            val projection = projection(e.position.x, e.position.y)
             setState { it.copy(
-                x = e.position.x,
-                y = e.position.y,
+                x = projection.x,
+                y = -projection.y,
+                scale = 12 / projection.distance,
                 isVisible = delta > 0,
                 delta = delta,
                 spirit = spiritState?.spirit,
@@ -73,6 +77,7 @@ class EntityViewModel(
 data class EntityViewState(
     val x: Float = 0f,
     val y: Float = 0f,
+    val scale: Float = 1f,
     val isVisible: Boolean = false,
     val delta: Double = 1.0,
     val spirit: Int? = null,

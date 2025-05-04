@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.stevdza_san.sprite.component.SpriteView
 import com.stevdza_san.sprite.domain.SpriteSheet
@@ -48,6 +49,7 @@ import potato.app.generated.resources.fairy_tiny
 import potato.app.generated.resources.imp_30
 import potato.app.generated.resources.imp_40
 import potato.app.generated.resources.imp_52
+import potato.app.generated.resources.imp_54
 import potato.app.generated.resources.sprite_small
 import potato.app.generated.resources.sprite_tiny
 
@@ -93,8 +95,9 @@ fun EntityView(
 
     if (!state.isVisible || boxSize == IntSize.Zero) return
 
-    val animatedX by animatePosition(state.x, state.delta, false)
-    val animatedY by animatePosition(state.y, state.delta, false)
+    val animatedX by animatePosition(state.x, state.delta)
+    val animatedY by animatePosition(state.y, state.delta)
+    val animatedScale by animatePosition(state.scale, state.delta)
     val animatedSpirit by animateFloatAsState(state.spiritRatio)
 
     val (image, imageSize) = getImage(viewModel.type)
@@ -107,9 +110,12 @@ fun EntityView(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .width((radius * 2).dp)
+            .zIndex(state.scale)
             .graphicsLayer {
                 translationX = centerX - radiusPx
                 translationY = centerY - radiusPx
+                scaleX = animatedScale
+                scaleY = animatedScale
             }
     ) {
         for (o in viewModel.effects) {
@@ -117,7 +123,7 @@ fun EntityView(
             key(o.key) {
 
                 val effectTime = remember (o.key) { Animatable(0f) }
-                val offset = 15f
+                val offset = 25f
 
                 LaunchedEffect(Unit) {
                     effectTime.animateTo(
@@ -154,6 +160,7 @@ fun EntityView(
                     .aspectRatio(1f)
                     .graphicsLayer {
                         scaleX = if (state.facingRight) 1f else -1f
+                        // scaleY = animatedScale
                     }
             )
             Box(
@@ -175,9 +182,9 @@ fun EntityView(
 }
 
 fun getImage(type: String) = when (type) {
-    Sprite::class.simpleName -> Res.drawable.fairy_tiny to 20
-    Imp::class.simpleName -> Res.drawable.imp_30 to 30
-    else -> Res.drawable.imp_40 to 40
+    Sprite::class.simpleName -> Res.drawable.fairy_52 to 52
+    Imp::class.simpleName -> Res.drawable.imp_54 to 54
+    else -> Res.drawable.imp_54 to 54
 }
 
 fun getText(effect: Effect) = when {
@@ -189,7 +196,7 @@ fun getText(effect: Effect) = when {
 fun animatePosition(
     value: Float,
     delta: Double,
-    snap: Boolean
+    snap: Boolean = false
 ) = animateFloatAsState(
     targetValue = value,
     animationSpec = if (snap) snap() else tween((delta * 1000).toInt(), easing = LinearEasing)
