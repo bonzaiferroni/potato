@@ -35,6 +35,7 @@ import compose.icons.tablericons.Ghost
 import compose.icons.tablericons.Man
 import compose.icons.tablericons.QuestionMark
 import io.ktor.client.plugins.observer.ResponseObserver
+import kabinet.utils.toMetricString
 import ponder.potato.LocalGame
 import ponder.potato.model.game.*
 import ponder.potato.model.game.entities.Imp
@@ -42,6 +43,7 @@ import ponder.potato.model.game.entities.Sprite
 import pondui.ui.controls.Icon
 import pondui.ui.controls.Text
 import pondui.ui.theme.Pond
+import pondui.utils.darken
 import potato.app.generated.resources.Res
 import potato.app.generated.resources.fairy_40
 import potato.app.generated.resources.fairy_52
@@ -119,7 +121,7 @@ fun EntityView(
             }
     ) {
         for (o in viewModel.effects) {
-            val text = getText(o.effect) ?: continue
+            val (text, color) = getText(o.effect) ?: continue
             key(o.key) {
 
                 val effectTime = remember (o.key) { Animatable(0f) }
@@ -135,6 +137,7 @@ fun EntityView(
                 Text(
                     text = text,
                     style = TextStyle(fontSize = Pond.typo.label.fontSize),
+                    color = color,
                     modifier = Modifier.graphicsLayer {
                         translationY = -(effectTime.value * 13f + offset)
                         alpha = minOf(1f, EFFECT_DISPLAY_SECONDS - effectTime.value)
@@ -188,7 +191,8 @@ fun getImage(type: String) = when (type) {
 }
 
 fun getText(effect: Effect) = when {
-    effect is Despirit -> effect.spirit.toString()
+    effect is Despirit -> effect.spirit.toString() to Color.Magenta.darken(-.5f)
+    effect is AetherReward -> effect.amount.toMetricString() to Color.Yellow.darken(-.5f)
     else -> null
 }
 

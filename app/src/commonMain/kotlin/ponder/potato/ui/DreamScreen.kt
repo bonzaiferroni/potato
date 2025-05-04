@@ -93,7 +93,7 @@ fun PurchaseBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("$label: ${cost.toMetricString()}")
-            Button("Buy", canPurchase, onClick = purchase)
+            Button("Dream", canPurchase, onClick = purchase)
         }
     }
 }

@@ -1,7 +1,9 @@
 package ponder.potato.model.game.zones
 
 import kotlinx.serialization.Serializable
+import ponder.potato.model.game.AetherReward
 import ponder.potato.model.game.GameResources
+import ponder.potato.model.game.components.DreamerState
 import ponder.potato.model.game.factorValue
 
 class Dream(
@@ -17,12 +19,19 @@ class Dream(
         state.spriteCount = cave.sprites
         if (state.progress >= state.resolution) {
             if (resources.aether >= state.aetherMax) return
-            val totalAether = resources.aether + state.reward
+            var dreamerReward = 0.0
+            for (entity in game.entities.values) {
+                val dreamer = entity.castIfState<DreamerState>() ?: continue
+                dreamerReward += dreamer.state.aetherReward
+                dreamer.showEffect { AetherReward(dreamer.state.aetherReward) }
+            }
+
+            val totalAether = resources.aether + state.reward + dreamerReward
             resources.aether = minOf(totalAether, state.aetherMax)
             state.progress = 0.0
         }
 
-        val totalProgress = state.progress + state.power * delta + state.power * state.spriteCount * .5f
+        val totalProgress = state.progress + state.power * delta
         if (totalProgress > state.resolution) {
             state.progress = state.resolution
         } else {
