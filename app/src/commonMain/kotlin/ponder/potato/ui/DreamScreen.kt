@@ -8,6 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -63,6 +64,13 @@ fun DreamScreen(
             Text("Dreaming...")
             ProgressBar(state.progressRatio)
         }
+        ZoneView(Cave::class, false)
+        FlowRow(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Sprite Count: ${state.spriteCount}", modifier = Modifier.weight(1f))
+            Text("Dream Level: ${state.level}", modifier = Modifier.weight(1f))
+        }
         ProgressBar(state.aetherRatio) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -72,10 +80,14 @@ fun DreamScreen(
                 Text(state.aetherMax.toMetricString())
             }
         }
-        PurchaseBar("Sprite", state.spriteCost, state.aether > state.spriteCost, purchase = viewModel::manifestSprite)
-        Text("Sprite Count: ${state.spriteCount}")
-        Text("Dream Level: ${state.level}")
-        ZoneView(Cave::class)
+        PurchaseBar("Sprite", state.spriteCost, state.aether > state.spriteCost, purchase = viewModel::manifestSprite) {
+            Text("Sprites provide extra Aether at the end of each dream.")
+            Text("You have ${state.spriteCount} sprites that provide ${state.spriteAether.toMetricString()} of The Aether at the end of each dream.")
+        }
+        PurchaseBar("Shroom", state.shroomCost, state.aether > state.shroomCost, purchase = viewModel::manifestShroom) {
+            Text("Shrooms let you hold more Aether.")
+            Text("You have ${state.shroomCount} shrooms that provide ${state.shroomStorage.toMetricString()} of The Aether at the end of each dream.")
+        }
     }
 }
 
@@ -84,7 +96,8 @@ fun PurchaseBar(
     label: String,
     cost: Double,
     canPurchase: Boolean,
-    purchase: () -> Unit
+    purchase: () -> Unit,
+    content: @Composable () -> Unit,
 ) {
     Card {
         Row(
@@ -95,6 +108,7 @@ fun PurchaseBar(
             Text("$label: ${cost.toMetricString()}")
             Button("Dream", canPurchase, onClick = purchase)
         }
+        content()
     }
 }
 

@@ -1,5 +1,6 @@
 package ponder.potato.model.game.zones
 
+import kotlinx.serialization.Serializable
 import ponder.potato.model.game.Vector
 
 interface Zone {
@@ -15,6 +16,7 @@ sealed class GameZone(): Zone {
 
     override val id: Int get() = _id ?: error("id not initialized")
     override val game: GameEngine get() = _game ?: error("game not initialized")
+    val resources get() = game.resources
 
     override val portals = mutableListOf<Portal>()
 
@@ -41,3 +43,4 @@ sealed class GameZone(): Zone {
         return zone
     }
 }
+

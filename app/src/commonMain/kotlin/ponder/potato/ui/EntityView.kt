@@ -58,6 +58,7 @@ import potato.app.generated.resources.sprite_tiny
 @Composable
 fun EntityView(
     entityId: Long,
+    fullVisibility: Boolean,
     boxSize: IntSize,
     viewModel: EntityViewModel = viewModel(key = entityId.toString()) { EntityViewModel(entityId) }
 ) {
@@ -145,6 +146,8 @@ fun EntityView(
                 )
             }
         }
+
+        if (!fullVisibility) return
 
         Column(
             modifier = Modifier.fillMaxWidth()

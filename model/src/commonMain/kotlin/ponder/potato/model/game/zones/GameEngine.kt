@@ -1,6 +1,9 @@
 package ponder.potato.model.game.zones
 
+import kabinet.utils.random
 import kotlinx.serialization.Serializable
+import ponder.potato.model.game.BOUNDARY_X
+import ponder.potato.model.game.BOUNDARY_Y
 import ponder.potato.model.game.Despirit
 import ponder.potato.model.game.GameResources
 import ponder.potato.model.game.OpposeEffect
@@ -19,13 +22,11 @@ interface Game {
     val zones: List<Zone>
     val entities: Map<Long, Entity>
     val resources: Resources
-    val map: GameMap
 }
 
 class GameEngine(
     override var state: GameState = GameState(),
     override var resources: GameResources = GameResources(),
-    override val map: GameMap
 ) : Game {
 
     override val zones = mutableListOf<GameZone>()
@@ -45,8 +46,8 @@ class GameEngine(
 
     inline fun <reified S, reified E : StateEntity<S>> spawn(
         zone: GameZone,
-        x: Float = 0f,
-        y: Float = 0f,
+        x: Float = Float.random(-BOUNDARY_X, BOUNDARY_X),
+        y: Float = Float.random(-BOUNDARY_Y, BOUNDARY_Y),
         create: () -> E,
     ) {
         val ghost = graveyard.firstNotNullOfOrNull {
@@ -58,8 +59,8 @@ class GameEngine(
     fun spawn(
         zone: GameZone,
         entity: StateEntity<*>,
-        x: Float = 0f,
-        y: Float = 0f,
+        x: Float = Float.random(-BOUNDARY_X, BOUNDARY_X),
+        y: Float = Float.random(-BOUNDARY_Y, BOUNDARY_Y),
     ) {
         manifesting.add(entity)
         entity.init(entityIdSource++)
@@ -109,5 +110,10 @@ data class GameState(
 
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T : EntityState> StateEntity<*>.castIfState(): StateEntity<T>? {
+    return if (state is T) this as StateEntity<T> else null
+}
+
+@Suppress("UNCHECKED_CAST")
+inline fun <reified T : EntityState> Entity.castIfState(): StateEntity<T>? {
     return if (state is T) this as StateEntity<T> else null
 }

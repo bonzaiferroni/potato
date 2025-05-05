@@ -2,7 +2,6 @@ package ponder.potato.model.game.zones
 
 import ponder.potato.model.game.*
 import ponder.potato.model.game.entities.Imp
-import ponder.potato.model.game.entities.Sprite
 
 class Village(
     val cave: Cave
@@ -16,7 +15,7 @@ class Village(
 
     override fun update(delta: Double) {
         super.update(delta)
-        val spriteCount = cave.sprites
+        val spriteCount = cave.spriteCount
         val impCount = imps
         if (spriteCount > (impCount + 1) * 5) {
             game.spawn(this) { Imp() }

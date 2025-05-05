@@ -12,15 +12,11 @@ import ponder.potato.model.game.sumOf
 
 class Dream(
     val state: DreamState,
-    val resources: GameResources,
-    val cave: Cave,
 ) : GameZone() {
 
     val canDive get() = resources.aether > state.levelCost
-    val canManifestSprite get() = resources.aether > state.spriteCost
 
     override fun update(delta: Double) {
-        state.spriteCount = cave.sprites
         val aetherMax = game.entities.readAetherMax()
 
         if (state.progress >= state.resolution) {
@@ -50,12 +46,6 @@ class Dream(
         resources.aether -= state.levelCost
         state.level ++
     }
-
-    fun manifestSprite() {
-        if (!canManifestSprite) return
-        resources.aether -= state.spriteCost
-        cave.manifestSprite()
-    }
 }
 
 @Serializable
@@ -63,10 +53,8 @@ data class DreamState(
     var level: Int = 1,
     var count: Int = 0,
     var progress: Double = 0.0,
-    var spriteCount: Int = 0
 ) {
     val power get() = factorValue(30, level, 1.2)
     val resolution get() = factorValue(100, level, 1.4)
     val levelCost get() = factorValue(100, level, 1.2)
-    val spriteCost get() = 100.0
 }

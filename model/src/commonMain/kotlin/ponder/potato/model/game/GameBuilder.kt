@@ -13,9 +13,8 @@ class GameBuilder {
 
 fun generateGame(data: GameData): GameEngine {
     val cave = Cave()
-    val dream = Dream(data.dream, data.resources, cave)
-    val map = GameMap(dream)
-    val game = GameEngine(data.game, data.resources, map)
+    val dream = Dream(data.dream)
+    val game = GameEngine(data.game, data.resources)
     val village = Village(cave)
     // val cave = Cave(dream)
     game.add(dream)
