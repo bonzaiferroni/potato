@@ -2,13 +2,9 @@ package ponder.potato.model.game.zones
 
 import kotlinx.serialization.Serializable
 import ponder.potato.model.game.AetherReward
-import ponder.potato.model.game.GameResources
-import ponder.potato.model.game.components.AetherStorage
-import ponder.potato.model.game.components.AetherStorageState
 import ponder.potato.model.game.components.DreamerState
 import ponder.potato.model.game.components.readAetherMax
 import ponder.potato.model.game.factorValue
-import ponder.potato.model.game.sumOf
 
 class Dream(
     val state: DreamState,
@@ -18,6 +14,7 @@ class Dream(
 
     override fun update(delta: Double) {
         val aetherMax = game.entities.readAetherMax()
+        state.level = game.potato?.level ?: 1
 
         if (state.progress >= state.resolution) {
             if (resources.aether >= aetherMax) return
@@ -41,10 +38,10 @@ class Dream(
         }
     }
 
-    fun dive() {
+    fun resolve() {
         if (!canDive) return
         resources.aether -= state.levelCost
-        state.level ++
+        game.potato?.level += 1
     }
 }
 

@@ -1,9 +1,7 @@
 package ponder.potato.ui
 
 import androidx.compose.animation.Animatable
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,9 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kabinet.utils.toMetricString
 import ponder.potato.LocalGame
+import ponder.potato.model.game.zones.BARD_COST
 import ponder.potato.model.game.zones.Cave
-import pondui.ui.controls.Button
-import pondui.ui.controls.Card
 import pondui.ui.controls.Divider
 import pondui.ui.controls.ProgressBar
 import pondui.ui.controls.Text
@@ -86,7 +82,7 @@ fun DreamScreen(
             ratio = if (state.spriteCount < state.maxSpriteCount) {
                 state.aether / state.spriteCost
             } else null,
-            purchase = viewModel::manifestSprite
+            purchase = viewModel::dreamSprite
         ) {
             Text("Sprites provide extra Aether at the end of each dream.")
             if (state.spriteCount > 0) {
@@ -99,7 +95,7 @@ fun DreamScreen(
             ratio = if (state.shroomCount < state.maxShroomCount) {
                 state.aether / state.shroomCost
             } else null,
-            purchase = viewModel::manifestShroom
+            purchase = viewModel::dreamShroom
         ) {
             Text("Shrooms let you hold more Aether.")
             if (state.shroomCount > 0) {
@@ -111,17 +107,20 @@ fun DreamScreen(
             cost = state.levelCost,
             ratio = state.aether / state.levelCost,
             buttonLabel = "Resolve",
-            purchase = viewModel::dive
+            purchase = viewModel::resolveDream
         ) {
             Text("Understand the meaning of this dream, to open the way to the next.")
         }
         PurchaseBar(
             label = "Bard",
-            cost = 2000.0,
-            ratio = 0.0,
-            purchase = { }
+            cost = BARD_COST,
+            ratio = state.aether / BARD_COST,
+            purchase = viewModel::dreamBard
         ) {
-            Text("Dream of a bard. Requires a deeper level of the dream.")
+            Text("Dream of a bard.")
+            if (state.level < 2) {
+                Text("Requires a deeper level of the dream.")
+            }
         }
     }
 }

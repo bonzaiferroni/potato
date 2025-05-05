@@ -1,6 +1,8 @@
 package ponder.potato.model.game.zones
 
-import kotlinx.serialization.Serializable
+import ponder.potato.model.game.BOUNDARY_X
+import ponder.potato.model.game.BOUNDARY_Y
+import ponder.potato.model.game.entities.Bard
 import ponder.potato.model.game.entities.Potato
 import ponder.potato.model.game.entities.Shroom
 import ponder.potato.model.game.entities.Sprite
@@ -16,6 +18,8 @@ class Cave : GameZone() {
     val maxShroomCount get() = game.potato?.level?.let { listOf(0, 5, 10, 20)[it] } ?: 0
     val shroomCost get() = factorValue(300, shroomCount + 1, 1.4)
     val canDreamShroom get() = resources.aether >= shroomCost && shroomCount < maxShroomCount
+    val bardCount get() = game.entities.values.count() { it is Bard }
+    val canDreamBard get() = resources.aether >= BARD_COST && bardCount == 0
 
     override fun init(id: Int, game: GameEngine) {
         super.init(id, game)
@@ -38,4 +42,12 @@ class Cave : GameZone() {
         resources.aether -= shroomCost
         game.spawn(this) { Shroom() }
     }
+
+    fun dreamBard() {
+        if (!canDreamBard) return
+        resources.aether -= BARD_COST
+        game.spawn(this, BOUNDARY_X / 2, BOUNDARY_Y / 2) { Bard() }
+    }
 }
+
+const val BARD_COST = 2000.0

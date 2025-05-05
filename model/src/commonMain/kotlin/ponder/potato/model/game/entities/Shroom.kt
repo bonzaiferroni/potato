@@ -18,5 +18,5 @@ data class ShroomState(
     override var level: Int = 1,
 ) : EntityState, AetherStorageState, ProgressState {
     override val isAlive: Boolean get() = true
-    override val aetherStorage get() = factorValue(100, level, 1.2)
+    override val aetherStorage get() = factorValue(300, level, 1.2)
 }

@@ -1,9 +1,7 @@
 package ponder.potato.ui
 
 import ponder.potato.GameService
-import ponder.potato.model.game.AetherReward
 import ponder.potato.model.game.EntityMap
-import ponder.potato.model.game.components.AetherStorage
 import ponder.potato.model.game.components.AetherStorageState
 import ponder.potato.model.game.components.DreamerState
 import ponder.potato.model.game.components.readAetherMax
@@ -56,18 +54,23 @@ class DreamScreenModel(
         }
     }
 
-    fun dive() {
-        dream.dive()
+    fun resolveDream() {
+        dream.resolve()
         refreshState()
     }
 
-    fun manifestSprite() {
+    fun dreamSprite() {
         cave.manifestSprite()
         refreshState()
     }
 
-    fun manifestShroom() {
+    fun dreamShroom() {
         cave.manifestShroom()
+        refreshState()
+    }
+
+    fun dreamBard() {
+        cave.dreamBard()
         refreshState()
     }
 }

@@ -16,7 +16,7 @@ class Potato(
 
 @Serializable
 data class PotatoState(
-    override val level: Int = 1,
+    override var level: Int = 1,
     override val position: MutablePosition = MutablePosition(),
 ) : EntityState, ProgressState, DreamerState, AetherStorageState {
     override val isAlive get() = true
