@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import kabinet.utils.toMetricString
 import pondui.ui.controls.Button
 import pondui.ui.controls.Card
+import pondui.ui.controls.H4
 import pondui.ui.controls.Label
 import pondui.ui.controls.ProgressBar
 import pondui.ui.controls.ProgressBarButton
@@ -37,7 +38,7 @@ fun PurchaseBar(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("$label: ${cost.toMetricString()}")
+            H4(label)
             val canPurchase = ratio?.let { it >= 1f } ?: false
             val labelText = when {
                 canPurchase -> buttonLabel

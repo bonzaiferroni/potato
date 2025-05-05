@@ -44,7 +44,7 @@ class DreamScreenModel(
                 delta = delta,
                 spriteCost = cave.spriteCost,
                 spriteCount = cave.spriteCount,
-                spriteAether = game.entities.readSpriteAether(),
+                spriteAether = game.entities.readSpriteAether(dreamLevel),
                 maxSpriteCount = cave.maxSpriteCount,
                 shroomCost = cave.shroomCost,
                 shroomCount = cave.shroomCount,
@@ -98,4 +98,4 @@ data class DreamScreenState(
 }
 
 fun EntityMap.readShroomStorage() = this.sumOf<AetherStorageState>({ it is Shroom }) { it.aetherStorage }
-fun EntityMap.readSpriteAether() = this.sumOf<DreamerState>({ it is Sprite }) { it.aetherReward }
+fun EntityMap.readSpriteAether(dreamLevel: Int) = this.sumOf<DreamerState>({ it is Sprite }) { it.getReward(dreamLevel) }
