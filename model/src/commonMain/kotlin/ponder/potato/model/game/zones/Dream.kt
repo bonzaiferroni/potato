@@ -56,5 +56,5 @@ data class DreamState(
 ) {
     val power get() = factorValue(30, level, 1.2)
     val resolution get() = factorValue(100, level, 1.4)
-    val levelCost get() = factorValue(100, level, 1.2)
+    val levelCost get() = factorValue(1200, level, 1.2)
 }

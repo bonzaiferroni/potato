@@ -34,11 +34,12 @@ class DreamScreenModel(
     fun refreshState(delta: Double = 1.0) {
         val resources = game.resources
         val aetherMax = game.entities.readAetherMax()
+        val dreamLevel = potato?.state?.level ?: 1
         setState {
             it.copy(
                 aether = resources.aether,
                 aetherMax = aetherMax,
-                level = potato?.state?.level ?: 1,
+                level = dreamLevel,
                 dreamProgress = dream.state.progress,
                 dreamProgressMax = dream.state.resolution,
                 levelCost = dream.state.levelCost,

@@ -66,49 +66,59 @@ fun DreamScreen(
         }
         ZoneView(Cave::class, false)
         FlowRow(
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            itemVerticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Sprite Count: ${state.spriteCount}", modifier = Modifier.weight(1f))
             Text("Dream Level: ${state.level}", modifier = Modifier.weight(1f))
-        }
-        ProgressBar(state.aetherRatio) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Aether: ${state.aether.toMetricString()}")
-                Text(state.aetherMax.toMetricString())
+            ProgressBar(state.aetherRatio, modifier = Modifier.weight(1f)) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Aether: ${state.aether.toMetricString()}")
+                    Text(state.aetherMax.toMetricString())
+                }
             }
         }
-        PurchaseBar("Sprite", state.spriteCost, state.aether > state.spriteCost, purchase = viewModel::manifestSprite) {
-            Text("Sprites provide extra Aether at the end of each dream.")
-            Text("You have ${state.spriteCount} sprites that provide ${state.spriteAether.toMetricString()} of The Aether at the end of each dream.")
-        }
-        PurchaseBar("Shroom", state.shroomCost, state.aether > state.shroomCost, purchase = viewModel::manifestShroom) {
-            Text("Shrooms let you hold more Aether.")
-            Text("You have ${state.shroomCount} shrooms that provide ${state.shroomStorage.toMetricString()} of The Aether at the end of each dream.")
-        }
-    }
-}
-
-@Composable
-fun PurchaseBar(
-    label: String,
-    cost: Double,
-    canPurchase: Boolean,
-    purchase: () -> Unit,
-    content: @Composable () -> Unit,
-) {
-    Card {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        PurchaseBar(
+            label = "Sprite",
+            cost = state.spriteCost,
+            ratio = state.aether / state.spriteCost,
+            purchase = viewModel::manifestSprite
         ) {
-            Text("$label: ${cost.toMetricString()}")
-            Button("Dream", canPurchase, onClick = purchase)
+            Text("Sprites provide extra Aether at the end of each dream.")
+            if (state.spriteCount > 0) {
+                Text("You have ${state.spriteCount} sprites that provide ${state.spriteAether.toMetricString()} of The Aether at the end of each dream.")
+            }
         }
-        content()
+        PurchaseBar(
+            label = "Shroom",
+            cost = state.shroomCost,
+            ratio = state.aether / state.shroomCost,
+            purchase = viewModel::manifestShroom
+        ) {
+            Text("Shrooms let you hold more Aether.")
+            if (state.shroomCount > 0) {
+                Text("You have ${state.shroomCount} shrooms that hold ${state.shroomStorage.toMetricString()} additional Aether.")
+            }
+        }
+        PurchaseBar(
+            label = "Dream resolution",
+            cost = state.levelCost,
+            ratio = state.aether / state.levelCost,
+            buttonLabel = "Resolve",
+            purchase = viewModel::dive
+        ) {
+            Text("Understand the meaning of this dream, to open the way to the next.")
+        }
+        PurchaseBar(
+            label = "Bard",
+            cost = 2000.0,
+            ratio = 0.0,
+            purchase = { }
+        ) {
+            Text("Dream of a bard. Requires a deeper level of the dream.")
+        }
     }
 }
 
