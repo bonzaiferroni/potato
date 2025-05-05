@@ -47,8 +47,10 @@ class DreamScreenModel(
                 spriteCost = cave.spriteCost,
                 spriteCount = cave.spriteCount,
                 spriteAether = game.entities.readSpriteAether(),
+                maxSpriteCount = cave.maxSpriteCount,
                 shroomCost = cave.shroomCost,
                 shroomCount = cave.shroomCount,
+                maxShroomCount = cave.maxShroomCount,
                 shroomStorage = game.entities.readShroomStorage()
             )
         }
@@ -80,8 +82,10 @@ data class DreamScreenState(
     val delta: Double = 1.0,
     val spriteCost: Double = 0.0,
     val spriteCount: Int = 0,
+    val maxSpriteCount: Int = 0,
     val shroomCost: Double = 0.0,
     val shroomCount: Int = 0,
+    val maxShroomCount: Int = 0,
     val spriteAether: Double = 0.0,
     val shroomStorage: Double = 0.0,
 ) {

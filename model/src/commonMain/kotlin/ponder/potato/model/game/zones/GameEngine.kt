@@ -16,12 +16,14 @@ import ponder.potato.model.game.entities.EntityState
 import ponder.potato.model.game.entities.Potato
 import ponder.potato.model.game.entities.StateEntity
 import ponder.potato.model.game.oppose
+import ponder.potato.model.game.read
 
 interface Game {
     val state: GameState
     val zones: List<Zone>
     val entities: Map<Long, Entity>
     val resources: Resources
+    val potato get() = entities.read<Potato>()?.state
 }
 
 class GameEngine(

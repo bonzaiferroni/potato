@@ -9,11 +9,13 @@ import ponder.potato.model.game.factorValue
 class Cave : GameZone() {
 
     val spriteCount get() = game.entities.values.count() { it is Sprite && it.position.zoneId == id }
+    val maxSpriteCount get() = game.potato?.level?.let { listOf(0, 5, 10, 20)[it] } ?: 0
     val spriteCost get() = factorValue(100, spriteCount + 1, 1.2)
-    val canDreamSprite get() = resources.aether >= spriteCost
+    val canDreamSprite get() = resources.aether >= spriteCost && spriteCount < maxSpriteCount
     val shroomCount get() = game.entities.values.count() { it is Shroom && it.position.zoneId == id }
-    val shroomCost get() = factorValue(300, shroomCount + 1, 1.2)
-    val canDreamShroom get() = resources.aether >= shroomCost
+    val maxShroomCount get() = game.potato?.level?.let { listOf(0, 5, 10, 20)[it] } ?: 0
+    val shroomCost get() = factorValue(300, shroomCount + 1, 1.4)
+    val canDreamShroom get() = resources.aether >= shroomCost && shroomCount < maxShroomCount
 
     override fun init(id: Int, game: GameEngine) {
         super.init(id, game)

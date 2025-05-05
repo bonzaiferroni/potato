@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import kabinet.utils.toMetricString
@@ -14,19 +15,21 @@ import pondui.ui.controls.Button
 import pondui.ui.controls.Card
 import pondui.ui.controls.Label
 import pondui.ui.controls.ProgressBar
+import pondui.ui.controls.ProgressBarButton
 import pondui.ui.controls.Text
+import pondui.ui.controls.actionable
+import pondui.ui.theme.Pond
 
 
 @Composable
 fun PurchaseBar(
     label: String,
     cost: Double,
-    ratio: Double,
+    ratio: Double?,
     buttonLabel: String = "Dream",
     purchase: () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    val canPurchase = ratio >= 1f
     Card {
         Row(
             modifier = Modifier.fillMaxWidth()
@@ -35,13 +38,18 @@ fun PurchaseBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("$label: ${cost.toMetricString()}")
-            if (canPurchase) {
-                Button(buttonLabel, isEnabled = canPurchase, onClick = purchase)
-            } else {
-                ProgressBar(ratio.toFloat()) {
-                    Text(cost.toMetricString())
-                }
+            val canPurchase = ratio?.let { it >= 1f } ?: false
+            val labelText = when {
+                canPurchase -> buttonLabel
+                ratio == null -> "Full"
+                else -> cost.toMetricString()
             }
+            ProgressBarButton(
+                ratio = ratio?.toFloat() ?: 1f,
+                labelText = labelText,
+                isEnabled = canPurchase,
+                onClick = purchase
+            )
         }
         content()
     }

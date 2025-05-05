@@ -83,18 +83,22 @@ fun DreamScreen(
         PurchaseBar(
             label = "Sprite",
             cost = state.spriteCost,
-            ratio = state.aether / state.spriteCost,
+            ratio = if (state.spriteCount < state.maxSpriteCount) {
+                state.aether / state.spriteCost
+            } else null,
             purchase = viewModel::manifestSprite
         ) {
             Text("Sprites provide extra Aether at the end of each dream.")
             if (state.spriteCount > 0) {
-                Text("You have ${state.spriteCount} sprites that provide ${state.spriteAether.toMetricString()} of The Aether at the end of each dream.")
+                Text("This dream has ${state.spriteCount} out of ${state.maxSpriteCount} possible sprites that provide ${state.spriteAether.toMetricString()} of The Aether at the end of each dream.")
             }
         }
         PurchaseBar(
             label = "Shroom",
             cost = state.shroomCost,
-            ratio = state.aether / state.shroomCost,
+            ratio = if (state.shroomCount < state.maxShroomCount) {
+                state.aether / state.shroomCost
+            } else null,
             purchase = viewModel::manifestShroom
         ) {
             Text("Shrooms let you hold more Aether.")
