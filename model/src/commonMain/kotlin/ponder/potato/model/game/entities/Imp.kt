@@ -1,5 +1,7 @@
 package ponder.potato.model.game.entities
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import ponder.potato.model.game.MutablePosition
 import ponder.potato.model.game.components.*
 import ponder.potato.model.game.factorValue
@@ -14,6 +16,8 @@ class Imp(
     )
 }
 
+@Serializable
+@SerialName("imp")
 data class ImpState(
     override var oppositionId: Long? = null,
     override var spirit: Int = 0,

@@ -1,5 +1,7 @@
 package ponder.potato.model.game.entities
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import ponder.potato.model.game.MutablePosition
 import ponder.potato.model.game.components.AetherStorage
 import ponder.potato.model.game.components.AetherStorageState
@@ -13,10 +15,12 @@ class Shroom(
     )
 }
 
+@Serializable
+@SerialName("shroom")
 data class ShroomState(
     override val position: MutablePosition = MutablePosition(),
     override var level: Int = 1,
 ) : EntityState, AetherStorageState, ProgressState {
     override val isAlive: Boolean get() = true
-    override val aetherStorage get() = factorValue(300, level, 1.2)
+    override val aetherStorage get() = factorValue(500, level, 1.2)
 }

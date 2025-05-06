@@ -109,16 +109,17 @@ fun DreamScreen(
             buttonLabel = "Resolve",
             purchase = viewModel::resolveDream
         ) {
-            Text("Understand the meaning of this dream, to open the way to the next.")
+            Text("Find an understanding of this dream, to open the way to the next.")
         }
+        val canPurchaseBard = state.level >= 2
         PurchaseBar(
             label = "Bard",
             cost = BARD_COST,
-            ratio = state.aether / BARD_COST,
+            ratio = if (canPurchaseBard) state.aether / BARD_COST else null,
             purchase = viewModel::dreamBard
         ) {
             Text("Dream of a bard.")
-            if (state.level < 2) {
+            if (!canPurchaseBard) {
                 Text("Requires a deeper level of the dream.")
             }
         }

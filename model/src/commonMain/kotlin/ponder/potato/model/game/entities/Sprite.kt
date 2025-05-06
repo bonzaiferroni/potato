@@ -1,5 +1,6 @@
 package ponder.potato.model.game.entities
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ponder.potato.model.game.components.*
 import ponder.potato.model.game.*
@@ -17,6 +18,7 @@ class Sprite(
 }
 
 @Serializable
+@SerialName("sprite")
 data class SpriteState(
     override val level: Int = 1,
     override var spirit: Int = 0,
@@ -26,5 +28,5 @@ data class SpriteState(
 ) : SpiritState, ProgressState, MoverState, OpposerState, DreamerState {
     override val maxSpirit get() = factorValue(100, level, 1.2).toInt()
     override val power get() = factorValue(5, level, 1.2).toInt()
-    override val aetherReward get() = factorValue(10, level, 1.2)
+    override val aetherReward get() = factorValue(20, level, 1.2)
 }

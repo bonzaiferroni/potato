@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import ponder.potato.model.game.BOUNDARY_X
 import ponder.potato.model.game.BOUNDARY_Y
 import ponder.potato.model.game.Despirit
+import ponder.potato.model.game.EntityMap
 import ponder.potato.model.game.GameResources
 import ponder.potato.model.game.OpposeEffect
 import ponder.potato.model.game.RaiseGhost
@@ -18,21 +19,21 @@ import ponder.potato.model.game.entities.StateEntity
 import ponder.potato.model.game.oppose
 import ponder.potato.model.game.read
 
-interface Game {
-    val state: GameState
-    val zones: List<Zone>
-    val entities: Map<Long, Entity>
-    val resources: Resources
-    val potato get() = entities.read<Potato>()?.state
-}
-
 class GameEngine(
-    override var state: GameState = GameState(),
-    override var resources: GameResources = GameResources(),
+    override var state: GameState,
+    override var resources: GameResources,
+    val entityStates: Map<Long, EntityState>?
 ) : Game {
 
     override val zones = mutableListOf<GameZone>()
-    override val entities = mutableMapOf<Long, StateEntity<*>>()
+    override val entities: MutableMap<Long, StateEntity<*>> = entityStates?.let {
+        val map = mutableMapOf<Long, StateEntity<*>>()
+        for ((id, state) in entityStates) {
+            val entity = state.toEntity()
+            map[id] = entity
+        }
+        map
+    } ?: mutableMapOf()
 
     var entityIdSource = 1L
     var zoneIdSource = 1

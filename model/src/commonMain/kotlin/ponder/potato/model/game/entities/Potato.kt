@@ -1,5 +1,6 @@
 package ponder.potato.model.game.entities
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ponder.potato.model.game.MutablePosition
 import ponder.potato.model.game.components.AetherStorageState
@@ -15,6 +16,7 @@ class Potato(
 }
 
 @Serializable
+@SerialName("potato")
 data class PotatoState(
     override var level: Int = 1,
     override val position: MutablePosition = MutablePosition(),

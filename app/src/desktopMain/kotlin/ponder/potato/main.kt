@@ -3,6 +3,7 @@ package ponder.potato
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import com.russhwolf.settings.Settings
 import kotlinx.serialization.Serializable
 import pondui.CacheFile
 import pondui.WatchWindow
