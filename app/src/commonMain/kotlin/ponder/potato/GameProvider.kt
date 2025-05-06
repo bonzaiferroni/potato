@@ -3,6 +3,8 @@ package ponder.potato
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.viewModelScope
@@ -43,5 +45,14 @@ class GameModel(
                 setState { service.game.state.copy() }
             }
         }
+    }
+}
+
+@Composable
+fun LaunchedGameUpdate(onUpdate: (GameState) -> Unit) {
+    val gameState by LocalGame.current.state.collectAsState()
+
+    LaunchedEffect(gameState) {
+        onUpdate(gameState)
     }
 }

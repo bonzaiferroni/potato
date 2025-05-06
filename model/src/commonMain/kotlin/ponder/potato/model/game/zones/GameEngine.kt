@@ -28,9 +28,12 @@ class GameEngine(
     override val zones = mutableListOf<GameZone>()
     override val entities: MutableMap<Long, StateEntity<*>> = entityStates?.let {
         val map = mutableMapOf<Long, StateEntity<*>>()
+        entityIdSource = 1L
         for ((id, state) in entityStates) {
             val entity = state.toEntity()
+            entity.init(id)
             map[id] = entity
+            entityIdSource = maxOf(entityIdSource, id + 1)
         }
         map
     } ?: mutableMapOf()

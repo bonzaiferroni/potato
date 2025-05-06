@@ -7,6 +7,7 @@ interface Zone {
     val id: Int
     val portals: List<Portal>
     val game: Game
+    val name: String
 }
 
 sealed class GameZone(): Zone {
@@ -17,6 +18,7 @@ sealed class GameZone(): Zone {
     override val id: Int get() = _id ?: error("id not initialized")
     override val game: GameEngine get() = _game ?: error("game not initialized")
     val resources get() = game.resources
+    override val name get() = this::class.simpleName ?: error("Zone must not be anonymous")
 
     override val portals = mutableListOf<Portal>()
 

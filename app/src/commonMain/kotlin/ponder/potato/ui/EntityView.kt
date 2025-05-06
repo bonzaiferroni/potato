@@ -36,6 +36,7 @@ import compose.icons.tablericons.Man
 import compose.icons.tablericons.QuestionMark
 import io.ktor.client.plugins.observer.ResponseObserver
 import kabinet.utils.toMetricString
+import ponder.potato.LaunchedGameUpdate
 import ponder.potato.LocalGame
 import ponder.potato.model.game.*
 import ponder.potato.model.game.entities.Imp
@@ -63,7 +64,8 @@ fun EntityView(
     viewModel: EntityViewModel = viewModel(key = entityId.toString()) { EntityViewModel(entityId) }
 ) {
     val state by viewModel.state.collectAsState()
-    val gameState by LocalGame.current.state.collectAsState()
+
+    LaunchedGameUpdate(viewModel::update)
 
     val screenWidth = getScreenWidth()
     val spriteState = rememberSpriteState(
@@ -74,10 +76,6 @@ fun EntityView(
 
     LaunchedEffect(Unit) {
         spriteState.start()
-    }
-
-    LaunchedEffect(gameState) {
-        viewModel.update(gameState)
     }
 
     LaunchedEffect(state.isMoving) {

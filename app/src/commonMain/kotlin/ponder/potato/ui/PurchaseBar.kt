@@ -29,9 +29,10 @@ fun PurchaseBar(
     ratio: Double?,
     buttonLabel: String = "Dream",
     purchase: () -> Unit,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    Card {
+    Card(modifier = modifier) {
         Row(
             modifier = Modifier.fillMaxWidth()
                 .heightIn(min = 40.dp),

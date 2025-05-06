@@ -2,6 +2,7 @@ package ponder.potato.ui
 
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,14 +31,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kabinet.utils.toMetricString
+import ponder.potato.LaunchedGameUpdate
 import ponder.potato.LocalGame
 import ponder.potato.model.game.zones.BARD_COST
 import ponder.potato.model.game.zones.Cave
 import pondui.ui.controls.Divider
 import pondui.ui.controls.ProgressBar
+import pondui.ui.controls.Tab
+import pondui.ui.controls.Tabs
 import pondui.ui.controls.Text
 import pondui.ui.controls.actionable
+import pondui.ui.nav.BottomBarSpacer
 import pondui.ui.nav.Scaffold
+import pondui.ui.nav.TopBarSpacer
 import pondui.ui.theme.Pond
 
 @Composable
@@ -45,83 +51,88 @@ fun DreamScreen(
     viewModel: DreamScreenModel = viewModel { DreamScreenModel() }
 ) {
     val state by viewModel.state.collectAsState()
-    val gameState by LocalGame.current.state.collectAsState()
 
-    LaunchedEffect(gameState) {
-        viewModel.update(gameState)
+    LaunchedGameUpdate(viewModel::update)
+
+    TopBarSpacer()
+
+    Column(
+        verticalArrangement = Pond.ruler.columnTight,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("Dreaming...")
+        ProgressBar(state.progressRatio)
     }
-
-    Scaffold {
-        Column(
-            verticalArrangement = Pond.ruler.columnTight,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Dreaming...")
-            ProgressBar(state.progressRatio)
+    ZoneView(Cave::class, false)
+    FlowRow(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        itemVerticalAlignment = Alignment.CenterVertically
+    ) {
+        Text("Dream Level: ${state.level}", modifier = Modifier.weight(1f))
+        ProgressBar(state.aetherRatio, modifier = Modifier.weight(1f)) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Aether: ${state.aether.toMetricString()}")
+                Text(state.aetherMax.toMetricString())
+            }
         }
-        ZoneView(Cave::class, false)
-        FlowRow(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            itemVerticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("Dream Level: ${state.level}", modifier = Modifier.weight(1f))
-            ProgressBar(state.aetherRatio, modifier = Modifier.weight(1f)) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Aether: ${state.aether.toMetricString()}")
-                    Text(state.aetherMax.toMetricString())
+    }
+    Tabs {
+        Tab("Zone") {
+            PurchaseBar(
+                label = "Sprite",
+                cost = state.spriteCost,
+                ratio = if (state.spriteCount < state.maxSpriteCount) {
+                    state.aether / state.spriteCost
+                } else null,
+                purchase = viewModel::dreamSprite,
+            ) {
+                Text("Sprites provide extra Aether at the end of each dream.")
+                if (state.spriteCount > 0) {
+                    Text("This dream has ${state.spriteCount} out of ${state.maxSpriteCount} possible sprites that provide ${state.spriteAether.toMetricString()} of The Aether at the end of each dream.")
                 }
             }
-        }
-        PurchaseBar(
-            label = "Sprite",
-            cost = state.spriteCost,
-            ratio = if (state.spriteCount < state.maxSpriteCount) {
-                state.aether / state.spriteCost
-            } else null,
-            purchase = viewModel::dreamSprite
-        ) {
-            Text("Sprites provide extra Aether at the end of each dream.")
-            if (state.spriteCount > 0) {
-                Text("This dream has ${state.spriteCount} out of ${state.maxSpriteCount} possible sprites that provide ${state.spriteAether.toMetricString()} of The Aether at the end of each dream.")
+            PurchaseBar(
+                label = "Shroom",
+                cost = state.shroomCost,
+                ratio = if (state.shroomCount < state.maxShroomCount) {
+                    state.aether / state.shroomCost
+                } else null,
+                purchase = viewModel::dreamShroom
+            ) {
+                Text("Shrooms let you hold more Aether.")
+                if (state.shroomCount > 0) {
+                    Text("You have ${state.shroomCount} shrooms that hold ${state.shroomStorage.toMetricString()} additional Aether.")
+                }
             }
-        }
-        PurchaseBar(
-            label = "Shroom",
-            cost = state.shroomCost,
-            ratio = if (state.shroomCount < state.maxShroomCount) {
-                state.aether / state.shroomCost
-            } else null,
-            purchase = viewModel::dreamShroom
-        ) {
-            Text("Shrooms let you hold more Aether.")
-            if (state.shroomCount > 0) {
-                Text("You have ${state.shroomCount} shrooms that hold ${state.shroomStorage.toMetricString()} additional Aether.")
+            PurchaseBar(
+                label = "Dream resolution",
+                cost = state.levelCost,
+                ratio = state.aether / state.levelCost,
+                buttonLabel = "Resolve",
+                purchase = viewModel::resolveDream
+            ) {
+                Text("Find an understanding of this dream, to open the way to the next.")
             }
-        }
-        PurchaseBar(
-            label = "Dream resolution",
-            cost = state.levelCost,
-            ratio = state.aether / state.levelCost,
-            buttonLabel = "Resolve",
-            purchase = viewModel::resolveDream
-        ) {
-            Text("Find an understanding of this dream, to open the way to the next.")
-        }
-        val canPurchaseBard = state.level >= 2
-        PurchaseBar(
-            label = "Bard",
-            cost = BARD_COST,
-            ratio = if (canPurchaseBard) state.aether / BARD_COST else null,
-            purchase = viewModel::dreamBard
-        ) {
-            Text("Dream of a bard.")
-            if (!canPurchaseBard) {
-                Text("Requires a deeper level of the dream.")
+            val canPurchaseBard = state.level >= 2
+            PurchaseBar(
+                label = "Bard",
+                cost = BARD_COST,
+                ratio = if (canPurchaseBard) state.aether / BARD_COST else null,
+                purchase = viewModel::dreamBard
+            ) {
+                Text("Dream of a bard.")
+                if (!canPurchaseBard) {
+                    Text("Requires a deeper level of the dream.")
+                }
             }
+            BottomBarSpacer()
+        }
+        Tab("Entities") {
+            EntityListModel(viewModel.caveId)
         }
     }
 }

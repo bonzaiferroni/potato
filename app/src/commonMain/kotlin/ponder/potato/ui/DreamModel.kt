@@ -24,6 +24,7 @@ class DreamScreenModel(
     private val dream = game.readZone<Dream>()
     private val cave = game.readZone<Cave>()
     private val potato get() = game.entities.read<Potato>()
+    val caveId = cave.id
 
     fun update(gameState: GameState) {
         refreshState(gameState.delta)
@@ -92,8 +93,12 @@ data class DreamScreenState(
     val spriteAether: Double = 0.0,
     val shroomStorage: Double = 0.0,
 ) {
-    val progressRatio get() = minOf(1.0, dreamProgress / dreamProgressMax).toFloat().takeIf { it != Float.NaN } ?: 0f
-    val aetherRatio get() = aetherMax.takeIf { it > 0 }?.let { minOf(1.0, aether / aetherMax).toFloat() } ?: 0f
+    val progressRatio get() = dreamProgressMax.takeIf { it > 0 }?.let {
+        minOf(1.0, dreamProgress / dreamProgressMax).toFloat().takeIf { it != Float.NaN } ?: 0f
+    } ?: 0f
+    val aetherRatio get() = aetherMax.takeIf { it > 0 }?.let {
+        minOf(1.0, aether / aetherMax).toFloat()
+    } ?: 0f
     val levelProgress get() = minOf(1.0, aether / levelCost).toFloat()
 }
 

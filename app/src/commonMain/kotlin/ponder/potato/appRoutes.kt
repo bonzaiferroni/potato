@@ -14,7 +14,7 @@ object HelloRoute : AppRoute("Hello")
 object DreamRoute : AppRoute("Dream")
 
 @Serializable
-object ExampleListRoute : AppRoute("Examples")
+object EntityListRoute : AppRoute("Entities")
 
 @Serializable
 data class ExampleProfileRoute(val exampleId: Long) : AppRoute(TITLE, exampleId) {

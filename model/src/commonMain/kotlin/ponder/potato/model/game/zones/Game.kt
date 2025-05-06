@@ -20,4 +20,6 @@ interface Game {
         resources = (resources as GameResources),
         entityStates = entities.map { it.key to it.value.state }.toMap()
     )
+
+    fun getZone(zoneId: Int) = zones.first { it.id == zoneId }
 }
