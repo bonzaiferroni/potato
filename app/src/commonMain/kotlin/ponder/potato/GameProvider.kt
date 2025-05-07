@@ -39,6 +39,7 @@ class GameModel(
 
     init {
         viewModelScope.launch {
+            service.init()
             while (true) {
                 delay(1.seconds)
                 service.update(1.0)

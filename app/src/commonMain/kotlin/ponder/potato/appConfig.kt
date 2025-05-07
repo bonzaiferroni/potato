@@ -7,13 +7,10 @@ import compose.icons.tablericons.File
 import compose.icons.tablericons.Heart
 import compose.icons.tablericons.Home
 import compose.icons.tablericons.List
-import compose.icons.tablericons.Rocket
-import compose.icons.tablericons.YinYang
 import kotlinx.collections.immutable.persistentListOf
 import ponder.potato.ui.DreamScreen
 import ponder.potato.ui.EntityListScreen
-import ponder.potato.ui.ExampleListScreen
-import ponder.potato.ui.ExampleProfileScreen
+import ponder.potato.ui.EntityListView
 import ponder.potato.ui.HelloScreen
 import ponder.potato.ui.StartScreen
 import pondui.ui.core.PondConfig
@@ -38,7 +35,8 @@ val appConfig = PondConfig(
         PortalDoor(TablerIcons.Home, StartRoute),
         PortalDoor(TablerIcons.Bed, DreamRoute),
         PortalDoor(TablerIcons.List, EntityListRoute),
-        PortalAction(TablerIcons.File, "Save") { GameService().save() }
+        PortalAction(TablerIcons.File, "Save") { GameService().save() },
+        PortalAction(TablerIcons.File, "Reset") { GameService().reset() },
 //        PortalDoor(TablerIcons.YinYang, HelloRoute),
 //        PortalDoor(TablerIcons.Rocket, ExampleListRoute),
     ),

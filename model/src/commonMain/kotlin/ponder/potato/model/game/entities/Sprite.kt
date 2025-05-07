@@ -13,7 +13,8 @@ class Sprite(
     override val components = listOf(
         Meander(this),
         Spirit(this),
-        Dreamer(this)
+        Dreamer(this),
+        Namer(this),
     )
 }
 
@@ -25,7 +26,8 @@ data class SpriteState(
     override val position: MutablePosition = MutablePosition(),
     override var destination: MutablePosition = MutablePosition(),
     override var oppositionId: Long? = null,
-) : SpiritState, ProgressState, MoverState, OpposerState, DreamerState {
+    override var name: String? = null,
+) : SpiritState, ProgressState, MoverState, OpposerState, DreamerState, NameState {
     override val maxSpirit get() = factorValue(100, level, 1.2).toInt()
     override val power get() = factorValue(5, level, 1.2).toInt()
     override val aetherReward get() = factorValue(20, level, 1.2)

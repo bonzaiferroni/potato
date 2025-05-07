@@ -1,5 +1,6 @@
 package ponder.potato.ui
 
+import ponder.potato.model.game.components.NameState
 import ponder.potato.model.game.components.SpiritState
 import ponder.potato.model.game.entities.Entity
 import ponder.potato.model.game.zones.Game
@@ -29,6 +30,7 @@ data class EntityInfo(
     val zoneName: String,
     val spirit: Int?,
     val maxSpirit: Int?,
+    val name: String?,
 )
 
 fun Entity.toEntityInfo(game: Game) = EntityInfo(
@@ -40,4 +42,5 @@ fun Entity.toEntityInfo(game: Game) = EntityInfo(
     zoneName = game.getZone(state.position.zoneId).name,
     spirit = (state as? SpiritState)?.spirit,
     maxSpirit = (state as? SpiritState)?.maxSpirit,
+    name = (state as? NameState)?.name
 )

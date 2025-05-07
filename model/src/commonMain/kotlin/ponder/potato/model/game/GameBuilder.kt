@@ -6,17 +6,17 @@ import ponder.potato.model.game.zones.Cave
 import ponder.potato.model.game.zones.Dream
 import ponder.potato.model.game.zones.DreamState
 import ponder.potato.model.game.zones.GameEngine
-import ponder.potato.model.game.zones.GameMap
 import ponder.potato.model.game.zones.GameState
+import ponder.potato.model.game.zones.NamingWay
 import ponder.potato.model.game.zones.Village
 
 class GameBuilder {
 }
 
-fun generateGame(data: GameData): GameEngine {
+fun generateGame(data: GameData, namingWay: NamingWay): GameEngine {
     val cave = Cave()
     val dream = Dream(data.dream)
-    val game = GameEngine(data.game, data.resources, data.entityStates)
+    val game = GameEngine(data.game, data.resources, namingWay, data.entityStates)
     val village = Village(cave)
     // val cave = Cave(dream)
     game.add(dream)

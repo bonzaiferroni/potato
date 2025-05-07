@@ -12,6 +12,8 @@ interface Game {
     val zones: List<Zone>
     val entities: Map<Long, Entity>
     val resources: Resources
+    val namingWay: NamingWay
+
     val potato get() = entities.read<Potato>()?.state
 
     fun toGameData() = GameData(

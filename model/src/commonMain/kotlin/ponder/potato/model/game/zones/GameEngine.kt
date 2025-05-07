@@ -14,9 +14,10 @@ import ponder.potato.model.game.entities.StateEntity
 import ponder.potato.model.game.oppose
 
 class GameEngine(
-    override var state: GameState,
-    override var resources: GameResources,
-    val entityStates: Map<Long, EntityState>?
+    override var state: GameState = GameState(),
+    override var resources: GameResources = GameResources(),
+    override val namingWay: NamingWay = NamingWay(),
+    val entityStates: Map<Long, EntityState>? = null
 ) : Game {
 
     override val zones = mutableListOf<GameZone>()
@@ -26,8 +27,7 @@ class GameEngine(
     var zoneIdSource = 1
 
     val graveyard = mutableListOf<StateEntity<*>>()
-    val ghostIds = mutableListOf<Long>()
-    val manifesting = mutableListOf<StateEntity<*>>()
+    val updating = mutableListOf<StateEntity<*>>()
 
     fun add(zone: GameZone) {
         zones.add(zone)
@@ -41,7 +41,6 @@ class GameEngine(
             val entity = state.toEntity()
             if (entity.position.zoneId != zone.id) continue
             spawn(zone, entity, entity.position.x, entity.position.y, id)
-            entityIdSource = maxOf(entityIdSource, id + 1)
         }
     }
 
@@ -62,13 +61,14 @@ class GameEngine(
         entity: StateEntity<*>,
         x: Float = Float.random(-BOUNDARY_X, BOUNDARY_X),
         y: Float = Float.random(-BOUNDARY_Y, BOUNDARY_Y),
-        id: Long = entityIdSource++,
+        id: Long = entityIdSource,
     ) {
-        manifesting.add(entity)
-        entity.init(id)
+        entities[id] = entity
         entity.enter(zone)
         entity.state.position.x = x
         entity.state.position.y = y
+        entity.init(id)
+        entityIdSource = maxOf(id + 1, entityIdSource)
     }
 
     fun update(delta: Double) {
@@ -78,27 +78,21 @@ class GameEngine(
         for (zone in zones) {
             zone.update(delta)
         }
-        for (entity in manifesting) {
-            entities[entity.id] = entity
-        }
-        manifesting.clear()
-        for (entity in entities.values) {
+        updating.clear()
+        updating.addAll(entities.values)
+        for (entity in updating) {
             val opposer = entity.castIfState<OpposerState>() ?: continue
             val target = opposer.state.oppositionId?.let { entities[it]?.castIfState<SpiritState>() } ?: continue
             opposer.oppose(target)
         }
-        for (entity in entities.values) {
+        for (entity in updating) {
             entity.update(delta)
         }
-        for (entity in entities.values) {
+        for (entity in updating) {
             if (entity.state.isAlive) continue
-            ghostIds.add(entity.id)
+            entities.remove(entity.id)
             entity.showEffect { RaiseGhost() }
         }
-        for (id in ghostIds) {
-            entities.remove(id)
-        }
-        ghostIds.clear()
     }
 
 }

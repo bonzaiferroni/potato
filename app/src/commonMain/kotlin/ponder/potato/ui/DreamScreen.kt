@@ -18,30 +18,23 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kabinet.utils.toMetricString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringArrayResource
-import org.jetbrains.compose.resources.stringResource
 import ponder.potato.LaunchedGameUpdate
-import ponder.potato.LocalGame
 import ponder.potato.ResourceColor
 import ponder.potato.model.game.zones.BARD_COST
 import ponder.potato.model.game.zones.Cave
 import pondui.ui.controls.*
 import pondui.ui.nav.BottomBarSpacer
-import pondui.ui.nav.Scaffold
 import pondui.ui.nav.TopBarSpacer
 import pondui.ui.theme.Pond
 import pondui.ui.theme.ProvideBookColors
 import potato.app.generated.resources.Res
-import potato.app.generated.resources.bard_card_full
-import potato.app.generated.resources.bardfox_card_alt
 import potato.app.generated.resources.bardfox_card_full
 import potato.app.generated.resources.dream_card_full
 import potato.app.generated.resources.dream_description
 import potato.app.generated.resources.imp_card_full
-import potato.app.generated.resources.imp_card_tiny
 import potato.app.generated.resources.potato_card_full
 import potato.app.generated.resources.shroom_card_full
 import potato.app.generated.resources.sprite_card_full
-import potato.app.generated.resources.sprite_card_tiny
 
 @Composable
 fun DreamScreen(
@@ -175,8 +168,8 @@ fun DreamScreen(
             }
             BottomBarSpacer()
         }
-        Tab("Entities") {
-            EntityListModel(viewModel.caveId)
+        Tab("Entities", scrollable = false) {
+            EntityListView(viewModel.caveId)
         }
     }
 }

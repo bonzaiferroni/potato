@@ -51,7 +51,7 @@ data class DreamState(
     var count: Int = 0,
     var progress: Double = 0.0,
 ) {
-    val power get() = factorValue(30, level, 1.2)
-    val resolution get() = factorValue(100, level, 1.4)
+    val power get() = 25.0// factorValue(30, level, 1.2)
+    val resolution get() = 100.0 // factorValue(100, level, 1.4)
     val levelCost get() = factorValue(1200, level, 1.2)
 }

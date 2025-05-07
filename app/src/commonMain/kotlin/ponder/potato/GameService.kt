@@ -3,9 +3,9 @@ package ponder.potato
 import androidx.compose.ui.graphics.Color
 import com.russhwolf.settings.get
 import com.russhwolf.settings.set
-import io.ktor.http.ContentDisposition.Companion.File
-import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.decodeFromString
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -20,8 +20,10 @@ import ponder.potato.model.game.entities.SpriteState
 import ponder.potato.model.game.generateGame
 import ponder.potato.model.game.zones.Game
 import ponder.potato.model.game.zones.GameEngine
+import ponder.potato.model.game.zones.NamingWay
 import pondui.utils.darken
 import pondui.utils.lighten
+import potato.app.generated.resources.Res
 
 class GameService() {
     val game: Game get() = engine
@@ -34,9 +36,20 @@ class GameService() {
         appSettings["game_data"] = json.encodeToString(game.toGameData())
     }
 
+    suspend fun init() {
+        initEngine()
+    }
+
+    fun reset() {
+        CoroutineScope(Dispatchers.Default).launch {
+            setEngine(GameData())
+        }
+    }
+
     companion object {
-        private val engine: GameEngine
-        init {
+        private var engine: GameEngine = GameEngine()
+
+        private suspend fun initEngine() {
             val gameData: GameData = try {
                 val saved = appSettings.get<String>("game_data")
                 if (saved == null) GameData()
@@ -44,7 +57,14 @@ class GameService() {
             } catch (e: Exception) {
                 GameData()
             }
-            engine = generateGame(gameData)
+            setEngine(gameData)
+        }
+
+        private suspend fun setEngine(gameData: GameData) {
+            val bytes = Res.readBytes("files/sprite_names.txt")
+            val spriteNames = bytes.decodeToString(0, 0 + bytes.size).split('\n')
+            val namingWay = NamingWay(spriteNames)
+            engine = generateGame(gameData, namingWay)
         }
     }
 }
