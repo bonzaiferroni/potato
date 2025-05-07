@@ -38,6 +38,7 @@ import io.ktor.client.plugins.observer.ResponseObserver
 import kabinet.utils.toMetricString
 import ponder.potato.LaunchedGameUpdate
 import ponder.potato.LocalGame
+import ponder.potato.ResourceColor
 import ponder.potato.model.game.*
 import ponder.potato.model.game.entities.Imp
 import ponder.potato.model.game.entities.Sprite
@@ -45,6 +46,7 @@ import pondui.ui.controls.Icon
 import pondui.ui.controls.Text
 import pondui.ui.theme.Pond
 import pondui.utils.darken
+import pondui.utils.lighten
 import potato.app.generated.resources.Res
 import potato.app.generated.resources.fairy_40
 import potato.app.generated.resources.fairy_52
@@ -192,8 +194,8 @@ fun getImage(type: String) = when (type) {
 }
 
 fun getText(effect: Effect) = when {
-    effect is Despirit -> effect.spirit.toString() to Color.Magenta.darken(-.5f)
-    effect is AetherReward -> effect.amount.toMetricString() to Color.Yellow.darken(-.5f)
+    effect is Despirit -> effect.spirit.toString() to Color.Red.lighten(.25f)
+    effect is AetherReward -> effect.amount.toMetricString() to ResourceColor.aetherLight
     else -> null
 }
 

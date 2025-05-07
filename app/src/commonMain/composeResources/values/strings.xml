@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My awesome app</string>
+    <string-array name="dream_description">
+        <item>You turn around and find yourself in a very strange place. It reminds you of the moment between a dream and the real world, where you can be aware of the events of either place. Nothing here has a definite shape, as if it can't quite commit on what shape to be.</item>
+        <item>Parts of the dream flash around you, sights and sounds and feelings, each fading in, each fading out. And you are aware of time flowing more coherently, somewhere nearby.</item>
+        <item>You can't remember anything before this place. You sift through your thoughts, holding each one for as long as you want to, like a stack of old game cards. Your thoughts begin to shape the dream.</item>
+    </string-array>
+</resources>

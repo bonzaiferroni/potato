@@ -17,7 +17,9 @@ import pondui.ui.controls.Card
 import pondui.ui.controls.H5
 import pondui.ui.controls.ProgressBar
 import pondui.ui.controls.Text
+import pondui.ui.nav.BottomBarSpacer
 import pondui.ui.nav.Scaffold
+import pondui.ui.nav.TopBarSpacer
 import pondui.ui.theme.Pond
 import pondui.utils.format
 
@@ -29,37 +31,43 @@ fun EntityListScreen(
 
     LaunchedGameUpdate(viewModel::update)
 
-    Scaffold {
-        LazyColumn(
-            verticalArrangement = Pond.ruler.columnTight
-        ) {
-            items(state.entities) { entity ->
-                Card(
+    LazyColumn(
+        verticalArrangement = Pond.ruler.columnTight
+    ) {
+        item {
+            TopBarSpacer()
+        }
+
+        items(state.entities) { entity ->
+            Card(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                FlowRow(
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    FlowRow(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        // Text(entity.name)
-                        Column {
-                            H5("${entity.type} ${entity.id}")
-                            Row {
-                                LabelValue("x", entity.x, modifier = Modifier.width(50.dp))
-                                LabelValue("y", entity.y)
-                            }
-                            LabelValue("zone", entity.zoneName)
+                    // Text(entity.name)
+                    Column {
+                        H5("${entity.type} ${entity.id}")
+                        Row {
+                            LabelValue("x", entity.x, modifier = Modifier.width(50.dp))
+                            LabelValue("y", entity.y)
                         }
-                        val spirit = entity.spirit;
-                        val maxSpirit = entity.maxSpirit
-                        if (spirit != null && maxSpirit != null) {
-                            ProgressBar(spirit / maxSpirit.toFloat()) {
-                                Text("Spirit: $spirit / $maxSpirit")
-                            }
+                        LabelValue("zone", entity.zoneName)
+                    }
+                    val spirit = entity.spirit;
+                    val maxSpirit = entity.maxSpirit
+                    if (spirit != null && maxSpirit != null) {
+                        ProgressBar(spirit / maxSpirit.toFloat()) {
+                            Text("Spirit: $spirit / $maxSpirit")
                         }
                     }
                 }
             }
+        }
+
+        item {
+            BottomBarSpacer()
         }
     }
 }

@@ -2,26 +2,11 @@ package ponder.potato.ui
 
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,20 +16,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kabinet.utils.toMetricString
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringArrayResource
+import org.jetbrains.compose.resources.stringResource
 import ponder.potato.LaunchedGameUpdate
 import ponder.potato.LocalGame
+import ponder.potato.ResourceColor
 import ponder.potato.model.game.zones.BARD_COST
 import ponder.potato.model.game.zones.Cave
-import pondui.ui.controls.Divider
-import pondui.ui.controls.ProgressBar
-import pondui.ui.controls.Tab
-import pondui.ui.controls.Tabs
-import pondui.ui.controls.Text
-import pondui.ui.controls.actionable
+import pondui.ui.controls.*
 import pondui.ui.nav.BottomBarSpacer
 import pondui.ui.nav.Scaffold
 import pondui.ui.nav.TopBarSpacer
 import pondui.ui.theme.Pond
+import pondui.ui.theme.ProvideBookColors
+import potato.app.generated.resources.Res
+import potato.app.generated.resources.bard_card_full
+import potato.app.generated.resources.bardfox_card_alt
+import potato.app.generated.resources.bardfox_card_full
+import potato.app.generated.resources.dream_card_full
+import potato.app.generated.resources.dream_description
+import potato.app.generated.resources.imp_card_full
+import potato.app.generated.resources.imp_card_tiny
+import potato.app.generated.resources.potato_card_full
+import potato.app.generated.resources.shroom_card_full
+import potato.app.generated.resources.sprite_card_full
+import potato.app.generated.resources.sprite_card_tiny
 
 @Composable
 fun DreamScreen(
@@ -62,7 +59,7 @@ fun DreamScreen(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text("Dreaming...")
-        ProgressBar(state.progressRatio)
+        ProgressBar(state.progressRatio, color = ResourceColor.aether)
     }
     ZoneView(Cave::class, false)
     FlowRow(
@@ -70,7 +67,7 @@ fun DreamScreen(
         itemVerticalAlignment = Alignment.CenterVertically
     ) {
         Text("Dream Level: ${state.level}", modifier = Modifier.weight(1f))
-        ProgressBar(state.aetherRatio, modifier = Modifier.weight(1f)) {
+        ProgressBar(state.aetherRatio, color = ResourceColor.aether, modifier = Modifier.weight(1f)) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
@@ -81,15 +78,47 @@ fun DreamScreen(
         }
     }
     Tabs {
-        Tab("Zone") {
+        Tab("Area") {
+            Card(
+                innerPadding = 0.dp,
+            ) {
+                Row {
+                    Image(
+                        painter = painterResource(Res.drawable.dream_card_full),
+                        contentDescription = "Image of purchase",
+                        modifier = Modifier.width(200.dp)
+                    )
+                    ProvideBookColors {
+                        Column(
+                            verticalArrangement = Pond.ruler.columnTight,
+                            modifier = Modifier.fillMaxWidth()
+                                .background(Pond.localColors.surface)
+                                .padding(Pond.ruler.innerPadding)
+                        ) {
+                            H4("The Dream", color = Pond.colors.tertiary)
+                            for (text in stringArrayResource(Res.array.dream_description)) {
+                                Text(text)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Tab("Shape Dream") {
             PurchaseBar(
                 label = "Sprite",
+                resource = Res.drawable.sprite_card_full,
                 cost = state.spriteCost,
                 ratio = if (state.spriteCount < state.maxSpriteCount) {
                     state.aether / state.spriteCost
                 } else null,
+                currentCount = state.spriteCount,
+                maxCount = state.maxSpriteCount,
+                resourceName = "Aether",
+                resourceColor = ResourceColor.aether,
                 purchase = viewModel::dreamSprite,
             ) {
+
                 Text("Sprites provide extra Aether at the end of each dream.")
                 if (state.spriteCount > 0) {
                     Text("This dream has ${state.spriteCount} out of ${state.maxSpriteCount} possible sprites that provide ${state.spriteAether.toMetricString()} of The Aether at the end of each dream.")
@@ -97,10 +126,13 @@ fun DreamScreen(
             }
             PurchaseBar(
                 label = "Shroom",
+                resource = Res.drawable.shroom_card_full,
                 cost = state.shroomCost,
                 ratio = if (state.shroomCount < state.maxShroomCount) {
                     state.aether / state.shroomCost
                 } else null,
+                currentCount = state.shroomCount,
+                maxCount = state.maxShroomCount,
                 purchase = viewModel::dreamShroom
             ) {
                 Text("Shrooms let you hold more Aether.")
@@ -110,9 +142,11 @@ fun DreamScreen(
             }
             PurchaseBar(
                 label = "Dream resolution",
+                resource = Res.drawable.potato_card_full,
                 cost = state.levelCost,
                 ratio = state.aether / state.levelCost,
                 buttonLabel = "Resolve",
+                currentCount = state.level,
                 purchase = viewModel::resolveDream
             ) {
                 Text("Find an understanding of this dream, to open the way to the next.")
@@ -120,6 +154,7 @@ fun DreamScreen(
             val canPurchaseBard = state.level >= 2
             PurchaseBar(
                 label = "Bard",
+                resource = Res.drawable.bardfox_card_full,
                 cost = BARD_COST,
                 ratio = if (canPurchaseBard) state.aether / BARD_COST else null,
                 purchase = viewModel::dreamBard
@@ -128,6 +163,15 @@ fun DreamScreen(
                 if (!canPurchaseBard) {
                     Text("Requires a deeper level of the dream.")
                 }
+            }
+            PurchaseBar(
+                label = "Imp",
+                resource = Res.drawable.imp_card_full,
+            ) {
+//                Text("Dream of a bard.")
+//                if (!canPurchaseBard) {
+//                    Text("Requires a deeper level of the dream.")
+//                }
             }
             BottomBarSpacer()
         }

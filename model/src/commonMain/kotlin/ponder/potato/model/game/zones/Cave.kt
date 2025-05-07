@@ -16,7 +16,7 @@ class Cave : GameZone() {
     val canDreamSprite get() = resources.aether >= spriteCost && spriteCount < maxSpriteCount
     val shroomCount get() = game.entities.values.count() { it is Shroom && it.position.zoneId == id }
     val maxShroomCount get() = game.potato?.level?.let { listOf(0, 5, 10, 20)[it] } ?: 0
-    val shroomCost get() = factorValue(300, shroomCount + 1, 1.4)
+    val shroomCost get() = factorValue(300, shroomCount + 1, 1.2)
     val canDreamShroom get() = resources.aether >= shroomCost && shroomCount < maxShroomCount
     val bardCount get() = game.entities.values.count() { it is Bard }
     val canDreamBard get() = resources.aether >= BARD_COST && bardCount == 0

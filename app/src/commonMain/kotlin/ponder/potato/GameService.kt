@@ -1,5 +1,6 @@
 package ponder.potato
 
+import androidx.compose.ui.graphics.Color
 import com.russhwolf.settings.get
 import com.russhwolf.settings.set
 import io.ktor.http.ContentDisposition.Companion.File
@@ -19,6 +20,8 @@ import ponder.potato.model.game.entities.SpriteState
 import ponder.potato.model.game.generateGame
 import ponder.potato.model.game.zones.Game
 import ponder.potato.model.game.zones.GameEngine
+import pondui.utils.darken
+import pondui.utils.lighten
 
 class GameService() {
     val game: Game get() = engine
@@ -61,4 +64,10 @@ val json = Json {
     serializersModule = gameSerialModule
     classDiscriminator = "type" // or "kind", or whatever suits yer flag
     ignoreUnknownKeys = true
+}
+
+object ResourceColor {
+    val aether = Color(0xffb13c91)
+    val aetherLight = aether.lighten(.5f)
+    val aetherDark = aether.darken(.25f)
 }

@@ -4,20 +4,14 @@ import kabinet.utils.random
 import kotlinx.serialization.Serializable
 import ponder.potato.model.game.BOUNDARY_X
 import ponder.potato.model.game.BOUNDARY_Y
-import ponder.potato.model.game.Despirit
-import ponder.potato.model.game.EntityMap
 import ponder.potato.model.game.GameResources
-import ponder.potato.model.game.OpposeEffect
 import ponder.potato.model.game.RaiseGhost
-import ponder.potato.model.game.Resources
 import ponder.potato.model.game.components.OpposerState
 import ponder.potato.model.game.components.SpiritState
 import ponder.potato.model.game.entities.Entity
 import ponder.potato.model.game.entities.EntityState
-import ponder.potato.model.game.entities.Potato
 import ponder.potato.model.game.entities.StateEntity
 import ponder.potato.model.game.oppose
-import ponder.potato.model.game.read
 
 class GameEngine(
     override var state: GameState,
@@ -26,17 +20,7 @@ class GameEngine(
 ) : Game {
 
     override val zones = mutableListOf<GameZone>()
-    override val entities: MutableMap<Long, StateEntity<*>> = entityStates?.let {
-        val map = mutableMapOf<Long, StateEntity<*>>()
-        entityIdSource = 1L
-        for ((id, state) in entityStates) {
-            val entity = state.toEntity()
-            entity.init(id)
-            map[id] = entity
-            entityIdSource = maxOf(entityIdSource, id + 1)
-        }
-        map
-    } ?: mutableMapOf()
+    override val entities: MutableMap<Long, StateEntity<*>> = mutableMapOf()
 
     var entityIdSource = 1L
     var zoneIdSource = 1
@@ -48,6 +32,17 @@ class GameEngine(
     fun add(zone: GameZone) {
         zones.add(zone)
         zone.init(zoneIdSource++, this)
+        addZoneStates(zone)
+    }
+
+    private fun addZoneStates(zone: GameZone) {
+        if (entityStates == null) return
+        for ((id, state) in entityStates) {
+            val entity = state.toEntity()
+            if (entity.position.zoneId != zone.id) continue
+            spawn(zone, entity, entity.position.x, entity.position.y, id)
+            entityIdSource = maxOf(entityIdSource, id + 1)
+        }
     }
 
     inline fun <reified S, reified E : StateEntity<S>> spawn(
@@ -67,9 +62,10 @@ class GameEngine(
         entity: StateEntity<*>,
         x: Float = Float.random(-BOUNDARY_X, BOUNDARY_X),
         y: Float = Float.random(-BOUNDARY_Y, BOUNDARY_Y),
+        id: Long = entityIdSource++,
     ) {
         manifesting.add(entity)
-        entity.init(entityIdSource++)
+        entity.init(id)
         entity.enter(zone)
         entity.state.position.x = x
         entity.state.position.y = y
