@@ -5,17 +5,25 @@ import ponder.potato.model.game.entities.Entity
 sealed class Effect {
 }
 
-data class OpposeEffect(
+data class Opposition(
     val target: Entity,
     val power: Int,
-) : Effect()
+): Effect()
 
 data class Despirit(
     val spirit: Int
-) : Effect()
+): Effect()
 
 data class AetherReward(
     val amount: Double
-) : Effect()
+): Effect()
 
-class RaiseGhost : Effect()
+class RaiseGhost: Effect()
+
+data class LevelUp(
+    val level: Int
+): Effect()
+
+data class ExperienceUp(
+    val experience: Double
+): Effect()

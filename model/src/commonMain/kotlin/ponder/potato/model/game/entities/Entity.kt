@@ -61,6 +61,7 @@ abstract class StateEntity<out T: EntityState>: Entity {
 interface EntityState {
     val isAlive: Boolean
     val position: MutablePosition
+    var status: String?
     val speed get() = 1f
 
     fun toEntity() = when(this) {

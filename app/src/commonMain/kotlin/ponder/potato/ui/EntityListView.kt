@@ -61,6 +61,9 @@ fun EntityListView(
                             LabelValue("y", entity.y)
                         }
                         LabelValue("zone", entity.zoneName)
+                        entity.status?.let {
+                            LabelValue("status", it)
+                        }
                     }
                     val spirit = entity.spirit;
                     val maxSpirit = entity.maxSpirit

@@ -31,6 +31,7 @@ data class EntityInfo(
     val spirit: Int?,
     val maxSpirit: Int?,
     val name: String?,
+    val status: String?
 )
 
 fun Entity.toEntityInfo(game: Game) = EntityInfo(
@@ -42,5 +43,6 @@ fun Entity.toEntityInfo(game: Game) = EntityInfo(
     zoneName = game.getZone(state.position.zoneId).name,
     spirit = (state as? SpiritState)?.spirit,
     maxSpirit = (state as? SpiritState)?.maxSpirit,
-    name = (state as? NameState)?.name
+    name = (state as? NameState)?.name,
+    status = state.status
 )

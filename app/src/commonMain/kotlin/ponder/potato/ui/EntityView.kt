@@ -196,6 +196,8 @@ fun getImage(type: String) = when (type) {
 fun getText(effect: Effect) = when {
     effect is Despirit -> effect.spirit.toString() to Color.Red.lighten(.25f)
     effect is AetherReward -> effect.amount.toMetricString() to ResourceColor.aetherLight
+    effect is LevelUp -> effect.level.toString() to Color.Blue.lighten(.25f)
+    effect is ExperienceUp -> effect.experience.toMetricString() to Color.Yellow.lighten(.25f)
     else -> null
 }
 

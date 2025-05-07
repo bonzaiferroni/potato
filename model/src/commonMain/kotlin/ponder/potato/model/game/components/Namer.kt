@@ -18,5 +18,6 @@ class Namer(
             name = game.namingWay.getName(entity)
         } while (count++ < 10 && game.entities.values.any { (it.state as? NameState)?.name == name })
         entity.state.name = name
+        entity.state.status = "A spirit takes a shape and a name: $name"
     }
 }

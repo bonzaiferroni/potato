@@ -17,5 +17,6 @@ class Bard(
 @SerialName("bard")
 data class BardState(
     override val isAlive: Boolean = true,
-    override val position: MutablePosition = MutablePosition()
+    override val position: MutablePosition = MutablePosition(),
+    override var status: String? = null,
 ): EntityState

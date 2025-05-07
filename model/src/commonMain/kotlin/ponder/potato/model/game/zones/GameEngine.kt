@@ -4,9 +4,12 @@ import kabinet.utils.random
 import kotlinx.serialization.Serializable
 import ponder.potato.model.game.BOUNDARY_X
 import ponder.potato.model.game.BOUNDARY_Y
+import ponder.potato.model.game.ExperienceUp
 import ponder.potato.model.game.GameResources
 import ponder.potato.model.game.RaiseGhost
+import ponder.potato.model.game.components.LevelState
 import ponder.potato.model.game.components.OpposerState
+import ponder.potato.model.game.components.ProgressState
 import ponder.potato.model.game.components.SpiritState
 import ponder.potato.model.game.entities.Entity
 import ponder.potato.model.game.entities.EntityState
@@ -28,6 +31,7 @@ class GameEngine(
 
     val graveyard = mutableListOf<StateEntity<*>>()
     val updating = mutableListOf<StateEntity<*>>()
+    val opposers = mutableListOf<StateEntity<OpposerState>>()
 
     fun add(zone: GameZone) {
         zones.add(zone)
@@ -78,18 +82,29 @@ class GameEngine(
         for (zone in zones) {
             zone.update(delta)
         }
+        opposers.clear()
         updating.clear()
         updating.addAll(entities.values)
         for (entity in updating) {
             val opposer = entity.castIfState<OpposerState>() ?: continue
             val target = opposer.state.oppositionId?.let { entities[it]?.castIfState<SpiritState>() } ?: continue
             opposer.oppose(target)
+            opposers.add(opposer)
         }
         for (entity in updating) {
             entity.update(delta)
         }
         for (entity in updating) {
             if (entity.state.isAlive) continue
+            val maxSpirit = (entity.state as? SpiritState)?.maxSpirit ?: 10
+            val level = (entity.state as? LevelState)?.level ?: 1
+            val opposerCount = opposers.count { it.state.oppositionId == entity.id }
+            val experience = maxSpirit * level / opposerCount.toDouble()
+            for (opposer in opposers) {
+                val progressor = opposer.castIfState<ProgressState>() ?: continue
+                progressor.state.addExperience(experience)
+                progressor.showEffect { ExperienceUp(experience) }
+            }
             entities.remove(entity.id)
             entity.showEffect { RaiseGhost() }
         }
