@@ -16,11 +16,9 @@ class Hunter(
     private var zonedAt: Instant = Instant.DISTANT_PAST
 
     override fun update(delta: Double) {
-        super.update(delta)
+        if (entity.hasOtherIntent(Intent.Oppose)) return
 
-        val target = state.oppositionId?.let { game.entities.read(it) }
-            ?: game.entities.findNearest<StateEntity<SpiritState>>(entity.zone, entity.position, findTarget)
-                ?.also { state.oppositionId = it.id }
+        val target = entity.readOrFindTarget(isTarget = findTarget)
 
         if (target == null) {
             val portal = entity.zone.portals.firstOrNull { it.zone != previousZone }
@@ -38,6 +36,7 @@ class Hunter(
             return
         }
 
+        state.intent = Intent.Oppose
         val squaredDistance = entity.position.squaredDistanceTo(target.position)
         if (squaredDistance > 1) {
             entity.moveToward(target.position, delta)

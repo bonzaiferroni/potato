@@ -19,12 +19,13 @@ class Imp(
 @Serializable
 @SerialName("imp")
 data class ImpState(
-    override var oppositionId: Long? = null,
+    override var targetId: Long? = null,
     override var spirit: Int = 0,
     override val level: Int = 1,
     override val position: MutablePosition = MutablePosition(),
     override val speed: Float = 1.2f,
-    override var status: String? = null,
+    override var log: String? = null,
+    override var intent: Intent? = null,
 ) : SpiritState, LevelState, OpposerState {
     override val maxSpirit get() = factorValue(100, level, 1.2).toInt()
     override val power get() = factorValue(10, level, 1.2).toInt()

@@ -20,7 +20,8 @@ class Potato(
 data class PotatoState(
     override var level: Int = 1,
     override val position: MutablePosition = MutablePosition(),
-    override var status: String? = null,
+    override var log: String? = null,
+    override var intent: Intent? = null,
 ) : EntityState, LevelState, DreamerState, AetherStorageState {
     override val isAlive get() = true
     override val aetherReward get() = factorValue(30, level, 1.2)

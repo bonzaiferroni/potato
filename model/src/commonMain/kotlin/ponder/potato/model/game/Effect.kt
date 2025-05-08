@@ -14,6 +14,10 @@ data class Despirit(
     val spirit: Int
 ): Effect()
 
+data class Inspirit(
+    val spirit: Int
+): Effect()
+
 data class AetherReward(
     val amount: Double
 ): Effect()

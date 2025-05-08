@@ -44,5 +44,5 @@ fun Entity.toEntityInfo(game: Game) = EntityInfo(
     spirit = (state as? SpiritState)?.spirit,
     maxSpirit = (state as? SpiritState)?.maxSpirit,
     name = (state as? NameState)?.name,
-    status = state.status
+    status = state.log
 )

@@ -18,5 +18,6 @@ class Bard(
 data class BardState(
     override val isAlive: Boolean = true,
     override val position: MutablePosition = MutablePosition(),
-    override var status: String? = null,
+    override var log: String? = null,
+    override var intent: Intent? = null,
 ): EntityState

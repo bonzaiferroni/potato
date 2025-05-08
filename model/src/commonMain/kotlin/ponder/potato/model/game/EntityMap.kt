@@ -13,16 +13,17 @@ inline fun <reified T> EntityMap.read() = this.values.firstOrNull() { it is T } 
 
 
 inline fun <reified T : Entity> EntityMap.findNearest(
-    zone: Zone,
-    position: Vector,
-    isTarget: (T) -> Boolean,
+    position: Position,
+    range: Float = Float.MAX_VALUE,
+    isTarget: (T) -> Boolean
 ): T? {
     var nearest: T? = null
     var nearestDistance = Float.MAX_VALUE
+    val rangeSquared = if (range == Float.MAX_VALUE) Float.MAX_VALUE else range * range
     for (entity in this.values) {
-        if (entity.zone != zone || entity !is T || !isTarget(entity)) continue
+        if (entity.position.zoneId != position.zoneId || entity !is T || !isTarget(entity)) continue
         val distance = position.squaredDistanceTo(entity.position)
-        if (distance > nearestDistance) continue
+        if (distance > nearestDistance && distance < rangeSquared) continue
         nearest = entity
         nearestDistance = distance
     }

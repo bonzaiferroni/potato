@@ -13,6 +13,7 @@ import ponder.potato.model.game.components.ProgressState
 import ponder.potato.model.game.components.SpiritState
 import ponder.potato.model.game.entities.Entity
 import ponder.potato.model.game.entities.EntityState
+import ponder.potato.model.game.entities.Intent
 import ponder.potato.model.game.entities.StateEntity
 import ponder.potato.model.game.oppose
 
@@ -48,16 +49,14 @@ class GameEngine(
         }
     }
 
-    inline fun <reified S, reified E : StateEntity<S>> spawn(
+    inline fun <reified S: EntityState, reified E : StateEntity<S>> spawn(
         zone: GameZone,
         x: Float = Float.random(-BOUNDARY_X, BOUNDARY_X),
         y: Float = Float.random(-BOUNDARY_Y, BOUNDARY_Y),
         create: () -> E,
     ) {
-        val ghost = graveyard.firstNotNullOfOrNull {
-            it as? E ?: return@firstNotNullOfOrNull null
-        } ?: create()
-        spawn(zone, ghost, x, y)
+        val entity = graveyard.firstNotNullOfOrNull { it as? E } ?: create()
+        spawn(zone, entity, x, y)
     }
 
     fun spawn(
@@ -86,8 +85,9 @@ class GameEngine(
         updating.clear()
         updating.addAll(entities.values)
         for (entity in updating) {
+            if (!entity.hasIntent(Intent.Oppose)) continue
             val opposer = entity.castIfState<OpposerState>() ?: continue
-            val target = opposer.state.oppositionId?.let { entities[it]?.castIfState<SpiritState>() } ?: continue
+            val target = opposer.state.targetId?.let { entities[it]?.castIfState<SpiritState>() } ?: continue
             opposer.oppose(target)
             opposers.add(opposer)
         }
@@ -98,15 +98,18 @@ class GameEngine(
             if (entity.state.isAlive) continue
             val maxSpirit = (entity.state as? SpiritState)?.maxSpirit ?: 10
             val level = (entity.state as? LevelState)?.level ?: 1
-            val opposerCount = opposers.count { it.state.oppositionId == entity.id }
+            val opposerCount = opposers.count { it.state.targetId == entity.id }
             val experience = maxSpirit * level / opposerCount.toDouble()
             for (opposer in opposers) {
+                if (opposer.state.targetId != entity.id) continue
                 val progressor = opposer.castIfState<ProgressState>() ?: continue
                 progressor.state.addExperience(experience)
                 progressor.showEffect { ExperienceUp(experience) }
             }
             entities.remove(entity.id)
             entity.showEffect { RaiseGhost() }
+            entity.recycle()
+            graveyard.add(entity)
         }
     }
 

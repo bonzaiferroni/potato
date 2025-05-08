@@ -61,9 +61,11 @@ class GameService() {
         }
 
         private suspend fun setEngine(gameData: GameData) {
-            val bytes = Res.readBytes("files/sprite_names.txt")
+            var bytes = Res.readBytes("files/sprite_names.txt")
             val spriteNames = bytes.decodeToString(0, 0 + bytes.size).split('\n')
-            val namingWay = NamingWay(spriteNames)
+            bytes = Res.readBytes("files/shroom_names.txt")
+            val shroomNames = bytes.decodeToString(0, 0 + bytes.size).split('\n')
+            val namingWay = NamingWay(spriteNames, shroomNames)
             engine = generateGame(gameData, namingWay)
         }
     }

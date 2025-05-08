@@ -23,4 +23,5 @@ abstract class StateComponent<T: EntityState>: Component {
     open fun init() { }
     open fun update(delta: Double) { }
     open fun enter(zone: GameZone) { }
+    open fun recycle() { }
 }
