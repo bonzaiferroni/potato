@@ -26,7 +26,6 @@ import kotlin.reflect.KClass
 @Composable
 fun <T: Zone> ZoneView(
     zoneClass: KClass<T>,
-    fullVisibility: Boolean = true,
     modifier: Modifier = Modifier,
     viewModel: ZoneViewModel<T> = viewModel { ZoneViewModel(zoneClass) }
 ) {
@@ -43,7 +42,7 @@ fun <T: Zone> ZoneView(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Pond.ruler.columnTight
     ) {
-        Text(if (fullVisibility) state.name else "?")
+        Text(if (state.fullVisibility) state.name else "?")
         Box(
             modifier = modifier.fillMaxWidth()
                 .aspectRatio(2f)
@@ -71,7 +70,7 @@ fun <T: Zone> ZoneView(
         ) {
             for (entityId in state.entityIds) {
                 key(entityId) {
-                    EntityView(entityId, fullVisibility, boxSize)
+                    EntityView(entityId, state.fullVisibility, boxSize)
                 }
             }
         }

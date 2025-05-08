@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 interface Resources {
     val map: Map<Resource, Double>
     val aether: Double
+
+    fun readQuantity(resource: Resource) = map[resource]
 }
 
 @Serializable

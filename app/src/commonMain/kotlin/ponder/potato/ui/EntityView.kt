@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -137,7 +138,7 @@ fun EntityView(
 
                 Text(
                     text = text,
-                    style = TextStyle(fontSize = Pond.typo.label.fontSize),
+                    style = TextStyle(fontWeight = FontWeight.Bold),
                     color = color,
                     modifier = Modifier.graphicsLayer {
                         translationY = -(effectTime.value * 13f + offset)
@@ -195,9 +196,10 @@ fun getImage(type: String) = when (type) {
 
 fun getText(effect: Effect) = when {
     effect is Despirit -> effect.spirit.toString() to Color.Red.lighten(.25f)
-    effect is AetherReward -> effect.amount.toMetricString() to ResourceColor.aetherLight
+    effect is AetherReward -> effect.amount.toMetricString() to ResourceColor.aether.lighten(.25f)
     effect is LevelUp -> effect.level.toString() to Color.Blue.lighten(.25f)
     effect is ExperienceUp -> effect.experience.toMetricString() to Color.Yellow.lighten(.25f)
+    effect is Inspirit -> effect.spirit.toString() to Color.Green.lighten(.25f)
     else -> null
 }
 

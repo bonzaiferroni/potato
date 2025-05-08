@@ -38,7 +38,7 @@ import potato.app.generated.resources.sprite_card_full
 
 @Composable
 fun DreamScreen(
-    viewModel: DreamScreenModel = viewModel { DreamScreenModel() }
+    viewModel: DreamModel = viewModel { DreamModel() }
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -46,30 +46,7 @@ fun DreamScreen(
 
     TopBarSpacer()
 
-    Column(
-        verticalArrangement = Pond.ruler.columnTight,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text("Dreaming...")
-        ProgressBar(state.progressRatio, color = ResourceColor.aether)
-    }
-    ZoneView(Cave::class, false)
-    FlowRow(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        itemVerticalAlignment = Alignment.CenterVertically
-    ) {
-        Text("Dream Level: ${state.level}", modifier = Modifier.weight(1f))
-        ProgressBar(state.aetherRatio, color = ResourceColor.aether, modifier = Modifier.weight(1f)) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Aether: ${state.aether.toMetricString()}")
-                Text(state.aetherMax.toMetricString())
-            }
-        }
-    }
+    ZoneView(Cave::class)
     Tabs {
         Tab("Area") {
             Card(
@@ -98,6 +75,25 @@ fun DreamScreen(
             }
         }
         Tab("Shape Dream") {
+            FlowRow(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                itemVerticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Dream Level: ${state.level}", modifier = Modifier.weight(1f))
+                ProgressBar(state.aetherRatio, color = ResourceColor.aether, modifier = Modifier.weight(1f)) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Aether: ${state.aether.toMetricString()}")
+                        Text(state.aetherMax.toMetricString())
+                    }
+                }
+                Row(modifier = Modifier.weight(1f)) {
+                    Text("Dreaming... ")
+                    ProgressBar(state.progressRatio, color = ResourceColor.aether)
+                }
+            }
             PurchaseBar(
                 label = "Sprite",
                 resource = Res.drawable.sprite_card_full,
@@ -142,7 +138,7 @@ fun DreamScreen(
                 currentCount = state.level,
                 purchase = viewModel::resolveDream
             ) {
-                Text("Find an understanding of this dream, to open the way to the next.")
+                Text("Find an understanding of the dream, to open the way to the next level.")
             }
             val canPurchaseBard = state.level >= 2
             PurchaseBar(

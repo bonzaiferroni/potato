@@ -14,7 +14,7 @@ interface Game {
     val resources: Resources
     val namingWay: NamingWay
 
-    val potato get() = entities.read<Potato>()?.state
+    val potato get() = entities.read<Potato>()
 
     fun toGameData() = GameData(
         dream = zones.firstNotNullOf { it as? Dream }.state,
@@ -24,4 +24,6 @@ interface Game {
     )
 
     fun getZone(zoneId: Int) = zones.first { it.id == zoneId }
+
+    val dreamLevel get() = potato?.state?.level ?: 1
 }

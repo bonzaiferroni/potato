@@ -13,6 +13,10 @@ class Rester(
 
     override fun update(delta: Double) {
         if (entity.hasOtherIntent(Intent.Rest)) return
+        if (entity.spiritFull) {
+            state.intent = null
+            return
+        }
 
         if (entity.isIdle) {
             val target = entity.findTarget(isTarget = findTarget)

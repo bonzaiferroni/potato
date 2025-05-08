@@ -17,3 +17,7 @@ class Spirit(
         state.spirit = state.maxSpirit
     }
 }
+
+val StateEntity<*>.spirit get() = (this.state as? SpiritState)?.spirit ?: 0
+val StateEntity<*>.maxSpirit get() = (this.state as? SpiritState)?.maxSpirit ?: 0
+val StateEntity<*>.spiritFull get() = spirit >= maxSpirit

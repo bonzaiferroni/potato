@@ -2,9 +2,10 @@ package ponder.potato.ui
 
 import ponder.potato.GameService
 import ponder.potato.model.game.EntityMap
-import ponder.potato.model.game.components.AetherStorageState
+import ponder.potato.model.game.Resource
+import ponder.potato.model.game.components.StorageState
 import ponder.potato.model.game.components.DreamerState
-import ponder.potato.model.game.components.readAetherMax
+import ponder.potato.model.game.components.readResourceMax
 import ponder.potato.model.game.entities.Potato
 import ponder.potato.model.game.entities.Shroom
 import ponder.potato.model.game.entities.Sprite
@@ -16,9 +17,9 @@ import ponder.potato.model.game.zones.GameState
 import ponder.potato.model.game.zones.readZone
 import pondui.ui.core.StateModel
 
-class DreamScreenModel(
+class DreamModel(
     private val service: GameService = GameService()
-) : StateModel<DreamScreenState>(DreamScreenState()) {
+) : StateModel<DreamState>(DreamState()) {
 
     private val game get() = service.game
     private val dream = game.readZone<Dream>()
@@ -32,7 +33,7 @@ class DreamScreenModel(
 
     fun refreshState(delta: Double = 1.0) {
         val resources = game.resources
-        val aetherMax = game.entities.readAetherMax()
+        val aetherMax = game.entities.readResourceMax(Resource.Aether)
         val dreamLevel = potato?.state?.level ?: 1
         setState {
             it.copy(
@@ -76,7 +77,7 @@ class DreamScreenModel(
     }
 }
 
-data class DreamScreenState(
+data class DreamState(
     val aether: Double = 0.0,
     val aetherMax: Double = 0.0,
     val level: Int = 0,
@@ -102,5 +103,5 @@ data class DreamScreenState(
     val levelProgress get() = minOf(1.0, aether / levelCost).toFloat()
 }
 
-fun EntityMap.readShroomStorage() = this.sumOf<AetherStorageState>({ it is Shroom }) { it.aetherStorage }
+fun EntityMap.readShroomStorage() = this.sumOf<StorageState>({ it is Shroom }) { it.storage }
 fun EntityMap.readSpriteAether(dreamLevel: Int) = this.sumOf<DreamerState>({ it is Sprite }) { it.getReward(dreamLevel) }

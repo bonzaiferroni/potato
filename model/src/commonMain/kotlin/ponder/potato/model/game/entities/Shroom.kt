@@ -3,8 +3,9 @@ package ponder.potato.model.game.entities
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ponder.potato.model.game.MutablePosition
-import ponder.potato.model.game.components.AetherStorage
-import ponder.potato.model.game.components.AetherStorageState
+import ponder.potato.model.game.Resource
+import ponder.potato.model.game.components.Storage
+import ponder.potato.model.game.components.StorageState
 import ponder.potato.model.game.components.LevelState
 import ponder.potato.model.game.components.NameState
 import ponder.potato.model.game.components.Namer
@@ -15,7 +16,7 @@ class Shroom(
     override val state: ShroomState = ShroomState()
 ) : StateEntity<ShroomState>() {
     override val components = listOf(
-        AetherStorage(this),
+        Storage(this),
         Namer(this),
     )
 }
@@ -29,7 +30,8 @@ data class ShroomState(
     override var visitorId: Long? = null,
     override var name: String? = null,
     override var intent: Intent? = null,
-) : EntityState, AetherStorageState, LevelState, VisitorState, NameState {
+) : EntityState, StorageState, LevelState, VisitorState, NameState {
     override val isAlive: Boolean get() = true
-    override val aetherStorage get() = factorValue(500, level, 1.2)
+    override val storage get() = factorValue(500, level, 1.2)
+    override fun isStorageType(resource: Resource) = resource == Resource.Aether
 }
