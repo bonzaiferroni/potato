@@ -1,8 +1,12 @@
 package ponder.potato.ui
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import ponder.potato.GameService
 import ponder.potato.model.game.Resource
 import ponder.potato.model.game.zones.GameState
+import ponder.potato.model.game.zones.ZoneAction
+import ponder.potato.model.game.zones.ZoneStatus
 import pondui.ui.core.StateModel
 
 class ZoneModel(
@@ -19,14 +23,16 @@ class ZoneModel(
 
     fun refreshState(delta: Double = 1.0) {
         val resource = game.resources.readQuantity(Resource.Aether)
+        setState { it.copy(
+
+        ) }
     }
 }
 
 data class ZoneState(
     val zoneId: Int = 0,
-    val resource: Double = 0.0,
-    val resourceMax: Double = 0.0,
-    val dreamLevel: Int = 0,
     val delta: Double = 1.0,
+    val actions: ImmutableList<ZoneAction> = persistentListOf(),
+    val statuses: ImmutableList<ZoneStatus> = persistentListOf()
 )
 

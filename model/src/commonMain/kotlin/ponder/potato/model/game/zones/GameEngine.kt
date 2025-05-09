@@ -131,3 +131,7 @@ inline fun <reified T : EntityState> StateEntity<*>.castIfState(): StateEntity<T
 inline fun <reified T : EntityState> Entity.castIfState(): StateEntity<T>? {
     return if (state is T) this as StateEntity<T> else null
 }
+
+inline fun <reified T: GameZone> List<GameZone>.readOrNull() = this.firstOrNull() { it is T } as T?
+inline fun <reified T: GameZone> List<GameZone>.read() = this.readOrNull<T>()
+    ?: error("No zone found: ${T::class.simpleName}")

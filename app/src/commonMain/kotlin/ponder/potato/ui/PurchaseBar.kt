@@ -1,52 +1,46 @@
 package ponder.potato.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import kabinet.utils.toMetricString
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
-import pondui.ui.controls.Button
+import ponder.potato.model.game.Resource
+import ponder.potato.model.game.zones.Actions
+import ponder.potato.model.game.zones.ZoneAction
 import pondui.ui.controls.Card
 import pondui.ui.controls.H4
-import pondui.ui.controls.Label
-import pondui.ui.controls.ProgressBar
 import pondui.ui.controls.ProgressBarButton
 import pondui.ui.controls.Text
-import pondui.ui.controls.actionable
 import pondui.ui.theme.Pond
+import potato.app.generated.resources.Res
+import potato.app.generated.resources.bardfox_card_full
+import potato.app.generated.resources.potato_card_full
+import potato.app.generated.resources.shroom_card_full
+import potato.app.generated.resources.sprite_card_full
 
 
 @Composable
 fun PurchaseBar(
     label: String,
     cost: Double? = null,
-    resourceName: String? = null,
-    resourceColor: Color = Pond.localColors.content,
+    resource: Resource? = null,
     ratio: Double? = null,
     currentCount: Int? = null,
     maxCount: Int? = null,
-    resource: DrawableResource? = null,
+    drawable: DrawableResource? = null,
     buttonLabel: String = "Dream",
     purchase: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
@@ -60,9 +54,9 @@ fun PurchaseBar(
             modifier = Modifier.fillMaxWidth()
                 .height(IntrinsicSize.Max),
         ) {
-            resource?.let {
+            drawable?.let {
                 Image(
-                    painter = painterResource(resource),
+                    painter = painterResource(drawable),
                     contentDescription = "Image of purchase",
                     modifier = Modifier.weight(1f)
                 )
@@ -92,13 +86,13 @@ fun PurchaseBar(
                             Text(currentCount.toString())
                         }
                     }
-                    if (cost != null && resourceName != null) {
+                    if (cost != null && resource != null) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.padding(horizontal = Pond.ruler.innerSpacing),
                         ) {
-                            Text(cost.toMetricString(), color = resourceColor)
-                            Text(" $resourceName", color = Pond.localColors.contentDim)
+                            Text(cost.toMetricString(), color = resource.toColor())
+                            Text(" ${resource.label}", color = Pond.localColors.contentDim)
                         }
                     }
                     val canPurchase = ratio?.let { it >= 1f } ?: false
@@ -117,4 +111,35 @@ fun PurchaseBar(
             }
         }
     }
+}
+
+@Composable
+fun PurchaseBar(
+    action: ZoneAction
+) = PurchaseBar(
+    label = action.action.label,
+    cost = action.cost,
+    resource = action.action.resource,
+    ratio = action.ratio,
+    currentCount = action.count,
+    maxCount = action.maxCount,
+    drawable = action.action.toResource(),
+    buttonLabel = action.action.verb,
+    purchase = action.block,
+) {
+    Text(action.action.description)
+    action.status?.let {
+        Text(it)
+    }
+}
+
+fun Resource.toColor() = when(this) {
+    Resource.Aether -> Color(0xffb13c91)
+}
+
+fun Actions.toResource() = when (this) {
+    Actions.DreamSprite -> Res.drawable.sprite_card_full
+    Actions.DreamShroom -> Res.drawable.shroom_card_full
+    Actions.ResolveDream -> Res.drawable.potato_card_full
+    Actions.DreamBard -> Res.drawable.bardfox_card_full
 }

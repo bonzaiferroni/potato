@@ -2,6 +2,7 @@ package ponder.potato.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,13 +28,18 @@ fun ZoneScreen(
     TopBarSpacer()
 
     ZoneView(viewModel.zone::class)
+    StatusBar(state.statuses)
 
     Tabs {
         Tab("Area") {
 
         }
         Tab("Actions") {
-
+            LazyColumn {
+                items(state.actions) { action ->
+                    PurchaseBar(action)
+                }
+            }
         }
         Tab("Entities") {
 

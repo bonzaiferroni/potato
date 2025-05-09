@@ -1,19 +1,18 @@
 package ponder.potato.ui
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import ponder.potato.GameService
-import ponder.potato.model.game.EntityMap
 import ponder.potato.model.game.Resource
-import ponder.potato.model.game.components.StorageState
-import ponder.potato.model.game.components.DreamerState
 import ponder.potato.model.game.components.readResourceMax
 import ponder.potato.model.game.entities.Potato
-import ponder.potato.model.game.entities.Shroom
-import ponder.potato.model.game.entities.Sprite
 import ponder.potato.model.game.read
-import ponder.potato.model.game.sumOf
 import ponder.potato.model.game.zones.Cave
 import ponder.potato.model.game.zones.Dream
 import ponder.potato.model.game.zones.GameState
+import ponder.potato.model.game.zones.ZoneAction
+import ponder.potato.model.game.zones.ZoneStatus
 import ponder.potato.model.game.zones.readZone
 import pondui.ui.core.StateModel
 
@@ -42,38 +41,12 @@ class DreamModel(
                 level = dreamLevel,
                 dreamProgress = dream.state.progress,
                 dreamProgressMax = dream.state.resolution,
-                levelCost = dream.state.levelCost,
+                levelCost = dream.levelCost,
                 delta = delta,
-                spriteCost = cave.spriteCost,
-                spriteCount = cave.spriteCount,
-                spriteAether = game.entities.readSpriteAether(dreamLevel),
-                maxSpriteCount = cave.maxSpriteCount,
-                shroomCost = cave.shroomCost,
-                shroomCount = cave.shroomCount,
-                maxShroomCount = cave.maxShroomCount,
-                shroomStorage = game.entities.readShroomStorage()
+                actions = dream.getActions().toImmutableList(),
+                statuses = dream.getStatus().toImmutableList()
             )
         }
-    }
-
-    fun resolveDream() {
-        dream.resolve()
-        refreshState()
-    }
-
-    fun dreamSprite() {
-        cave.manifestSprite()
-        refreshState()
-    }
-
-    fun dreamShroom() {
-        cave.manifestShroom()
-        refreshState()
-    }
-
-    fun dreamBard() {
-        cave.dreamBard()
-        refreshState()
     }
 }
 
@@ -85,14 +58,8 @@ data class DreamState(
     val dreamProgress: Double = 0.0,
     val dreamProgressMax: Double = 0.0,
     val delta: Double = 1.0,
-    val spriteCost: Double = 0.0,
-    val spriteCount: Int = 0,
-    val maxSpriteCount: Int = 0,
-    val shroomCost: Double = 0.0,
-    val shroomCount: Int = 0,
-    val maxShroomCount: Int = 0,
-    val spriteAether: Double = 0.0,
-    val shroomStorage: Double = 0.0,
+    val actions: ImmutableList<ZoneAction> = persistentListOf(),
+    val statuses: ImmutableList<ZoneStatus> = persistentListOf()
 ) {
     val progressRatio get() = dreamProgressMax.takeIf { it > 0 }?.let {
         minOf(1.0, dreamProgress / dreamProgressMax).toFloat().takeIf { it != Float.NaN } ?: 0f
@@ -102,6 +69,3 @@ data class DreamState(
     } ?: 0f
     val levelProgress get() = minOf(1.0, aether / levelCost).toFloat()
 }
-
-fun EntityMap.readShroomStorage() = this.sumOf<StorageState>({ it is Shroom }) { it.storage }
-fun EntityMap.readSpriteAether(dreamLevel: Int) = this.sumOf<DreamerState>({ it is Sprite }) { it.getReward(dreamLevel) }

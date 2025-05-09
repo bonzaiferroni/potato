@@ -3,9 +3,14 @@ package ponder.potato.model.game.zones
 import ponder.potato.model.game.GameData
 import ponder.potato.model.game.GameResources
 import ponder.potato.model.game.Resources
+import ponder.potato.model.game.components.DreamerState
+import ponder.potato.model.game.components.StorageState
 import ponder.potato.model.game.entities.Entity
 import ponder.potato.model.game.entities.Potato
+import ponder.potato.model.game.entities.Shroom
+import ponder.potato.model.game.entities.Sprite
 import ponder.potato.model.game.read
+import ponder.potato.model.game.sumOf
 
 interface Game {
     val state: GameState
@@ -27,3 +32,6 @@ interface Game {
 
     val dreamLevel get() = potato?.state?.level ?: 1
 }
+
+fun Game.readShroomStorage() = entities.sumOf<StorageState>({ it is Shroom }) { it.storage }
+fun Game.readSpriteAether() = entities.sumOf<DreamerState>({ it is Sprite }) { it.getReward(dreamLevel) }

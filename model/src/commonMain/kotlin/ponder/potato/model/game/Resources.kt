@@ -19,6 +19,6 @@ data class GameResources(
         set(value) { map[Resource.Aether] = value }
 }
 
-enum class Resource {
-    Aether
+enum class Resource(val label: String) {
+    Aether("The Aether")
 }

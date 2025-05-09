@@ -39,7 +39,6 @@ import io.ktor.client.plugins.observer.ResponseObserver
 import kabinet.utils.toMetricString
 import ponder.potato.LaunchedGameUpdate
 import ponder.potato.LocalGame
-import ponder.potato.ResourceColor
 import ponder.potato.model.game.*
 import ponder.potato.model.game.entities.Imp
 import ponder.potato.model.game.entities.Sprite
@@ -196,7 +195,7 @@ fun getImage(type: String) = when (type) {
 
 fun getText(effect: Effect) = when {
     effect is Despirit -> effect.spirit.toString() to Color.Red.lighten(.25f)
-    effect is AetherReward -> effect.amount.toMetricString() to ResourceColor.aether.lighten(.25f)
+    effect is AetherReward -> effect.amount.toMetricString() to Resource.Aether.toColor().lighten(.25f)
     effect is LevelUp -> effect.level.toString() to Color.Blue.lighten(.25f)
     effect is ExperienceUp -> effect.experience.toMetricString() to Color.Yellow.lighten(.25f)
     effect is Inspirit -> effect.spirit.toString() to Color.Green.lighten(.25f)

@@ -21,15 +21,15 @@ sealed class GameZone(): Zone {
     override val name get() = this::class.simpleName ?: error("Zone must not be anonymous")
 
     override val portals = mutableListOf<Portal>()
+    open fun getActions(): List<ZoneAction> = emptyList()
+    open fun getStatus(): List<ZoneStatus> = emptyList()
 
     open fun init(id: Int, game: GameEngine) {
         _id = id
         _game = game
     }
 
-    open fun update(delta: Double) {
-
-    }
+    open fun update(delta: Double) { }
 
     fun <Z : GameZone> addPortal(
         zone: Z,

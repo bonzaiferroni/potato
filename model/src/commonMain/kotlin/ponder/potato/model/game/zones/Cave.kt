@@ -1,5 +1,6 @@
 package ponder.potato.model.game.zones
 
+import kabinet.utils.toMetricString
 import ponder.potato.model.game.BOUNDARY_X
 import ponder.potato.model.game.BOUNDARY_Y
 import ponder.potato.model.game.entities.Bard
@@ -43,11 +44,31 @@ class Cave : GameZone() {
         game.spawn(this) { Shroom() }
     }
 
-    fun dreamBard() {
-        if (!canDreamBard) return
-        resources.aether -= BARD_COST
-        game.spawn(this, BOUNDARY_X / 2, BOUNDARY_Y / 2) { Bard() }
-    }
+    override fun getActions() = listOf(
+        ZoneAction(
+            action = Actions.DreamSprite,
+            status = if (spriteCount > 0 && maxSpriteCount > 0) {
+                "This dream has $spriteCount out of $maxSpriteCount possible sprites that provide" +
+                        " ${game.readSpriteAether().toMetricString()} of The Aether at the end of each dream."
+            } else null,
+            cost = 500.0,
+            currentResource = resources.aether,
+            count = spriteCount,
+            maxCount = maxSpriteCount,
+            block = ::manifestSprite
+        ),
+        ZoneAction(
+            action = Actions.DreamShroom,
+            status = if (shroomCount > 0 && maxShroomCount > 0) {
+                "You have $shroomCount shrooms that hold ${game.readShroomStorage().toMetricString()} additional Aether."
+            } else null,
+            cost = 1000.0,
+            currentResource = resources.aether,
+            count = shroomCount,
+            maxCount = maxShroomCount,
+            block = ::manifestShroom
+        ),
+    )
 }
 
 const val BARD_COST = 2000.0

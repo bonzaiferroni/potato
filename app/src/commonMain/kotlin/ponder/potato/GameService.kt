@@ -87,9 +87,3 @@ val json = Json {
     classDiscriminator = "type" // or "kind", or whatever suits yer flag
     ignoreUnknownKeys = true
 }
-
-object ResourceColor {
-    val aether = Color(0xffb13c91)
-    val aetherLight = aether.lighten(.5f)
-    val aetherDark = aether.darken(.25f)
-}

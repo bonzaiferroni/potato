@@ -3,7 +3,6 @@ package ponder.potato.model.game
 import ponder.potato.model.game.entities.Entity
 import ponder.potato.model.game.entities.EntityState
 import ponder.potato.model.game.entities.StateEntity
-import ponder.potato.model.game.zones.Zone
 import ponder.potato.model.game.zones.castIfState
 
 typealias EntityMap = Map<Long, Entity>
@@ -49,3 +48,8 @@ inline fun <reified S: EntityState> EntityMap.sumOf(where: (StateEntity<S>) -> B
     }
     return value
 }
+
+inline fun EntityMap.count(block: (Entity) -> Boolean) =
+    this.values.count { block(it) }
+
+inline fun <reified E: StateEntity<*>> EntityMap.count() = this.values.count { it is E }
