@@ -39,7 +39,6 @@ class Rester(
 
         val spiritGain = minOf(10, spiritState.maxSpirit - spiritState.spirit)
         spiritState.spirit += spiritGain
-        println(spiritState.spirit)
         entity.showEffect { Inspirit(spiritGain) }
     }
 }

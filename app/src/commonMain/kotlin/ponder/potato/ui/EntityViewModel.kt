@@ -48,11 +48,9 @@ class EntityViewModel(
     fun refreshState(delta: Double = 0.0) {
         entity?.let { e ->
             val spiritState = e.state as? SpiritState
-            val projection = projection(e.position.x, e.position.y)
             setState { it.copy(
-                x = projection.x,
-                y = -projection.y,
-                scale = 12 / projection.distance,
+                x = e.position.x,
+                y = e.position.y,
                 isVisible = delta > 0,
                 delta = delta,
                 spirit = spiritState?.spirit,

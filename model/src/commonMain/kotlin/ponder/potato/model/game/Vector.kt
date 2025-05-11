@@ -14,3 +14,8 @@ fun Vector.squaredDistanceTo(vector: Vector): Float {
 }
 
 fun Vector.distanceTo(vector: Vector) = sqrt(this.squaredDistanceTo(vector))
+
+data class Vector2(
+    override val x: Float,
+    override val y: Float
+): Vector

@@ -103,11 +103,13 @@ fun EntityView(
         }
     }
 
-    if (!state.isVisible || boxSize == IntSize.Zero || state.x == Float.NaN || state.y == Float.NaN) return
+    val (xPosition, yPosition, distance) = remember(Vector2(state.x, state.y)) { projection(state.x, state.y) }
 
-    val animatedX by animatePosition(state.x, state.delta)
-    val animatedY by animatePosition(state.y, state.delta)
-    val animatedScale by animatePosition(state.scale, state.delta)
+    if (!state.isVisible || boxSize == IntSize.Zero || xPosition == Float.NaN || yPosition == Float.NaN) return
+
+    val animatedX by animatePosition(xPosition, state.delta)
+    val animatedY by animatePosition(-yPosition, state.delta) // flip y for camera space
+    val animatedScale by animatePosition(12 / distance, state.delta)
     val animatedSpirit by animateFloatAsState(state.spiritRatio)
 
     val (image, imageSize) = getImage(viewModel.type)
@@ -120,7 +122,7 @@ fun EntityView(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .width((radius * 2).dp)
-            .zIndex(state.scale)
+            .zIndex(animatedScale)
             .graphicsLayer {
                 translationX = centerX - radiusPx
                 translationY = centerY - radiusPx
@@ -133,8 +135,10 @@ fun EntityView(
             key(o.key) {
 
                 val effectTime = remember (o.key) { Animatable(0f) }
-                val effectX = remember { Float.random(-1f, 1f) }
+                val effectX = remember { Float.random(1f, 5f) }
+                val effectY = remember { Float.random(-10f, 10f) }
                 val offset = 30f
+                val wind = if (viewModel.entity is Imp) 1f else -1f
 
                 LaunchedEffect(Unit) {
                     effectTime.animateTo(
@@ -148,8 +152,8 @@ fun EntityView(
                     style = TextStyle(fontWeight = FontWeight.Bold),
                     color = color,
                     modifier = Modifier.graphicsLayer {
-                        translationY = -(effectTime.value * 13f + offset)
-                        translationX = (effectTime.value * effectX * 10)
+                        translationY = -(effectTime.value * 13f + offset) + effectY
+                        translationX = (effectTime.value * effectTime.value * effectX * wind)
                         alpha = minOf(1f, EFFECT_DISPLAY_SECONDS - effectTime.value)
                     }
                 )
@@ -194,11 +198,11 @@ fun getImage(type: String) = when (type) {
 }
 
 fun getText(effect: Effect) = when {
-    effect is Despirit -> effect.spirit.toString() to Color.Red.lighten(.25f)
-    effect is AetherReward -> effect.amount.toMetricString() to Resource.Aether.toColor().lighten(.25f)
-    effect is LevelUp -> effect.level.toString() to Color.Blue.lighten(.25f)
-    effect is ExperienceUp -> effect.experience.toMetricString() to Color.Yellow.lighten(.25f)
-    effect is Inspirit -> effect.spirit.toString() to Color.Green.lighten(.25f)
+    effect is Despirit -> effect.spirit.toString() to Color.Red.lighten(.5f)
+    effect is AetherReward -> effect.amount.toMetricString() to Resource.Aether.toColor().lighten(.5f)
+    effect is LevelUp -> effect.level.toString() to Color.Blue.lighten(.5f)
+    effect is ExperienceUp -> effect.experience.toMetricString() to Color.Yellow.lighten(.5f)
+    effect is Inspirit -> effect.spirit.toString() to Color.Green.lighten(.5f)
     else -> null
 }
 
