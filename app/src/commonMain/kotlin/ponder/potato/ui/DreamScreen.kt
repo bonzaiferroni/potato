@@ -16,6 +16,7 @@ import org.jetbrains.compose.resources.stringArrayResource
 import ponder.potato.LaunchedGameUpdate
 import ponder.potato.model.game.Resource
 import ponder.potato.model.game.zones.Cave
+import ponder.potato.model.game.zones.Dream
 import ponder.potato.model.game.zones.IntValue
 import ponder.potato.model.game.zones.ProgressValue
 import ponder.potato.model.game.zones.ResourceStatus
@@ -43,43 +44,10 @@ fun DreamScreen(
 
     Tabs {
         Tab("Area") {
-            Card(
-                innerPadding = 0.dp,
-            ) {
-                Row {
-                    Image(
-                        painter = painterResource(Res.drawable.dream_card_full),
-                        contentDescription = "Image of purchase",
-                        modifier = Modifier.width(200.dp)
-                    )
-                    ProvideBookColors {
-                        Column(
-                            verticalArrangement = Pond.ruler.columnTight,
-                            modifier = Modifier.fillMaxWidth()
-                                .background(Pond.localColors.surface)
-                                .padding(Pond.ruler.innerPadding)
-                        ) {
-                            H4("The Dream", color = Pond.colors.tertiary)
-                            for (text in stringArrayResource(Res.array.dream_description)) {
-                                Text(text)
-                            }
-                        }
-                    }
-                }
-            }
+            AreaView(Dream::class)
         }
         Tab("Shape Dream", scrollable = false) {
-
-            LazyColumn(
-                verticalArrangement = Pond.ruler.columnTight
-            ) {
-                items(state.actions) { action ->
-                    PurchaseBar(action)
-                }
-                item {
-                    BottomBarSpacer()
-                }
-            }
+            ActionsView(state.actions) { viewModel.refreshState() }
         }
         Tab("Entities", scrollable = false) {
             EntityListView(viewModel.caveId)

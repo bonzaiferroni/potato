@@ -13,7 +13,6 @@ class Spirit(
     override val entity: StateEntity<SpiritState>,
 ): StateComponent<SpiritState>() {
     override fun init() {
-        super.init()
         state.spirit = state.maxSpirit
     }
 }

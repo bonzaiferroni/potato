@@ -65,6 +65,8 @@ kotlin {
             implementation(project(":model"))
 
             implementation("com.stevdza-san:sprite:1.1.0")
+            implementation("io.github.alexzhirkevich:compottie:2.0.0-rc04")
+            implementation("io.github.alexzhirkevich:compottie-dot:2.0.0-rc04")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

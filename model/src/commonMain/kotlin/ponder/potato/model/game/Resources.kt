@@ -6,7 +6,7 @@ interface Resources {
     val map: Map<Resource, Double>
     val aether: Double
 
-    fun readQuantity(resource: Resource) = map[resource]
+    fun readQuantity(resource: Resource) = map[resource] ?: 0.0
 }
 
 @Serializable

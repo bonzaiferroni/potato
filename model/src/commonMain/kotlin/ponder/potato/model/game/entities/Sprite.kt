@@ -14,7 +14,9 @@ class Sprite(
         Dreamer(this),
         Namer(this),
         Leveler(this),
-        Opposer(this, 5f) { it is Imp && it.target is Sprite && it.hasIntent(Intent.Oppose) },
+        Opposer(this, 5f) {
+            it is Imp && it.target is Sprite && it.hasIntent(Intent.Oppose)
+        },
         Rester(this) { it is Shroom && it.state.visitorId == null },
         Meander(this),
     )

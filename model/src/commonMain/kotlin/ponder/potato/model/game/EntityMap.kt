@@ -22,7 +22,7 @@ inline fun <reified T : Entity> EntityMap.findNearest(
     for (entity in this.values) {
         if (entity.position.zoneId != position.zoneId || entity !is T || !isTarget(entity)) continue
         val distance = position.squaredDistanceTo(entity.position)
-        if (distance > nearestDistance && distance < rangeSquared) continue
+        if (distance > nearestDistance || distance >= rangeSquared) continue
         nearest = entity
         nearestDistance = distance
     }

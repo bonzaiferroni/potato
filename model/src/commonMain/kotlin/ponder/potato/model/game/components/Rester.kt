@@ -2,7 +2,6 @@ package ponder.potato.model.game.components
 
 import ponder.potato.model.game.Inspirit
 import ponder.potato.model.game.approach
-import ponder.potato.model.game.entities.EntityState
 import ponder.potato.model.game.entities.Intent
 import ponder.potato.model.game.entities.StateEntity
 
@@ -23,9 +22,8 @@ class Rester(
             if (target != null) {
                 state.intent = Intent.Rest
                 entity.target = target
-            } else {
-                return
             }
+            return
         }
 
         val target = entity.readOrClearTarget<TargetState>()
@@ -34,13 +32,14 @@ class Rester(
             return
         }
 
-        val approaching = entity.approach(target.position, delta, 0)
-        if (approaching) return
+        val arrived = entity.approach(target.position, delta, 0)
+        if (!arrived) return
 
         val spiritState = entity.state as? SpiritState ?: return
 
         val spiritGain = minOf(10, spiritState.maxSpirit - spiritState.spirit)
         spiritState.spirit += spiritGain
+        println(spiritState.spirit)
         entity.showEffect { Inspirit(spiritGain) }
     }
 }

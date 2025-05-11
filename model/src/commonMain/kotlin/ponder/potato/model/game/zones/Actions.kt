@@ -11,7 +11,7 @@ enum class Actions(
     DreamSprite(
         label = "Sprite",
         verb = "Dream",
-        description = "Sprites provide extra Aether at the end of each dream and defend Potato.",
+        description = "Sprites provide extra Aether at the end of each dream and watch over Potato.",
         resource = Resource.Aether
     ),
     DreamShroom(

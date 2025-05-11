@@ -3,6 +3,7 @@ package ponder.potato.model.game.zones
 import kabinet.utils.toMetricString
 import ponder.potato.model.game.BOUNDARY_X
 import ponder.potato.model.game.BOUNDARY_Y
+import ponder.potato.model.game.Resource
 import ponder.potato.model.game.entities.Bard
 import ponder.potato.model.game.entities.Potato
 import ponder.potato.model.game.entities.Shroom
@@ -68,6 +69,11 @@ class Cave : GameZone() {
             maxCount = maxShroomCount,
             block = ::manifestShroom
         ),
+    )
+
+    override fun getStatus() = listOf(
+        IntValue("Dream level", game.dreamLevel),
+        game.readResourceStatus(Resource.Aether)
     )
 }
 

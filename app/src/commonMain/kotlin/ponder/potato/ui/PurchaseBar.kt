@@ -115,7 +115,8 @@ fun PurchaseBar(
 
 @Composable
 fun PurchaseBar(
-    action: ZoneAction
+    action: ZoneAction,
+    onAction: () -> Unit,
 ) = PurchaseBar(
     label = action.action.label,
     cost = action.cost,
@@ -125,7 +126,10 @@ fun PurchaseBar(
     maxCount = action.maxCount,
     drawable = action.action.toResource(),
     buttonLabel = action.action.verb,
-    purchase = action.block,
+    purchase = {
+        action.block()
+        onAction()
+    },
 ) {
     Text(action.action.description)
     action.status?.let {
@@ -133,7 +137,7 @@ fun PurchaseBar(
     }
 }
 
-fun Resource.toColor() = when(this) {
+fun Resource.toColor() = when (this) {
     Resource.Aether -> Color(0xffb13c91)
 }
 

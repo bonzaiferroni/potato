@@ -32,14 +32,10 @@ fun ZoneScreen(
 
     Tabs {
         Tab("Area") {
-
+            AreaView(viewModel.zone::class)
         }
-        Tab("Actions") {
-            LazyColumn {
-                items(state.actions) { action ->
-                    PurchaseBar(action)
-                }
-            }
+        Tab("Actions", scrollable = false) {
+            ActionsView(state.actions) { viewModel.refreshState() }
         }
         Tab("Entities") {
 

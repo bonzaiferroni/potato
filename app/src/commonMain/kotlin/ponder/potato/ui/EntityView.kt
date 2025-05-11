@@ -5,6 +5,7 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -35,7 +36,13 @@ import compose.icons.TablerIcons
 import compose.icons.tablericons.Ghost
 import compose.icons.tablericons.Man
 import compose.icons.tablericons.QuestionMark
+import io.github.alexzhirkevich.compottie.Compottie
+import io.github.alexzhirkevich.compottie.LottieClipSpec
+import io.github.alexzhirkevich.compottie.dynamic.LottieDynamicProperties
+import io.github.alexzhirkevich.compottie.rememberLottieComposition
+import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import io.ktor.client.plugins.observer.ResponseObserver
+import kabinet.utils.random
 import kabinet.utils.toMetricString
 import ponder.potato.LaunchedGameUpdate
 import ponder.potato.LocalGame
@@ -126,6 +133,7 @@ fun EntityView(
             key(o.key) {
 
                 val effectTime = remember (o.key) { Animatable(0f) }
+                val effectX = remember { Float.random(-1f, 1f) }
                 val offset = 30f
 
                 LaunchedEffect(Unit) {
@@ -141,6 +149,7 @@ fun EntityView(
                     color = color,
                     modifier = Modifier.graphicsLayer {
                         translationY = -(effectTime.value * 13f + offset)
+                        translationX = (effectTime.value * effectX * 10)
                         alpha = minOf(1f, EFFECT_DISPLAY_SECONDS - effectTime.value)
                     }
                 )
@@ -152,22 +161,13 @@ fun EntityView(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            SpriteView(
-                spriteState = spriteState,
-                spriteSpec = SpriteSpec(
-                    screenWidth = screenWidth.value,
-                    default = SpriteSheet(
-                        frameWidth = imageSize,
-                        frameHeight = imageSize,
-                        image = image
-                    )
+            val composition by rememberLottieComposition(state.isMoving) { viewModel.entity.toLottieResource(state.isMoving) }
+            Image(
+                painter = rememberLottiePainter(
+                    composition = composition,
+                    iterations = Compottie.IterateForever,
                 ),
-                modifier = Modifier.fillMaxWidth()
-                    .aspectRatio(1f)
-                    .graphicsLayer {
-                        scaleX = if (state.facingRight) 1f else -1f
-                        // scaleY = animatedScale
-                    }
+                contentDescription = "Lottie animation"
             )
             Box(
                 modifier = Modifier.fillMaxWidth()

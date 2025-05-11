@@ -50,6 +50,7 @@ abstract class StateEntity<out T: EntityState>: Entity {
         for (component in components) {
             component.init()
         }
+        (state as? TargetState)?.let { it.targetId = null }
     }
 
     open fun update(delta: Double) {
