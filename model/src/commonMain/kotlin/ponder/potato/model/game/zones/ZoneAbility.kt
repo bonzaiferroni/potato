@@ -2,7 +2,7 @@ package ponder.potato.model.game.zones
 
 import ponder.potato.model.game.Resource
 
-enum class Actions(
+enum class ZoneAbility(
     val label: String,
     val verb: String,
     val description: String,

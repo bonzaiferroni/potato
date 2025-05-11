@@ -1,8 +1,6 @@
 package ponder.potato.model.game.zones
 
 import kabinet.utils.toMetricString
-import ponder.potato.model.game.BOUNDARY_X
-import ponder.potato.model.game.BOUNDARY_Y
 import ponder.potato.model.game.Resource
 import ponder.potato.model.game.entities.Bard
 import ponder.potato.model.game.entities.Potato
@@ -45,9 +43,9 @@ class Cave : GameZone() {
         game.spawn(this) { Shroom() }
     }
 
-    override fun getActions() = listOf(
+    override fun getZoneActions() = listOf(
         ZoneAction(
-            action = Actions.DreamSprite,
+            ability = ZoneAbility.DreamSprite,
             status = if (spriteCount > 0 && maxSpriteCount > 0) {
                 "This dream has $spriteCount out of $maxSpriteCount possible sprites that provide" +
                         " ${game.readSpriteAether().toMetricString()} of The Aether at the end of each dream."
@@ -59,7 +57,7 @@ class Cave : GameZone() {
             block = ::manifestSprite
         ),
         ZoneAction(
-            action = Actions.DreamShroom,
+            ability = ZoneAbility.DreamShroom,
             status = if (shroomCount > 0 && maxShroomCount > 0) {
                 "You have $shroomCount shrooms that hold ${game.readShroomStorage().toMetricString()} additional Aether."
             } else null,

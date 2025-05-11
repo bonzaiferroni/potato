@@ -43,7 +43,7 @@ class DreamModel(
                 dreamProgressMax = dream.state.resolution,
                 levelCost = dream.levelCost,
                 delta = delta,
-                actions = dream.getActions().toImmutableList(),
+                actions = dream.getZoneActions().toImmutableList(),
                 statuses = dream.getStatus().toImmutableList()
             )
         }

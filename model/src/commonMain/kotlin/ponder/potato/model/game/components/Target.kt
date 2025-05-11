@@ -1,5 +1,6 @@
 package ponder.potato.model.game.components
 
+import ponder.potato.model.game.entities.Entity
 import ponder.potato.model.game.entities.EntityState
 import ponder.potato.model.game.entities.StateEntity
 import ponder.potato.model.game.findNearest
@@ -14,6 +15,8 @@ var StateEntity<TargetState>.target
     set(value) {
         state.targetId = value?.id
     }
+
+val Entity.target get() = (state as? TargetState)?.targetId?.let { game.entities[it] }
 
 inline fun <reified S : EntityState> StateEntity<TargetState>.findTarget(
     range: Float = Float.MAX_VALUE,

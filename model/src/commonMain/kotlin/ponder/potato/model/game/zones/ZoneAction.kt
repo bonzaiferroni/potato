@@ -1,9 +1,7 @@
 package ponder.potato.model.game.zones
 
-import ponder.potato.model.game.Resource
-
 data class ZoneAction(
-    val action: Actions,
+    val ability: ZoneAbility,
     val status: String?,
     val cost: Double,
     val currentResource: Double,

@@ -1,6 +1,9 @@
 package ponder.potato.model.game.components
 
+import ponder.potato.model.game.Despirit
+import ponder.potato.model.game.entities.Entity
 import ponder.potato.model.game.entities.EntityState
+import ponder.potato.model.game.entities.SpriteState
 import ponder.potato.model.game.entities.StateEntity
 
 interface SpiritState: EntityState {
@@ -17,6 +20,12 @@ class Spirit(
     }
 }
 
-val StateEntity<*>.spirit get() = (this.state as? SpiritState)?.spirit ?: 0
-val StateEntity<*>.maxSpirit get() = (this.state as? SpiritState)?.maxSpirit ?: 0
-val StateEntity<*>.spiritFull get() = spirit >= maxSpirit
+val Entity.spirit get() = (this.state as? SpiritState)?.spirit ?: 0
+val Entity.maxSpirit get() = (this.state as? SpiritState)?.maxSpirit ?: 0
+val Entity.spiritFull get() = spirit >= maxSpirit
+fun Entity.despirit(amount: Int) {
+    (this.state as? SpiritState)?.let {
+        it.spirit -= minOf(amount, it.spirit)
+        this.showEffect { Despirit(amount) }
+    }
+}

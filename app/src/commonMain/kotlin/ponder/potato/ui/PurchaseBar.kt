@@ -18,7 +18,7 @@ import kabinet.utils.toMetricString
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import ponder.potato.model.game.Resource
-import ponder.potato.model.game.zones.Actions
+import ponder.potato.model.game.zones.ZoneAbility
 import ponder.potato.model.game.zones.ZoneAction
 import pondui.ui.controls.Card
 import pondui.ui.controls.H4
@@ -118,20 +118,20 @@ fun PurchaseBar(
     action: ZoneAction,
     onAction: () -> Unit,
 ) = PurchaseBar(
-    label = action.action.label,
+    label = action.ability.label,
     cost = action.cost,
-    resource = action.action.resource,
+    resource = action.ability.resource,
     ratio = action.ratio,
     currentCount = action.count,
     maxCount = action.maxCount,
-    drawable = action.action.toResource(),
-    buttonLabel = action.action.verb,
+    drawable = action.ability.toResource(),
+    buttonLabel = action.ability.verb,
     purchase = {
         action.block()
         onAction()
     },
 ) {
-    Text(action.action.description)
+    Text(action.ability.description)
     action.status?.let {
         Text(it)
     }
@@ -141,9 +141,9 @@ fun Resource.toColor() = when (this) {
     Resource.Aether -> Color(0xffb13c91)
 }
 
-fun Actions.toResource() = when (this) {
-    Actions.DreamSprite -> Res.drawable.sprite_card_full
-    Actions.DreamShroom -> Res.drawable.shroom_card_full
-    Actions.ResolveDream -> Res.drawable.potato_card_full
-    Actions.DreamBard -> Res.drawable.bardfox_card_full
+fun ZoneAbility.toResource() = when (this) {
+    ZoneAbility.DreamSprite -> Res.drawable.sprite_card_full
+    ZoneAbility.DreamShroom -> Res.drawable.shroom_card_full
+    ZoneAbility.ResolveDream -> Res.drawable.potato_card_full
+    ZoneAbility.DreamBard -> Res.drawable.bardfox_card_full
 }

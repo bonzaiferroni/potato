@@ -24,9 +24,9 @@ class Dream(
         game.spawn(cave, BOUNDARY_X / 2, BOUNDARY_Y / 2) { Bard() }
     }
 
-    override fun getActions(): List<ZoneAction> = listOf(
+    override fun getZoneActions(): List<ZoneAction> = listOf(
         ZoneAction(
-            action = Actions.ResolveDream,
+            ability = ZoneAbility.ResolveDream,
             status = null,
             cost = levelCost,
             currentResource = game.resources.aether,
@@ -35,7 +35,7 @@ class Dream(
             block = ::resolve,
         ),
         ZoneAction(
-            action = Actions.DreamBard,
+            ability = ZoneAbility.DreamBard,
             status = null,
             cost = 500.0,
             currentResource = game.resources.aether,

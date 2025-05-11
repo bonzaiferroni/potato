@@ -11,6 +11,7 @@ import ponder.potato.model.game.components.StateComponent
 import ponder.potato.model.game.components.TargetState
 import ponder.potato.model.game.findNearest
 import ponder.potato.model.game.read
+import ponder.potato.model.game.zones.EntityAction
 import ponder.potato.model.game.zones.GameZone
 import ponder.potato.model.game.zones.Zone
 
@@ -22,12 +23,15 @@ interface Entity {
 
     val game get() = zone.game
     val position: Position get() = state.position
+
+    fun showEffect(createEffect: () -> Effect)
 }
 
 abstract class StateEntity<out T: EntityState>: Entity {
 
     abstract override val state: T
     abstract override val components: List<StateComponent<*>>
+    open val abilities: List<() -> EntityAction?> = emptyList()
 
     val effects = MutableSharedFlow<Effect>(extraBufferCapacity = 1)
 
@@ -65,7 +69,7 @@ abstract class StateEntity<out T: EntityState>: Entity {
         }
     }
 
-    fun showEffect(createEffect: () -> Effect) {
+    override fun showEffect(createEffect: () -> Effect) {
         if (effects.subscriptionCount.value == 0) return
         effects.tryEmit(createEffect())
     }

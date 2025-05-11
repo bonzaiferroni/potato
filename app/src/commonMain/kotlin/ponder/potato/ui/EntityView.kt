@@ -112,10 +112,10 @@ fun EntityView(
     val animatedScale by animatePosition(12 / distance, state.delta)
     val animatedSpirit by animateFloatAsState(state.spiritRatio)
 
-    val (image, imageSize) = getImage(viewModel.type)
     val centerX = boxSize.width * (animatedX + BOUNDARY_X) / (BOUNDARY_X * 2)
     val centerY = boxSize.height * (animatedY + BOUNDARY_Y) / (BOUNDARY_Y * 2)
-    val radius = imageSize / 2
+    val entitySize = 50f
+    val radius = entitySize / 2
     val radiusPx = with(LocalDensity.current) { radius.dp.toPx() }
 
     Box(
@@ -189,12 +189,6 @@ fun EntityView(
             )
         }
     }
-}
-
-fun getImage(type: String) = when (type) {
-    Sprite::class.simpleName -> Res.drawable.fairy_52 to 52
-    Imp::class.simpleName -> Res.drawable.imp_54 to 54
-    else -> Res.drawable.imp_54 to 54
 }
 
 fun getText(effect: Effect) = when {

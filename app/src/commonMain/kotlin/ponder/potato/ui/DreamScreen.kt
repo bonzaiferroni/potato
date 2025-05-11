@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kabinet.utils.toMetricString
+import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringArrayResource
 import ponder.potato.LaunchedGameUpdate
@@ -47,7 +48,7 @@ fun DreamScreen(
             AreaView(Dream::class)
         }
         Tab("Shape Dream", scrollable = false) {
-            ActionsView(state.actions) { viewModel.refreshState() }
+            ActionsView(persistentListOf(), state.actions) { viewModel.refreshState() }
         }
         Tab("Entities", scrollable = false) {
             EntityListView(viewModel.caveId)

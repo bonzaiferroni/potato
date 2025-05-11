@@ -1,7 +1,7 @@
 package ponder.potato.model.game.zones
 
-import kotlinx.serialization.Serializable
 import ponder.potato.model.game.Vector
+import ponder.potato.model.game.abilities.shoutAtTarget
 
 interface Zone {
     val id: Int
@@ -21,7 +21,7 @@ sealed class GameZone(): Zone {
     override val name get() = this::class.simpleName ?: error("Zone must not be anonymous")
 
     override val portals = mutableListOf<Portal>()
-    open fun getActions(): List<ZoneAction> = emptyList()
+    open fun getZoneActions(): List<ZoneAction> = emptyList()
     open fun getStatus(): List<ZoneStatus> = emptyList()
 
     open fun init(id: Int, game: GameEngine) {
@@ -43,6 +43,18 @@ sealed class GameZone(): Zone {
             zone.portals.add(Portal(this, remote.x, remote.y, local.x, local.y))
         }
         return zone
+    }
+
+    fun getEntityActions(): List<EntityAction> {
+        val actions = mutableListOf<EntityAction>()
+        for (entity in game.entities.values) {
+            if (entity.zone != this) continue
+            for (ability in entity.abilities) {
+                val action = ability() ?: continue
+                actions.add(action)
+            }
+        }
+        return actions
     }
 }
 

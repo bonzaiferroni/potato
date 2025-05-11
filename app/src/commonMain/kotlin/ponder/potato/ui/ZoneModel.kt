@@ -4,7 +4,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import ponder.potato.GameService
-import ponder.potato.model.game.Resource
+import ponder.potato.model.game.zones.EntityAction
 import ponder.potato.model.game.zones.GameState
 import ponder.potato.model.game.zones.ZoneAction
 import ponder.potato.model.game.zones.ZoneStatus
@@ -25,7 +25,8 @@ class ZoneModel(
     fun refreshState(delta: Double = 1.0) {
         setState { it.copy(
             delta = delta,
-            actions = zone.getActions().toImmutableList(),
+            entityActions = zone.getEntityActions().toImmutableList(),
+            zoneActions = zone.getZoneActions().toImmutableList(),
             statuses = zone.getStatus().toImmutableList(),
         ) }
     }
@@ -34,7 +35,8 @@ class ZoneModel(
 data class ZoneState(
     val zoneId: Int = 0,
     val delta: Double = 1.0,
-    val actions: ImmutableList<ZoneAction> = persistentListOf(),
+    val entityActions: ImmutableList<EntityAction> = persistentListOf(),
+    val zoneActions: ImmutableList<ZoneAction> = persistentListOf(),
     val statuses: ImmutableList<ZoneStatus> = persistentListOf()
 )
 
