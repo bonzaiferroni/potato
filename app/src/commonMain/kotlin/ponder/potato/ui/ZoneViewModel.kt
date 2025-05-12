@@ -24,7 +24,8 @@ class ZoneViewModel<T : Zone>(
     fun update(gameState: GameState) {
         val entityIds = game.entities.values.filter { it.position.zoneId == zone.id }.map{ it.id }.toImmutableList()
         val bardPresent = game.entities.read<Bard>()?.position?.zoneId == zone.id
-        setState { it.copy(entityIds = entityIds, fullVisibility = bardPresent) }
+        val exits = zone.portals.map { ZoneExit(it.zoneId, it.x, it.y) }
+        setState { it.copy(entityIds = entityIds, fullVisibility = bardPresent, exits = exits) }
     }
 }
 
@@ -32,4 +33,11 @@ data class ZoneViewState(
     val name: String = "",
     val entityIds: ImmutableList<Long> = persistentListOf(),
     val fullVisibility: Boolean = false,
+    val exits: List<ZoneExit> = emptyList()
+)
+
+data class ZoneExit(
+    val zoneId: Int,
+    val x: Float,
+    val y: Float,
 )

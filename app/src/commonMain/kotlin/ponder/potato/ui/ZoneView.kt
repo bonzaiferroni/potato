@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
@@ -17,7 +18,11 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ponder.potato.LocalGame
+import ponder.potato.ZoneRoute
+import ponder.potato.model.game.Vector2
 import ponder.potato.model.game.zones.Zone
+import pondui.ui.controls.Button
+import pondui.ui.controls.NavButton
 import pondui.ui.controls.Text
 import pondui.ui.core.PondApp
 import pondui.ui.theme.Pond
@@ -68,9 +73,15 @@ fun <T: Zone> ZoneView(
                     drawPath(path = path,  color = Color.Blue.copy(.1f))
                 }
         ) {
+            val zoneScope = ZoneScope(boxSize)
             for (entityId in state.entityIds) {
                 key(entityId) {
-                    EntityView(entityId, state.fullVisibility, boxSize)
+                    zoneScope.EntityView(entityId, state.fullVisibility)
+                }
+            }
+            for (exit in state.exits) {
+                zoneScope.ZoneObject(exit.x, exit.y, 1.0) {
+                    NavButton(exit.zoneId.toString(), modifier = Modifier.alpha(.3f)) { ZoneRoute(exit.zoneId) }
                 }
             }
         }

@@ -38,7 +38,9 @@ import compose.icons.tablericons.Man
 import compose.icons.tablericons.QuestionMark
 import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieClipSpec
+import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.dynamic.LottieDynamicProperties
+import io.github.alexzhirkevich.compottie.rememberLottieAnimatable
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import io.ktor.client.plugins.observer.ResponseObserver
@@ -66,10 +68,9 @@ import potato.app.generated.resources.sprite_small
 import potato.app.generated.resources.sprite_tiny
 
 @Composable
-fun EntityView(
+fun ZoneScope.EntityView(
     entityId: Long,
     fullVisibility: Boolean,
-    boxSize: IntSize,
     viewModel: EntityViewModel = viewModel(key = entityId.toString()) { EntityViewModel(entityId) }
 ) {
     val state by viewModel.state.collectAsState()
@@ -103,33 +104,9 @@ fun EntityView(
         }
     }
 
-    val (xPosition, yPosition, distance) = remember(Vector2(state.x, state.y)) { projection(state.x, state.y) }
-
-    if (!state.isVisible || boxSize == IntSize.Zero || xPosition == Float.NaN || yPosition == Float.NaN) return
-
-    val animatedX by animatePosition(xPosition, state.delta)
-    val animatedY by animatePosition(-yPosition, state.delta) // flip y for camera space
-    val animatedScale by animatePosition(12 / distance, state.delta)
     val animatedSpirit by animateFloatAsState(state.spiritRatio)
 
-    val centerX = boxSize.width * (animatedX + BOUNDARY_X) / (BOUNDARY_X * 2)
-    val centerY = boxSize.height * (animatedY + BOUNDARY_Y) / (BOUNDARY_Y * 2)
-    val entitySize = 50f
-    val radius = entitySize / 2
-    val radiusPx = with(LocalDensity.current) { radius.dp.toPx() }
-
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .width((radius * 2).dp)
-            .zIndex(animatedScale)
-            .graphicsLayer {
-                translationX = centerX - radiusPx
-                translationY = centerY - radiusPx
-                scaleX = animatedScale
-                scaleY = animatedScale
-            }
-    ) {
+    ZoneObject(state.x, state.y, state.delta) {
         for (o in viewModel.effects) {
             val (text, color) = getText(o.effect) ?: continue
             key(o.key) {
@@ -160,12 +137,23 @@ fun EntityView(
             }
         }
 
-        if (!fullVisibility) return
+        if (!fullVisibility) return@ZoneObject
+
+        var isMoving by remember { mutableStateOf(state.isMoving) }
 
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            val composition by rememberLottieComposition(state.isMoving) { viewModel.entity.toLottieResource(state.isMoving) }
+            val composition by rememberLottieComposition(isMoving) { viewModel.entity.toLottieResource(state.isMoving) }
+            val progress by animateLottieCompositionAsState(
+                composition,
+                iterations = Compottie.IterateForever,
+            )
+            LaunchedEffect(progress) {
+                if (!isMoving || progress > .99f) {
+                    isMoving = state.isMoving
+                }
+            }
             Image(
                 painter = rememberLottiePainter(
                     composition = composition,
