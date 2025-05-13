@@ -23,9 +23,8 @@ import ponder.potato.model.game.BOUNDARY_X
 import ponder.potato.model.game.BOUNDARY_Y
 import ponder.potato.model.game.Point
 import ponder.potato.model.game.Vector2
-import ponder.potato.model.game.zones.Zone
+import ponder.potato.model.game.Zone
 import pondui.ui.controls.NavButton
-import pondui.ui.controls.Text
 import pondui.ui.theme.Pond
 import kotlin.reflect.KClass
 

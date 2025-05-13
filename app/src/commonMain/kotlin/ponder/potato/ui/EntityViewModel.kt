@@ -8,14 +8,10 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import ponder.potato.GameService
 import ponder.potato.model.game.Effect
-import ponder.potato.model.game.components.SpiritState
-import ponder.potato.model.game.entities.StateEntity
-import ponder.potato.model.game.zones.GameState
+import ponder.potato.model.game.SpiritState
+import ponder.potato.model.game.StateEntity
+import ponder.potato.model.game.GameState
 import pondui.ui.core.StateModel
-import kotlin.math.cos
-import kotlin.math.pow
-import kotlin.math.sin
-import kotlin.math.sqrt
 import kotlin.time.Duration.Companion.seconds
 
 class EntityViewModel(

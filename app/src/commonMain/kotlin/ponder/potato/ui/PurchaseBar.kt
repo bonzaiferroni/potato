@@ -18,8 +18,8 @@ import kabinet.utils.toMetricString
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import ponder.potato.model.game.Resource
-import ponder.potato.model.game.zones.ZoneAbility
-import ponder.potato.model.game.zones.ZoneAction
+import ponder.potato.model.game.ZoneAbility
+import ponder.potato.model.game.ZoneAction
 import pondui.ui.controls.Card
 import pondui.ui.controls.H4
 import pondui.ui.controls.ProgressBarButton

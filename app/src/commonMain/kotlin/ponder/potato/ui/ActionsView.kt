@@ -5,8 +5,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import kotlinx.collections.immutable.ImmutableList
-import ponder.potato.model.game.zones.EntityAction
-import ponder.potato.model.game.zones.ZoneAction
+import ponder.potato.model.game.EntityAction
+import ponder.potato.model.game.ZoneAction
 import pondui.ui.controls.Button
 import pondui.ui.nav.BottomBarSpacer
 import pondui.ui.theme.Pond

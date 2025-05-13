@@ -5,15 +5,15 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import ponder.potato.GameService
 import ponder.potato.model.game.Resource
-import ponder.potato.model.game.components.readResourceMax
-import ponder.potato.model.game.entities.Potato
+import ponder.potato.model.game.Potato
 import ponder.potato.model.game.read
-import ponder.potato.model.game.zones.Cave
-import ponder.potato.model.game.zones.Dream
-import ponder.potato.model.game.zones.GameState
-import ponder.potato.model.game.zones.ZoneAction
-import ponder.potato.model.game.zones.ZoneStatus
-import ponder.potato.model.game.zones.readZone
+import ponder.potato.model.game.Cave
+import ponder.potato.model.game.Dream
+import ponder.potato.model.game.GameState
+import ponder.potato.model.game.ZoneAction
+import ponder.potato.model.game.ZoneStatus
+import ponder.potato.model.game.readResourceMax
+import ponder.potato.model.game.readZone
 import pondui.ui.core.StateModel
 
 class DreamModel(

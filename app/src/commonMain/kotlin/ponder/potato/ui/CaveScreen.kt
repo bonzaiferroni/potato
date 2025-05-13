@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import ponder.potato.GameService
 import ponder.potato.ZoneRoute
-import ponder.potato.model.game.zones.Cave
+import ponder.potato.model.game.Cave
 
 @Composable
 fun CaveScreen() {

@@ -12,10 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ponder.potato.LaunchedGameUpdate
-import ponder.potato.model.game.components.NameState
-import ponder.potato.model.game.entities.StateEntity
 import pondui.ui.controls.Card
-import pondui.ui.controls.H4
 import pondui.ui.controls.H5
 import pondui.ui.controls.ProgressBar
 import pondui.ui.controls.Text

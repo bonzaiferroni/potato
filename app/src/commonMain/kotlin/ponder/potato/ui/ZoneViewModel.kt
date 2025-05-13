@@ -6,10 +6,10 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import ponder.potato.GameService
-import ponder.potato.model.game.entities.Bard
+import ponder.potato.model.game.Bard
 import ponder.potato.model.game.read
-import ponder.potato.model.game.zones.GameState
-import ponder.potato.model.game.zones.Zone
+import ponder.potato.model.game.GameState
+import ponder.potato.model.game.Zone
 import pondui.ui.core.StateModel
 import kotlin.reflect.KClass
 

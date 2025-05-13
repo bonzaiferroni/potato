@@ -1,10 +1,10 @@
 package ponder.potato.ui
 
-import ponder.potato.model.game.components.NameState
-import ponder.potato.model.game.components.SpiritState
-import ponder.potato.model.game.entities.Entity
-import ponder.potato.model.game.zones.Game
-import ponder.potato.model.game.zones.GameState
+import ponder.potato.model.game.NameState
+import ponder.potato.model.game.SpiritState
+import ponder.potato.model.game.Entity
+import ponder.potato.model.game.Game
+import ponder.potato.model.game.GameState
 
 class EntityListModel(
     val zoneId: Int? = null,

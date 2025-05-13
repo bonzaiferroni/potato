@@ -10,16 +10,16 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import ponder.potato.model.game.GameData
-import ponder.potato.model.game.entities.BardState
-import ponder.potato.model.game.entities.EntityState
-import ponder.potato.model.game.entities.ImpState
-import ponder.potato.model.game.entities.PotatoState
-import ponder.potato.model.game.entities.ShroomState
-import ponder.potato.model.game.entities.SpriteStateLevel
+import ponder.potato.model.game.BardState
+import ponder.potato.model.game.EntityState
+import ponder.potato.model.game.ImpState
+import ponder.potato.model.game.PotatoState
+import ponder.potato.model.game.ShroomState
+import ponder.potato.model.game.SpriteStateLevel
 import ponder.potato.model.game.generateGame
-import ponder.potato.model.game.zones.Game
-import ponder.potato.model.game.zones.GameEngine
-import ponder.potato.model.game.zones.NamingWay
+import ponder.potato.model.game.Game
+import ponder.potato.model.game.GameEngine
+import ponder.potato.model.game.NamingWay
 import potato.app.generated.resources.Res
 
 class GameService() {

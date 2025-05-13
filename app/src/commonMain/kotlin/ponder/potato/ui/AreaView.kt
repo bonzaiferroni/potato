@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringArrayResource
-import ponder.potato.model.game.zones.Dream
-import ponder.potato.model.game.zones.Zone
+import ponder.potato.model.game.Dream
+import ponder.potato.model.game.Zone
 import pondui.ui.controls.Card
 import pondui.ui.controls.H4
 import pondui.ui.controls.Text

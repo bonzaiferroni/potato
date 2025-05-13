@@ -1,7 +1,5 @@
 package ponder.potato.model.game
 
-import ponder.potato.model.game.entities.Entity
-
 sealed class Effect {
 }
 

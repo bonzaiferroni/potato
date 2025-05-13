@@ -6,15 +6,13 @@ import kotlinx.collections.immutable.toImmutableList
 import ponder.potato.GameService
 import ponder.potato.model.game.BOUNDARY_X
 import ponder.potato.model.game.BOUNDARY_Y
-import ponder.potato.model.game.MutablePosition
-import ponder.potato.model.game.components.travelTo
-import ponder.potato.model.game.entities.Bard
-import ponder.potato.model.game.moveTo
+import ponder.potato.model.game.Bard
 import ponder.potato.model.game.read
-import ponder.potato.model.game.zones.EntityAction
-import ponder.potato.model.game.zones.GameState
-import ponder.potato.model.game.zones.ZoneAction
-import ponder.potato.model.game.zones.ZoneStatus
+import ponder.potato.model.game.EntityAction
+import ponder.potato.model.game.GameState
+import ponder.potato.model.game.ZoneAction
+import ponder.potato.model.game.ZoneStatus
+import ponder.potato.model.game.travelTo
 import pondui.ui.core.StateModel
 
 class ZoneModel(
@@ -33,7 +31,6 @@ class ZoneModel(
     }
 
     fun update(gameState: GameState) {
-
         refreshState(gameState.delta)
     }
 

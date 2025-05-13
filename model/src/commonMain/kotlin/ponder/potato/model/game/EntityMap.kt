@@ -1,10 +1,5 @@
 package ponder.potato.model.game
 
-import ponder.potato.model.game.entities.Entity
-import ponder.potato.model.game.entities.EntityState
-import ponder.potato.model.game.entities.StateEntity
-import ponder.potato.model.game.zones.castIfState
-
 typealias EntityMap = Map<Long, Entity>
 
 inline fun <reified T> EntityMap.read(id: Long) = this[id] as? T

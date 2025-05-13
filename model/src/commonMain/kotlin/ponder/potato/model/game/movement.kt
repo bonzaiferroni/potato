@@ -1,13 +1,6 @@
 package ponder.potato.model.game
 
-import ponder.potato.model.game.components.MoverState
-import ponder.potato.model.game.entities.Entity
-import ponder.potato.model.game.entities.Intent
-import ponder.potato.model.game.entities.StateEntity
-import ponder.potato.model.game.zones.GameZone
-import ponder.potato.model.game.zones.Portal
 import kotlin.math.sqrt
-import kotlin.random.Random
 
 fun Entity.moveToward(position: Position, delta: Double) {
     val potential = delta * state.speed

@@ -10,10 +10,10 @@ import androidx.compose.ui.Modifier
 import kabinet.utils.toMetricString
 import kotlinx.collections.immutable.ImmutableList
 import ponder.potato.model.game.Resource
-import ponder.potato.model.game.zones.IntValue
-import ponder.potato.model.game.zones.ProgressValue
-import ponder.potato.model.game.zones.ResourceStatus
-import ponder.potato.model.game.zones.ZoneStatus
+import ponder.potato.model.game.IntValue
+import ponder.potato.model.game.ProgressValue
+import ponder.potato.model.game.ResourceStatus
+import ponder.potato.model.game.ZoneStatus
 import pondui.ui.controls.ProgressBar
 import pondui.ui.controls.Text
 import pondui.ui.theme.Pond

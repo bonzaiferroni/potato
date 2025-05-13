@@ -1,14 +1,12 @@
 package ponder.potato.ui
 
-import androidx.compose.runtime.Composable
-import io.github.alexzhirkevich.compottie.DotLottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
-import ponder.potato.model.game.entities.Bard
-import ponder.potato.model.game.entities.Entity
-import ponder.potato.model.game.entities.Imp
-import ponder.potato.model.game.entities.Potato
-import ponder.potato.model.game.entities.Shroom
-import ponder.potato.model.game.entities.Sprite
+import ponder.potato.model.game.Bard
+import ponder.potato.model.game.Entity
+import ponder.potato.model.game.Imp
+import ponder.potato.model.game.Potato
+import ponder.potato.model.game.Shroom
+import ponder.potato.model.game.Sprite
 import potato.app.generated.resources.Res
 
 suspend fun Entity?.toLottieResource(isMoving: Boolean) = when (this) {
