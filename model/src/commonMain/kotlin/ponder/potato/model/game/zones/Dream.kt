@@ -29,7 +29,7 @@ class Dream(
             ability = ZoneAbility.ResolveDream,
             status = null,
             cost = levelCost,
-            currentResource = game.resources.aether,
+            currentResource = game.storage.aether,
             count = level,
             maxCount = null,
             block = ::resolve,
@@ -38,7 +38,7 @@ class Dream(
             ability = ZoneAbility.DreamBard,
             status = null,
             cost = 500.0,
-            currentResource = game.resources.aether,
+            currentResource = game.storage.aether,
             count = game.entities.count<Bard>(),
             maxCount = 1,
             block = ::dreamBard,
@@ -48,7 +48,7 @@ class Dream(
     override fun getStatus() = listOf(
         IntValue("Dream level", game.dreamLevel),
         ProgressValue("Dreaming...", (state.progress / state.resolution).toFloat()),
-        ResourceStatus(game.resources.aether, state.aetherMax, Resource.Aether)
+        ResourceStatus(game.storage.aether, state.aetherMax, Resource.Aether)
     )
 
     override fun update(delta: Double) {

@@ -28,6 +28,6 @@ data class GameData(
     // val potato: PotatoState = PotatoState(),
     val dream: DreamState = DreamState(),
     val game: GameState = GameState(),
-    val resources: GameResources = GameResources(),
+    val resources: GameStorage = GameStorage(),
     val entityStates: Map<Long, EntityState> = mapOf()
 )

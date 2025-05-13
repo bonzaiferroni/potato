@@ -1,6 +1,7 @@
 package ponder.potato.model.game.zones
 
 import ponder.potato.model.game.Point
+import ponder.potato.model.game.entities.EntityState
 
 interface Zone {
     val id: Int
@@ -16,7 +17,7 @@ sealed class GameZone(): Zone {
 
     override val id: Int get() = _id ?: error("id not initialized")
     override val game: GameEngine get() = _game ?: error("game not initialized")
-    val resources get() = game.resources
+    val resources get() = game.storage
     override val name get() = this::class.simpleName ?: error("Zone must not be anonymous")
 
     override val portals = mutableListOf<Portal>()
@@ -55,5 +56,7 @@ sealed class GameZone(): Zone {
         }
         return actions
     }
+
+    inline fun <reified T: EntityState> readFirstOrNull() = game.entities.values.firstNotNullOfOrNull { it.castIfState<T>() }
 }
 

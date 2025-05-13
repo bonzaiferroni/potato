@@ -16,7 +16,7 @@ interface ShoutState: EntityState {
 
 fun StateEntity<ShoutState>.shoutAtTarget(): EntityAction? {
     val target = this.target ?: return null
-    return EntityAction(id, EntityAbility.Shout, state.shoutedAt) {
+    return EntityAction(id, EntityAbility.Shout, lastUsed = state.shoutedAt) {
         state.shoutedAt = Clock.System.now()
         target.despirit(10)
     }

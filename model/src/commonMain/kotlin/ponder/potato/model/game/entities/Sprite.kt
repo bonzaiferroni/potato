@@ -9,8 +9,8 @@ import ponder.potato.model.game.abilities.ShoutState
 import ponder.potato.model.game.abilities.shoutAtTarget
 
 class Sprite(
-    override val state: SpriteState = SpriteState()
-) : StateEntity<SpriteState>() {
+    override val state: SpriteStateLevel = SpriteStateLevel()
+) : StateEntity<SpriteStateLevel>() {
 
     override val components = listOf(
         Spirit(this),
@@ -29,9 +29,9 @@ class Sprite(
 
 @Serializable
 @SerialName("sprite")
-data class SpriteState(
+data class SpriteStateLevel(
     override var level: Int = 1,
-    override var progress: Int = 0,
+    override var levelProgress: Int = 0,
     override var spirit: Int = 0,
     override val position: MutablePosition = MutablePosition(),
     override var destination: MutablePosition = MutablePosition(),
@@ -40,7 +40,7 @@ data class SpriteState(
     override var log: String? = null,
     override var intent: Intent? = null,
     override var shoutedAt: Instant? = null,
-) : SpiritState, ProgressState, MoverState, OpposerState, DreamerState, NameState, TargetState, ShoutState {
+) : SpiritState, LevelProgressState, MoverState, OpposerState, DreamerState, NameState, TargetState, ShoutState {
     override val maxSpirit get() = factorValue(100, level, 1.2).toInt()
     override val power get() = factorValue(5, level, 1.2).toInt()
     override val aetherReward get() = factorValue(20, level, 1.2)

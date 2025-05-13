@@ -2,24 +2,23 @@ package ponder.potato.model.game.entities
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import ponder.potato.model.game.Effect
-import ponder.potato.model.game.EntityMap
 import ponder.potato.model.game.MutablePosition
 import ponder.potato.model.game.Position
 import ponder.potato.model.game.components.Component
-import ponder.potato.model.game.components.SpiritState
 import ponder.potato.model.game.components.StateComponent
 import ponder.potato.model.game.components.TargetState
-import ponder.potato.model.game.findNearest
-import ponder.potato.model.game.read
+import ponder.potato.model.game.components.target
 import ponder.potato.model.game.zones.EntityAction
 import ponder.potato.model.game.zones.GameZone
 import ponder.potato.model.game.zones.Zone
+import ponder.potato.model.game.zones.castIfState
 
 interface Entity {
     val id: Long
     val zone: Zone
     val state: EntityState
     val components: List<Component>
+    val name: String
 
     val game get() = zone.game
     val position: Position get() = state.position
@@ -36,6 +35,7 @@ abstract class StateEntity<out T: EntityState>: Entity {
     val effects = MutableSharedFlow<Effect>(extraBufferCapacity = 1)
 
     override var id = 0L
+    override val name get() = this::class.simpleName ?: error("must used named entity class")
 
     private var _zone: GameZone? = null
     override val zone get() = _zone ?: error("zone not initialized")
@@ -76,6 +76,7 @@ abstract class StateEntity<out T: EntityState>: Entity {
 
     fun hasIntent(intent: Intent) = state.intent == intent
     fun hasOtherIntent(intent: Intent) = state.intent != null && state.intent != intent
+    inline fun <reified T: EntityState> readTarget() = target?.castIfState<T>()
 }
 
 interface EntityState {
@@ -87,7 +88,7 @@ interface EntityState {
 
     fun toEntity() = when(this) {
         is PotatoState -> Potato(this)
-        is SpriteState -> Sprite(this)
+        is SpriteStateLevel -> Sprite(this)
         is ShroomState -> Shroom(this)
         is BardState -> Bard(this)
         is ImpState -> Imp(this)

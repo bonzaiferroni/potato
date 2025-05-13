@@ -31,7 +31,7 @@ class DreamModel(
     }
 
     fun refreshState(delta: Double = 1.0) {
-        val resources = game.resources
+        val resources = game.storage
         val aetherMax = game.entities.readResourceMax(Resource.Aether)
         val dreamLevel = potato?.state?.level ?: 1
         setState {

@@ -139,6 +139,8 @@ fun PurchaseBar(
 
 fun Resource.toColor() = when (this) {
     Resource.Aether -> Color(0xffb13c91)
+    Resource.Dirt -> Color(0xff6e4e3c)
+    Resource.Gold -> Color(0xffb69511)
 }
 
 fun ZoneAbility.toResource() = when (this) {

@@ -3,7 +3,6 @@ package ponder.potato.model.game.components
 import ponder.potato.model.game.Despirit
 import ponder.potato.model.game.entities.Entity
 import ponder.potato.model.game.entities.EntityState
-import ponder.potato.model.game.entities.SpriteState
 import ponder.potato.model.game.entities.StateEntity
 
 interface SpiritState: EntityState {

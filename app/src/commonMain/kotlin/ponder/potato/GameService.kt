@@ -1,6 +1,5 @@
 package ponder.potato
 
-import androidx.compose.ui.graphics.Color
 import com.russhwolf.settings.get
 import com.russhwolf.settings.set
 import kotlinx.coroutines.CoroutineScope
@@ -16,13 +15,11 @@ import ponder.potato.model.game.entities.EntityState
 import ponder.potato.model.game.entities.ImpState
 import ponder.potato.model.game.entities.PotatoState
 import ponder.potato.model.game.entities.ShroomState
-import ponder.potato.model.game.entities.SpriteState
+import ponder.potato.model.game.entities.SpriteStateLevel
 import ponder.potato.model.game.generateGame
 import ponder.potato.model.game.zones.Game
 import ponder.potato.model.game.zones.GameEngine
 import ponder.potato.model.game.zones.NamingWay
-import pondui.utils.darken
-import pondui.utils.lighten
 import potato.app.generated.resources.Res
 
 class GameService() {
@@ -74,7 +71,7 @@ class GameService() {
 val gameSerialModule = SerializersModule {
     polymorphic(EntityState::class) {
         subclass(PotatoState::class, PotatoState.serializer())
-        subclass(SpriteState::class, SpriteState.serializer())
+        subclass(SpriteStateLevel::class, SpriteStateLevel.serializer())
         subclass(ShroomState::class, ShroomState.serializer())
         subclass(ImpState::class, ImpState.serializer())
         subclass(BardState::class, BardState.serializer())

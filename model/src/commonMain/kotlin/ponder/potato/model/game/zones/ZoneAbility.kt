@@ -6,7 +6,7 @@ enum class ZoneAbility(
     val label: String,
     val verb: String,
     val description: String,
-    val resource: Resource,
+    val resource: Resource?,
 ) {
     DreamSprite(
         label = "Sprite",
@@ -31,5 +31,5 @@ enum class ZoneAbility(
         verb = "Dream",
         description = "Dream of a bard.",
         resource = Resource.Aether
-    )
+    ),
 }

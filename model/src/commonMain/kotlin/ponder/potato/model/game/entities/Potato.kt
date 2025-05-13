@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ponder.potato.model.game.MutablePosition
 import ponder.potato.model.game.Resource
-import ponder.potato.model.game.components.StorageState
+import ponder.potato.model.game.components.EntityStorageState
 import ponder.potato.model.game.components.DreamerState
 import ponder.potato.model.game.components.LevelState
 import ponder.potato.model.game.components.StateComponent
@@ -23,9 +23,9 @@ data class PotatoState(
     override val position: MutablePosition = MutablePosition(),
     override var log: String? = null,
     override var intent: Intent? = null,
-) : EntityState, LevelState, DreamerState, StorageState {
+) : EntityState, LevelState, DreamerState, EntityStorageState {
     override val isAlive get() = true
     override val aetherReward get() = factorValue(30, level, 1.2)
-    override val storage get() = factorValue(1000, level, 1.2)
-    override fun isStorageType(resource: Resource) = resource == Resource.Aether
+    override val storedValue get() = factorValue(1000, level, 1.2)
+    override val storedResource get() = Resource.Aether
 }

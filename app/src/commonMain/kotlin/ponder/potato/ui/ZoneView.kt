@@ -48,7 +48,6 @@ fun <T: Zone> ZoneView(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Pond.ruler.columnTight,
     ) {
-        Text(if (state.fullVisibility) state.name else "?")
         Box(
             modifier = modifier.fillMaxWidth()
                 .aspectRatio(1.5f)

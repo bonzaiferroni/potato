@@ -5,8 +5,8 @@ data class ZoneAction(
     val status: String?,
     val cost: Double,
     val currentResource: Double,
-    val count: Int?,
-    val maxCount: Int?,
+    val count: Int? = null,
+    val maxCount: Int? = null,
     val block: () -> Unit,
 ) {
     val ratio get() = currentResource / cost

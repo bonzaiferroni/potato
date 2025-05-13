@@ -9,24 +9,24 @@ interface LevelState: EntityState {
     val level: Int
 }
 
-interface ProgressState: LevelState {
-    var progress: Int
+interface LevelProgressState: LevelState {
+    var levelProgress: Int
     override var level: Int
 
     fun addExperience(experience: Double) {
-        val progress = experienceToProgress(level, experience).toInt()
-        this.progress += progress
+        val progress = experienceToLevelProgress(level, experience).toInt()
+        this.levelProgress += progress
     }
 }
 
 class Leveler(
-    override val entity: StateEntity<ProgressState>
-): StateComponent<ProgressState>() {
+    override val entity: StateEntity<LevelProgressState>
+): StateComponent<LevelProgressState>() {
 
     override fun update(delta: Double) {
         super.update(delta)
-        if (state.progress >= 100) {
-            state.progress -= 100
+        if (state.levelProgress >= 100) {
+            state.levelProgress -= 100
             state.level++
             entity.showEffect { LevelUp(state.level) }
             entity.state.log = "Reached a new level: ${state.level}"
@@ -34,4 +34,4 @@ class Leveler(
     }
 }
 
-fun experienceToProgress(level: Int, experience: Double) = (experience / factorValue(100, level, 1.2)) * experience
+fun experienceToLevelProgress(level: Int, experience: Double) = (experience / factorValue(100, level, 1.2)) * experience

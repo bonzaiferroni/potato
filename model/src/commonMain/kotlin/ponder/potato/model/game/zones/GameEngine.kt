@@ -5,12 +5,13 @@ import kotlinx.serialization.Serializable
 import ponder.potato.model.game.BOUNDARY_X
 import ponder.potato.model.game.BOUNDARY_Y
 import ponder.potato.model.game.ExperienceUp
-import ponder.potato.model.game.GameResources
+import ponder.potato.model.game.GameStorage
 import ponder.potato.model.game.RaiseGhost
 import ponder.potato.model.game.components.LevelState
 import ponder.potato.model.game.components.OpposerState
-import ponder.potato.model.game.components.ProgressState
+import ponder.potato.model.game.components.LevelProgressState
 import ponder.potato.model.game.components.SpiritState
+import ponder.potato.model.game.components.EntityStorageState
 import ponder.potato.model.game.entities.Entity
 import ponder.potato.model.game.entities.EntityState
 import ponder.potato.model.game.entities.Intent
@@ -19,7 +20,7 @@ import ponder.potato.model.game.oppose
 
 class GameEngine(
     override var state: GameState = GameState(),
-    override var resources: GameResources = GameResources(),
+    override var storage: GameStorage = GameStorage(),
     override val namingWay: NamingWay = NamingWay(),
     val entityStates: Map<Long, EntityState>? = null
 ) : Game {
@@ -84,6 +85,7 @@ class GameEngine(
         opposers.clear()
         updating.clear()
         updating.addAll(entities.values)
+        // opposition
         for (entity in updating) {
             if (!entity.hasIntent(Intent.Oppose)) continue
             val opposer = entity.castIfState<OpposerState>() ?: continue
@@ -91,6 +93,15 @@ class GameEngine(
             opposer.oppose(target)
             opposers.add(opposer)
         }
+
+        // set storage limits
+        storage.limits.clear()
+        for (entity in updating) {
+            val entityStorage = entity.state as? EntityStorageState ?: continue
+            val resource = entityStorage.storedResource
+            storage.limits[resource] = storage.readLimit(resource) + entityStorage.storedValue
+        }
+
         for (entity in updating) {
             entity.update(delta)
         }
@@ -102,7 +113,7 @@ class GameEngine(
             val experience = maxSpirit * level / opposerCount.toDouble()
             for (opposer in opposers) {
                 if (opposer.state.targetId != entity.id) continue
-                val progressor = opposer.castIfState<ProgressState>() ?: continue
+                val progressor = opposer.castIfState<LevelProgressState>() ?: continue
                 progressor.state.addExperience(experience)
                 progressor.showEffect { ExperienceUp(experience) }
             }
