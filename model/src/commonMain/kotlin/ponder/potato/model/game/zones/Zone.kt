@@ -37,10 +37,10 @@ sealed class GameZone(): Zone {
         remote: Point,
         isBidirectional: Boolean = true
     ): Z {
-        val portal = Portal(zone, local.x, local.y, remote.x, remote.y)
+        val portal = Portal(zone, local.x, local.y, this.id, remote.x, remote.y)
         portals.add(portal)
         if (isBidirectional) {
-            zone.portals.add(Portal(this, remote.x, remote.y, local.x, local.y))
+            zone.portals.add(Portal(this, remote.x, remote.y, zone.id,  local.x, local.y))
         }
         return zone
     }

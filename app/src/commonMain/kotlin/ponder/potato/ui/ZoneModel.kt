@@ -4,6 +4,13 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import ponder.potato.GameService
+import ponder.potato.model.game.BOUNDARY_X
+import ponder.potato.model.game.BOUNDARY_Y
+import ponder.potato.model.game.MutablePosition
+import ponder.potato.model.game.components.travelTo
+import ponder.potato.model.game.entities.Bard
+import ponder.potato.model.game.moveTo
+import ponder.potato.model.game.read
 import ponder.potato.model.game.zones.EntityAction
 import ponder.potato.model.game.zones.GameState
 import ponder.potato.model.game.zones.ZoneAction
@@ -18,7 +25,15 @@ class ZoneModel(
     val zone get() = game.zones.first { it.id == stateNow.zoneId }
     val potato get() = game.potato
 
+    fun init() {
+        val bard = game.entities.read<Bard>()
+        if (bard != null && bard.zone != zone) {
+            bard.travelTo(BOUNDARY_X / 2, BOUNDARY_Y / 2, zoneId)
+        }
+    }
+
     fun update(gameState: GameState) {
+
         refreshState(gameState.delta)
     }
 

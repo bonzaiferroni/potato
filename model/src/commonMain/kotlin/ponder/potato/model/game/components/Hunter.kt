@@ -21,7 +21,7 @@ class Hunter(
         val target = entity.readOrFindTarget(isTarget = findTarget)
 
         if (target == null) {
-            val portal = entity.zone.portals.firstOrNull { it.zone != previousZone }
+            val portal = entity.zone.portals.firstOrNull { it.destination != previousZone }
                 ?: if ((Clock.System.now() - zonedAt) > 1.minutes) entity.zone.portals.firstOrNull() else null
             if (portal != null) {
                 val distance = entity.position.squaredDistanceTo(portal)

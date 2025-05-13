@@ -4,4 +4,5 @@ enum class Intent {
     Oppose,
     Rest,
     Mine,
+    Travel,
 }

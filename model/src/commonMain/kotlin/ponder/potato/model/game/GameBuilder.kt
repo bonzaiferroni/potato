@@ -2,6 +2,7 @@ package ponder.potato.model.game
 
 import kotlinx.serialization.Serializable
 import ponder.potato.model.game.entities.EntityState
+import ponder.potato.model.game.entities.Potato
 import ponder.potato.model.game.zones.*
 
 class GameBuilder {

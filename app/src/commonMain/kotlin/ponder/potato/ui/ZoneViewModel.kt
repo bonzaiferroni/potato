@@ -24,7 +24,7 @@ class ZoneViewModel<T : Zone>(
     fun update(gameState: GameState) {
         val entityIds = game.entities.values.filter { it.position.zoneId == zone.id }.map{ it.id }.toImmutableList()
         val bardPresent = game.entities.read<Bard>()?.position?.zoneId == zone.id
-        val exits = zone.portals.map { ZoneExit(it.zoneId, it.x, it.y) }
+        val exits = zone.portals.map { ZoneExit(it.destination.id, it.x, it.y) }
         setState { it.copy(entityIds = entityIds, fullVisibility = true, exits = exits) }
     }
 }

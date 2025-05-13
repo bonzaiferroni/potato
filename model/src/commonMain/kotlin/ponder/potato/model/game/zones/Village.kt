@@ -9,7 +9,8 @@ class Village(
 
     val imps get() = game.entities.values.count() { it is Imp }
 
-    init {
+    override fun init(id: Int, game: GameEngine) {
+        super.init(id, game)
         addPortal(cave, Vector2(-BOUNDARY_X, 0f), Vector2(BOUNDARY_X, 0f))
     }
 

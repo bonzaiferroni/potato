@@ -1,6 +1,7 @@
 package ponder.potato.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -16,6 +17,11 @@ fun ZoneScreen(
     viewModel: ZoneModel = viewModel { ZoneModel(route.zoneId) }
 ) {
     val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.init()
+    }
+
     LaunchedGameUpdate(viewModel::update)
 
     TopBarSpacer()

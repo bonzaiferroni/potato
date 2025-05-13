@@ -15,7 +15,7 @@ interface Position : Point {
 
 @Serializable
 data class MutablePosition(
-    override var zoneId: Int = 0,
     override var x: Float = 0.0f,
-    override var y: Float = 0.0f
+    override var y: Float = 0.0f,
+    override var zoneId: Int = 0
 ) : Position
