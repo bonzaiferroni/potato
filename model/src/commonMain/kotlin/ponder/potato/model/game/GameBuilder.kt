@@ -2,13 +2,7 @@ package ponder.potato.model.game
 
 import kotlinx.serialization.Serializable
 import ponder.potato.model.game.entities.EntityState
-import ponder.potato.model.game.zones.Cave
-import ponder.potato.model.game.zones.Dream
-import ponder.potato.model.game.zones.DreamState
-import ponder.potato.model.game.zones.GameEngine
-import ponder.potato.model.game.zones.GameState
-import ponder.potato.model.game.zones.NamingWay
-import ponder.potato.model.game.zones.Village
+import ponder.potato.model.game.zones.*
 
 class GameBuilder {
 }
@@ -18,10 +12,12 @@ fun generateGame(data: GameData, namingWay: NamingWay): GameEngine {
     val dream = Dream(data.dream)
     val game = GameEngine(data.game, data.resources, namingWay, data.entityStates)
     val village = Village(cave)
+    val mine = Mine(cave)
     // val cave = Cave(dream)
     game.add(dream)
     game.add(cave)
     game.add(village)
+    game.add(mine)
     return game
 }
 

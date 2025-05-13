@@ -25,6 +25,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.stevdza_san.sprite.component.SpriteView
@@ -77,7 +78,6 @@ fun ZoneScope.EntityView(
 
     LaunchedGameUpdate(viewModel::update)
 
-    val screenWidth = getScreenWidth()
     val spriteState = rememberSpriteState(
         totalFrames = 9,
         framesPerRow = 3,
@@ -142,7 +142,8 @@ fun ZoneScope.EntityView(
         var isMoving by remember { mutableStateOf(state.isMoving) }
 
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val composition by rememberLottieComposition(isMoving) { viewModel.entity.toLottieResource(state.isMoving) }
             val progress by animateLottieCompositionAsState(
@@ -154,13 +155,7 @@ fun ZoneScope.EntityView(
                     isMoving = state.isMoving
                 }
             }
-            Image(
-                painter = rememberLottiePainter(
-                    composition = composition,
-                    iterations = Compottie.IterateForever,
-                ),
-                contentDescription = "Lottie animation"
-            )
+            // Text("(${state.x}, ${state.y})", style = TextStyle(fontSize = 8.sp))
             Box(
                 modifier = Modifier.fillMaxWidth()
                     .height(2.dp)
@@ -174,6 +169,13 @@ fun ZoneScope.EntityView(
                             size = Size(size.width * animatedSpirit, size.height)
                         )
                     }
+            )
+            Image(
+                painter = rememberLottiePainter(
+                    composition = composition,
+                    iterations = Compottie.IterateForever,
+                ),
+                contentDescription = "Lottie animation"
             )
         }
     }

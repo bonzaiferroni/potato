@@ -2,7 +2,7 @@ package ponder.potato.model.game
 
 import kotlinx.serialization.Serializable
 
-interface Position : Vector {
+interface Position : Point {
     val zoneId: Int
     fun atPosition(position: Position) = x == position.x && y == position.y && zoneId == position.zoneId
 
@@ -12,11 +12,6 @@ interface Position : Vector {
         squaredDistanceTo(position)
     }
 }
-
-data class Point(
-    override val x: Float,
-    override val y: Float,
-): Vector
 
 @Serializable
 data class MutablePosition(

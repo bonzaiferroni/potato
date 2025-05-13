@@ -10,7 +10,7 @@ class Village(
     val imps get() = game.entities.values.count() { it is Imp }
 
     init {
-        addPortal(cave, Point(-BOUNDARY_X, 0f), Point(BOUNDARY_X, 0f))
+        addPortal(cave, Vector2(-BOUNDARY_X, 0f), Vector2(BOUNDARY_X, 0f))
     }
 
     override fun update(delta: Double) {

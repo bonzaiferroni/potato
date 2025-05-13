@@ -1,6 +1,8 @@
 package ponder.potato.model.game.zones
 
 import kabinet.utils.toMetricString
+import ponder.potato.model.game.BOUNDARY_X
+import ponder.potato.model.game.BOUNDARY_Y
 import ponder.potato.model.game.Resource
 import ponder.potato.model.game.entities.Bard
 import ponder.potato.model.game.entities.Potato
@@ -25,10 +27,10 @@ class Cave : GameZone() {
         super.init(id, game)
         game.spawn(this, 0f, 0f) { Potato() }
 //        game.spawn(this) { Imp() }
-//        game.spawn(this, BOUNDARY_X, BOUNDARY_Y) { Potato() }
-//        game.spawn(this, -BOUNDARY_X, BOUNDARY_Y) { Potato() }
-//        game.spawn(this, BOUNDARY_X, -BOUNDARY_Y) { Potato() }
-//        game.spawn(this, -BOUNDARY_X, -BOUNDARY_Y) { Potato() }
+//        game.spawn(this, BOUNDARY_X, BOUNDARY_Y) { Bard() }
+//        game.spawn(this, -BOUNDARY_X, BOUNDARY_Y) { Bard() }
+//        game.spawn(this, BOUNDARY_X, -BOUNDARY_Y) { Bard() }
+//        game.spawn(this, -BOUNDARY_X, -BOUNDARY_Y) { Bard() }
     }
 
     fun manifestSprite() {

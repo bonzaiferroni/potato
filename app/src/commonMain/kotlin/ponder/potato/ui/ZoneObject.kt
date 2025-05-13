@@ -5,10 +5,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -24,28 +28,35 @@ fun ZoneScope.ZoneObject(
     delta: Double,
     content: @Composable () -> Unit
 ) {
-    val (xPosition, yPosition, distance) = remember(Vector2(x, y)) { projection(x, y) }
+    val (xPosition, yPosition) = remember(Vector2(x, y)) { projection_perspective(x, y) }
+    val distance = y + BOUNDARY_Y
 
-    if (boxSize == IntSize.Zero || xPosition == Float.NaN || yPosition == Float.NaN) return
+    if (zoneBoxSize == IntSize.Zero || xPosition == Float.NaN || yPosition == Float.NaN) return
 
     val animatedX by animatePosition(xPosition, delta)
     val animatedY by animatePosition(-yPosition, delta) // flip y for camera space
-    val animatedScale by animatePosition(12 / distance, delta)
+    val animatedScale by animatePosition(1f - y / BOUNDARY_Y * .25f, delta)
 
-    val centerX = boxSize.width * (animatedX + BOUNDARY_X) / (BOUNDARY_X * 2)
-    val centerY = boxSize.height * (animatedY + BOUNDARY_Y) / (BOUNDARY_Y * 2)
-    val entitySize = 50f
+    val centerX = zoneBoxSize.width * (animatedX + BOUNDARY_X) / (BOUNDARY_X * 2)
+    val centerY = zoneBoxSize.height * (animatedY + BOUNDARY_Y) / (BOUNDARY_Y * 2)
+    val entitySize = zoneBoxSize.width / 8
     val radius = entitySize / 2
     val radiusPx = with(LocalDensity.current) { radius.dp.toPx() }
 
+    var boxSize by remember { mutableStateOf(IntSize.Zero) }
+
     Box(
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.BottomCenter,
         modifier = Modifier
             .width((radius * 2).dp)
             .zIndex(animatedScale)
+            .onGloballyPositioned { coordinates ->
+                boxSize = coordinates.size
+            }
             .graphicsLayer {
+                transformOrigin = TransformOrigin(0.5f, 1f) // Bottom center as pivot
                 translationX = centerX - radiusPx
-                translationY = centerY - radiusPx
+                translationY = centerY - boxSize.height
                 scaleX = animatedScale
                 scaleY = animatedScale
             }
@@ -56,5 +67,5 @@ fun ZoneScope.ZoneObject(
 
 @Stable
 class ZoneScope(
-    val boxSize: IntSize
+    val zoneBoxSize: IntSize
 )

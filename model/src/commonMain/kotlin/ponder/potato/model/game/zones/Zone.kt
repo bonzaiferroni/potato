@@ -1,7 +1,6 @@
 package ponder.potato.model.game.zones
 
-import ponder.potato.model.game.Vector
-import ponder.potato.model.game.abilities.shoutAtTarget
+import ponder.potato.model.game.Point
 
 interface Zone {
     val id: Int
@@ -33,8 +32,8 @@ sealed class GameZone(): Zone {
 
     fun <Z : GameZone> addPortal(
         zone: Z,
-        local: Vector,
-        remote: Vector,
+        local: Point,
+        remote: Point,
         isBidirectional: Boolean = true
     ): Z {
         val portal = Portal(zone, local.x, local.y, remote.x, remote.y)
