@@ -50,4 +50,6 @@ data class BardState(
     override var intent: Intent? = null,
     override var targetId: Long? = null,
     override val destination: MutablePosition = MutablePosition(),
-): EntityState, TargetState, MoverState
+): EntityState, TargetState, MoverState {
+    override val speed get() = 2f
+}
