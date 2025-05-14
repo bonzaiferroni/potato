@@ -9,14 +9,16 @@ interface Storage {
 
     fun readQuantity(resource: Resource) = resources[resource] ?: 0.0
     fun addQuantity(resource: Resource, value: Double): Double
+    fun removeQuantity(resource: Resource, value: Double): Boolean
     fun readLimit(resource: Resource) = limits[resource] ?: 0.0
 }
 
 @Serializable
 data class GameStorage(
-    override val limits: MutableMap<Resource, Double> = mutableMapOf(),
     override val resources: MutableMap<Resource, Double> = mutableMapOf()
 ): Storage {
+    override val limits: MutableMap<Resource, Double> = mutableMapOf()
+
     override var aether get() = resources[Resource.Aether] ?: 0.0
         set(value) { resources[Resource.Aether] = value }
 
@@ -24,6 +26,13 @@ data class GameStorage(
         val addedValue = minOf(readLimit(resource) - readQuantity(resource), value)
         resources[resource] = readQuantity(resource) + addedValue
         return addedValue
+    }
+
+    override fun removeQuantity(resource: Resource, value: Double): Boolean {
+        val currentValue = readQuantity(resource)
+        if (currentValue < value) return false
+        resources[resource] = currentValue - value
+        return true
     }
 }
 

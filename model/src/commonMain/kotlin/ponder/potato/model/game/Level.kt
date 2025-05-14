@@ -23,7 +23,7 @@ class Leveler(
         if (state.levelProgress >= 100) {
             state.levelProgress -= 100
             state.level++
-            if (entity.isObserved) entity.showEffect(LevelUp(state.level))
+            entity.showEffect { LevelUp(state.level) }
         }
     }
 }

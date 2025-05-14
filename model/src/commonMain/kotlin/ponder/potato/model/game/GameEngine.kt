@@ -66,21 +66,6 @@ class GameEngine(
         entityIdSource = maxOf(id + 1, entityIdSource)
     }
 
-    inline fun <reified S : EntityState, reified E : StateEntity<S>> spawnIfAbsent(
-        count: Int,
-        zone: GameZone,
-        point: Point? = null,
-        create: () -> E,
-    ) {
-        if (entities.count { it is E && it.zone == zone } >= count) return
-        spawn(
-            zone = zone,
-            x = point?.x ?: Float.randomInsideBoundary(),
-            y = point?.y ?: Float.randomInsideBoundary(),
-            create = create
-        )
-    }
-
     fun start() {
         for (zone in zones) {
             zone.start()
@@ -130,10 +115,10 @@ class GameEngine(
                 if (opposer.state.targetId != entity.id) continue
                 val progressor = opposer.castIfState<LevelProgressState>() ?: continue
                 progressor.state.addExperience(experience)
-                if (progressor.isObserved) progressor.showEffect(ExperienceUp(experience))
+                progressor.showEffect { ExperienceUp(experience) }
             }
             entities.remove(entity.id)
-            if (entity.isObserved) entity.showEffect(RaiseGhost())
+            entity.showEffect { RaiseGhost() }
             entity.recycle()
             graveyard.add(entity)
         }

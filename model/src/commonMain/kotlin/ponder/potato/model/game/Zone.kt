@@ -32,6 +32,22 @@ sealed class GameZone(): Zone {
 
     open fun update(delta: Double) { }
 
+    inline fun <reified S : EntityState, reified E : StateEntity<S>> spawnIfAbsent(
+        point: Point,
+        create: () -> E,
+    ) {
+        val count = game.entities.count {
+            it is E && it.zone == this && it.position.x == point.x && it.position.y == point.y
+        }
+        if (count > 0) return
+        game.spawn(
+            zone = this,
+            x = point.x,
+            y = point.y,
+            create = create
+        )
+    }
+
     fun addPortal(
         zone: GameZone,
         point: Point,
@@ -63,5 +79,6 @@ sealed class GameZone(): Zone {
         return actions
     }
 
-    inline fun <reified T: EntityState> readFirstOrNull() = game.entities.values.firstNotNullOfOrNull { it.castIfState<T>() }
+    inline fun <reified T: EntityState> readFirstOrNull() =
+        game.entities.values.firstNotNullOfOrNull { if (it.zone == this) it.castIfState<T>() else null }
 }

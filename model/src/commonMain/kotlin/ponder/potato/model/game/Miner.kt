@@ -27,8 +27,7 @@ class Miner(
             state.intent = null
             state.targetId = null
             state.progress = null
-            if (console.isObserved(entity))
-                console.log("${entity.name} is unable to mine more ${type.label}, storage is full.")
+            log { "${entity.name} is unable to mine more ${type.label}, storage is full." }
         }
     }
 }

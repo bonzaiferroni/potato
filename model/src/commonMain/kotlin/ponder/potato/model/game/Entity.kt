@@ -71,6 +71,10 @@ abstract class StateEntity<out T: EntityState>: Entity {
         effects.tryEmit(effect)
     }
 
+    inline fun showEffect(effect: () -> Effect) {
+        if (isObserved) showEffect(effect())
+    }
+
     fun hasIntent(intent: Intent) = state.intent == intent
     fun hasOtherIntent(intent: Intent) = state.intent != null && state.intent != intent
     inline fun <reified T: EntityState> readTarget() = target?.castIfState<T>()

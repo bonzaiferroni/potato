@@ -20,7 +20,7 @@ class EntityViewModel(
     val gameService: GameService = GameService()
 ): StateModel<EntityViewState>(EntityViewState()) {
     val game = gameService.game
-    val entity = game.entities[entityId] as? StateEntity<*>
+    val entity get() = game.entities[entityId] as? StateEntity<*>
     val type = entity?.let { it::class.simpleName } ?: "Unknown"
     private val _effects = mutableStateListOf<ObservedEffect>()
     val effects: SnapshotStateList<ObservedEffect> = _effects

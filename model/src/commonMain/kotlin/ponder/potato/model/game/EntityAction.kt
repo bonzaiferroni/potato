@@ -13,4 +13,5 @@ data class EntityAction(
 enum class EntityAbility(val label: String, val coolDown: Float? = null) {
     Shout("Shout", 5f),
     Mine("Mine"),
+    Fill("Fill")
 }

@@ -78,7 +78,7 @@ fun ZoneScope.EntityView(
             val (text, color) = getText(o.effect) ?: continue
             key(o.key) {
 
-                val effectTime = remember (o.key) { Animatable(0f) }
+                val effectTime = remember(o.key) { Animatable(0f) }
                 val effectX = remember { Float.random(1f, 5f) }
                 val effectY = remember { Float.random(-10f, 10f) }
                 val offset = 60f

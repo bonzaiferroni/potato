@@ -30,8 +30,9 @@ fun StatusBar(
         for (status in statuses) {
             when (status) {
                 is ResourceStatus -> {
+                    val ratio = if (status.max > 0) (status.current / status.max).toFloat() else 0f
                     ProgressBar(
-                        progress = (status.current / status.max).toFloat(),
+                        progress = ratio,
                         color = status.resource.toColor(),
                         modifier = Modifier.weight(1f)
                     ) {

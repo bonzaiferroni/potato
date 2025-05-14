@@ -10,4 +10,7 @@ class GameConsole {
     fun log(message: String) {
         messages.tryEmit(message)
     }
+    inline fun log(entity: Entity, message: () -> String) {
+        if (isObserved(entity)) log(message())
+    }
 }

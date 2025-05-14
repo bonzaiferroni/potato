@@ -17,4 +17,8 @@ abstract class StateComponent<T: EntityState>: Component {
     open fun update(delta: Double) { }
     open fun enter(zone: GameZone) { }
     open fun recycle() { }
+
+    inline fun log(message: () -> String) {
+        if (console.isObserved(entity)) console.log(message())
+    }
 }

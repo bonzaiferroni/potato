@@ -15,10 +15,8 @@ class Cave : GameZone() {
     val bardCount get() = game.entities.values.count() { it is Bard }
     val canDreamBard get() = resources.aether >= BARD_COST && bardCount == 0
 
-    override fun init(id: Int, game: GameEngine) {
-        super.init(id, game)
-        game.spawn(this, 0f, 0f) { Potato() }
-//        game.spawn(this) { Imp() }
+    override fun start() {
+        spawnIfAbsent(Point.origin) { Potato() }
 //        game.spawn(this, BOUNDARY_X, BOUNDARY_Y) { Bard() }
 //        game.spawn(this, -BOUNDARY_X, BOUNDARY_Y) { Bard() }
 //        game.spawn(this, BOUNDARY_X, -BOUNDARY_Y) { Bard() }
