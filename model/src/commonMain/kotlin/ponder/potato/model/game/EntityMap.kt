@@ -1,5 +1,7 @@
 package ponder.potato.model.game
 
+import kotlin.reflect.KClass
+
 typealias EntityMap = Map<Long, Entity>
 
 inline fun <reified T> EntityMap.read(id: Long) = this[id] as? T
@@ -46,5 +48,8 @@ inline fun <reified S: EntityState> EntityMap.sumOf(where: (StateEntity<S>) -> B
 
 inline fun EntityMap.count(block: (Entity) -> Boolean) =
     this.values.count { block(it) }
+
+fun EntityMap.count(kClass: KClass<*>, zoneId: Int) =
+    this.values.count { it::class == kClass && it.position.zoneId == zoneId }
 
 inline fun <reified E: StateEntity<*>> EntityMap.count() = this.values.count { it is E }

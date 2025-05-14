@@ -9,11 +9,12 @@ interface Component {
 
 abstract class StateComponent<T: EntityState>: Component {
     abstract override val entity: StateEntity<T>
-    override val state get() = entity.state as? T ?: error("invalid state")
+    override val state get() = entity.state
     override val zone get() = entity.zone
     override val game get() = entity.game
 
     open fun init() { }
+    open fun start() { }
     open fun update(delta: Double) { }
     open fun enter(zone: GameZone) { }
     open fun recycle() { }

@@ -20,6 +20,6 @@ val Entity.spiritFull get() = spirit >= maxSpirit
 fun Entity.despirit(amount: Int) {
     (this.state as? SpiritState)?.let {
         it.spirit -= minOf(amount, it.spirit)
-        this.showEffect { Despirit(amount) }
+        if (this.isObserved) this.showEffect(Despirit(amount))
     }
 }

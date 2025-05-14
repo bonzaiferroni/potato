@@ -8,7 +8,6 @@ class GameEngine(
     override var state: GameState = GameState(),
     override var storage: GameStorage = GameStorage(),
     override val namingWay: NamingWay = NamingWay(),
-    val entityStates: Map<Long, EntityState>? = null
 ) : Game {
 
     override val zones = mutableListOf<GameZone>()
@@ -21,14 +20,14 @@ class GameEngine(
     val updating = mutableListOf<StateEntity<*>>()
     val opposers = mutableListOf<StateEntity<OpposerState>>()
 
-    fun add(zone: GameZone) {
+    fun add(zone: GameZone, entityStates: Map<Long, EntityState>?) {
         zones.add(zone)
         zone.init(zoneIdSource++, this)
-        addZoneStates(zone)
+        if (entityStates == null) return
+        addZoneStates(zone, entityStates)
     }
 
-    private fun addZoneStates(zone: GameZone) {
-        if (entityStates == null) return
+    private fun addZoneStates(zone: GameZone, entityStates: Map<Long, EntityState>) {
         for ((id, state) in entityStates) {
             val entity = state.toEntity()
             if (entity.position.zoneId != zone.id) continue
@@ -36,7 +35,7 @@ class GameEngine(
         }
     }
 
-    inline fun <reified S: EntityState, reified E : StateEntity<S>> spawn(
+    inline fun <reified S : EntityState, reified E : StateEntity<S>> spawn(
         zone: GameZone,
         x: Float = Float.random(-BOUNDARY_X, BOUNDARY_X),
         y: Float = Float.random(-BOUNDARY_Y, BOUNDARY_Y),
@@ -44,6 +43,17 @@ class GameEngine(
     ) {
         val entity = graveyard.firstNotNullOfOrNull { it as? E } ?: create()
         spawn(zone, entity, x, y)
+    }
+
+    inline fun <reified S : EntityState, reified E : StateEntity<S>> spawnIfAbsent(
+        count: Int,
+        zone: GameZone,
+        x: Float = Float.random(-BOUNDARY_X, BOUNDARY_X),
+        y: Float = Float.random(-BOUNDARY_Y, BOUNDARY_Y),
+        create: () -> E,
+    ) {
+        if (entities.count { it is E && it.zone == zone } >= count) return
+        spawn(zone, x, y, create)
     }
 
     fun spawn(
@@ -59,6 +69,15 @@ class GameEngine(
         entity.state.position.y = y
         entity.init(id)
         entityIdSource = maxOf(id + 1, entityIdSource)
+    }
+
+    fun start() {
+        for (zone in zones) {
+            zone.start()
+        }
+        for (entity in entities.values) {
+            entity.start()
+        }
     }
 
     fun update(delta: Double) {
@@ -101,10 +120,10 @@ class GameEngine(
                 if (opposer.state.targetId != entity.id) continue
                 val progressor = opposer.castIfState<LevelProgressState>() ?: continue
                 progressor.state.addExperience(experience)
-                progressor.showEffect { ExperienceUp(experience) }
+                if (progressor.isObserved) progressor.showEffect(ExperienceUp(experience))
             }
             entities.remove(entity.id)
-            entity.showEffect { RaiseGhost() }
+            if (entity.isObserved) entity.showEffect(RaiseGhost())
             entity.recycle()
             graveyard.add(entity)
         }
@@ -129,6 +148,6 @@ inline fun <reified T : EntityState> Entity.castIfState(): StateEntity<T>? {
     return if (state is T) this as StateEntity<T> else null
 }
 
-inline fun <reified T: GameZone> List<GameZone>.readOrNull() = this.firstOrNull() { it is T } as T?
-inline fun <reified T: GameZone> List<GameZone>.read() = this.readOrNull<T>()
+inline fun <reified T : GameZone> List<GameZone>.readOrNull() = this.firstOrNull() { it is T } as T?
+inline fun <reified T : GameZone> List<GameZone>.read() = this.readOrNull<T>()
     ?: error("No zone found: ${T::class.simpleName}")

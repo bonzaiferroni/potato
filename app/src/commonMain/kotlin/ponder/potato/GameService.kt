@@ -37,6 +37,7 @@ class GameService() {
 
     suspend fun init() {
         initEngine()
+        engine.start()
     }
 
     fun reset() {

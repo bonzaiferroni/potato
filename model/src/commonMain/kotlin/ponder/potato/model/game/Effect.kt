@@ -16,7 +16,7 @@ data class Inspirit(
     val spirit: Int
 ): Effect()
 
-data class AetherReward(
+data class ResourceReward(
     val amount: Double
 ): Effect()
 

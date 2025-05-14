@@ -8,11 +8,12 @@ interface Entity {
     val state: EntityState
     val components: List<Component>
     val name: String
+    val isObserved: Boolean
 
     val game get() = zone.game
     val position: Position get() = state.position
 
-    fun showEffect(createEffect: () -> Effect)
+    fun showEffect(effect: Effect)
 }
 
 abstract class StateEntity<out T: EntityState>: Entity {
@@ -22,6 +23,7 @@ abstract class StateEntity<out T: EntityState>: Entity {
     open val abilities: List<() -> EntityAction?> = emptyList()
 
     val effects = MutableSharedFlow<Effect>(extraBufferCapacity = 1)
+    override val isObserved get() = effects.subscriptionCount.value > 0
 
     override var id = 0L
     override val name get() = this::class.simpleName ?: error("must used named entity class")
@@ -46,6 +48,12 @@ abstract class StateEntity<out T: EntityState>: Entity {
         (state as? TargetState)?.let { it.targetId = null }
     }
 
+    open fun start() = {
+        for (component in components) {
+            component.start()
+        }
+    }
+
     open fun update(delta: Double) {
         for (component in components) {
             component.update(delta)
@@ -58,9 +66,8 @@ abstract class StateEntity<out T: EntityState>: Entity {
         }
     }
 
-    override fun showEffect(createEffect: () -> Effect) {
-        if (effects.subscriptionCount.value == 0) return
-        effects.tryEmit(createEffect())
+    override fun showEffect(effect: Effect) {
+        effects.tryEmit(effect)
     }
 
     fun hasIntent(intent: Intent) = state.intent == intent

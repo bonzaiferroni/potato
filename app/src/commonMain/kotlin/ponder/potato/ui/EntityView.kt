@@ -153,7 +153,7 @@ fun ZoneScope.EntityView(
 
 fun getText(effect: Effect) = when {
     effect is Despirit -> effect.spirit.toString() to Color.Red.lighten(.5f)
-    effect is AetherReward -> effect.amount.toMetricString() to Resource.Aether.toColor().lighten(.5f)
+    effect is ResourceReward -> effect.amount.toMetricString() to Resource.Aether.toColor().lighten(.5f)
     effect is LevelUp -> effect.level.toString() to Color.Blue.lighten(.5f)
     effect is ExperienceUp -> effect.experience.toMetricString() to Color.Yellow.lighten(.5f)
     effect is Inspirit -> effect.spirit.toString() to Color.Green.lighten(.5f)

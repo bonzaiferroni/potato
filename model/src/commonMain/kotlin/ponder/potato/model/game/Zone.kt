@@ -1,5 +1,7 @@
 package ponder.potato.model.game
 
+import kotlin.reflect.KClass
+
 interface Zone {
     val id: Int
     val portals: List<Portal>
@@ -25,6 +27,8 @@ sealed class GameZone(): Zone {
         _id = id
         _game = game
     }
+
+    open fun start() { }
 
     open fun update(delta: Double) { }
 
@@ -56,4 +60,3 @@ sealed class GameZone(): Zone {
 
     inline fun <reified T: EntityState> readFirstOrNull() = game.entities.values.firstNotNullOfOrNull { it.castIfState<T>() }
 }
-

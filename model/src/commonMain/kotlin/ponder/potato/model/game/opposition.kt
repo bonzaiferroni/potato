@@ -8,6 +8,6 @@ fun StateEntity<OpposerState>.oppose(target: StateEntity<SpiritState>) {
     val damage = (this.state.power * Random.nextFloat()).toInt()
 
     target.state.spirit -= damage
-    this.showEffect { Opposition(target, damage) }
+    if (this.isObserved) this.showEffect(Opposition(target, damage))
     // target.showEffect { Despirit(damage) }
 }

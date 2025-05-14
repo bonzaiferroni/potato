@@ -51,7 +51,7 @@ class Dream(
             for (entity in game.entities.values) {
                 val dreamer = entity.castIfState<DreamerState>() ?: continue
                 dreamerReward += dreamer.state.getReward(level)
-                dreamer.showEffect { AetherReward(dreamer.state.aetherReward) }
+                if (dreamer.isObserved) dreamer.showEffect(ResourceReward(dreamer.state.aetherReward))
             }
 
             val totalAether = resources.aether + dreamerReward
