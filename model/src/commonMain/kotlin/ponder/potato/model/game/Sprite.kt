@@ -33,7 +33,6 @@ data class SpriteStateLevel(
     override var destination: MutablePosition = MutablePosition(),
     override var targetId: Long? = null,
     override var name: String? = null,
-    override var log: String? = null,
     override var intent: Intent? = null,
     override var shoutedAt: Instant? = null,
 ) : SpiritState, LevelProgressState, MoverState, OpposerState, DreamerState, NameState, TargetState, ShoutState {

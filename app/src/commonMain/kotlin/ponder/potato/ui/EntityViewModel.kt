@@ -11,6 +11,7 @@ import ponder.potato.model.game.Effect
 import ponder.potato.model.game.SpiritState
 import ponder.potato.model.game.StateEntity
 import ponder.potato.model.game.GameState
+import ponder.potato.model.game.ProgressState
 import pondui.ui.core.StateModel
 import kotlin.time.Duration.Companion.seconds
 
@@ -51,7 +52,8 @@ class EntityViewModel(
                 delta = delta,
                 spirit = spiritState?.spirit,
                 spiritMax = spiritState?.maxSpirit,
-                isMoving = e.position.x != stateNow.x || e.position.y != stateNow.y
+                isMoving = e.position.x != stateNow.x || e.position.y != stateNow.y,
+                progress = (e.state as? ProgressState)?.progress
             ) }
         }
     }
@@ -72,6 +74,7 @@ data class EntityViewState(
     val spirit: Int? = null,
     val spiritMax: Int? = null,
     val isMoving: Boolean = false,
+    val progress: Float? = null,
 ) {
     val spiritRatio = if (spiritMax == null || spirit == null || spiritMax == 0) 1f else spirit / spiritMax.toFloat()
 }

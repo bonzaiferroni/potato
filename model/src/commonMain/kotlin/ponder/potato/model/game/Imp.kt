@@ -21,7 +21,6 @@ data class ImpState(
     override val level: Int = 1,
     override val position: MutablePosition = MutablePosition(),
     override val speed: Float = 1.2f,
-    override var log: String? = null,
     override var intent: Intent? = null,
 ) : SpiritState, LevelState, OpposerState {
     override val maxSpirit get() = factorValue(100, level, 1.2).toInt()

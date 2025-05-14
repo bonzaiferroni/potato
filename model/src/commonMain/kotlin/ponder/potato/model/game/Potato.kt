@@ -14,7 +14,6 @@ class Potato(
 data class PotatoState(
     override var level: Int = 1,
     override val position: MutablePosition = MutablePosition(),
-    override var log: String? = null,
     override var intent: Intent? = null,
 ) : EntityState, LevelState, DreamerState, EntityStorageState {
     override val isAlive get() = true

@@ -27,7 +27,7 @@ fun ActionsView(
                     horizontalArrangement = Pond.ruler.rowTight
                 ) {
                     for (action in entityActions) {
-                        Button(action.ability.label, onClick = action.invoke)
+                        Button(action.label, onClick = action.invoke)
                     }
                 }
             }

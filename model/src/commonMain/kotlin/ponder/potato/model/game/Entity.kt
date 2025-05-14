@@ -71,16 +71,6 @@ abstract class StateEntity<out T: EntityState>: Entity {
 interface EntityState {
     val isAlive: Boolean
     val position: MutablePosition
-    var log: String?
     var intent: Intent?
     val speed get() = 1f
-
-    fun toEntity() = when(this) {
-        is PotatoState -> Potato(this)
-        is SpriteStateLevel -> Sprite(this)
-        is ShroomState -> Shroom(this)
-        is BardState -> Bard(this)
-        is ImpState -> Imp(this)
-        else -> error("unknown state: ${this::class.simpleName}")
-    }
 }

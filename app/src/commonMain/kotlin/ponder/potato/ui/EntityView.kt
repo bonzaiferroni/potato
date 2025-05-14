@@ -31,6 +31,7 @@ import kabinet.utils.toMetricString
 import ponder.potato.LaunchedGameUpdate
 import ponder.potato.model.game.*
 import ponder.potato.model.game.Imp
+import pondui.ui.controls.ProgressBar
 import pondui.ui.controls.Text
 import pondui.utils.lighten
 
@@ -80,7 +81,7 @@ fun ZoneScope.EntityView(
                 val effectTime = remember (o.key) { Animatable(0f) }
                 val effectX = remember { Float.random(1f, 5f) }
                 val effectY = remember { Float.random(-10f, 10f) }
-                val offset = 30f
+                val offset = 60f
                 val wind = if (viewModel.entity is Imp) 1f else -1f
 
                 LaunchedEffect(Unit) {
@@ -122,6 +123,9 @@ fun ZoneScope.EntityView(
                 }
             }
             // Text("(${state.x}, ${state.y})", style = TextStyle(fontSize = 8.sp))
+            state.progress?.let {
+                ProgressBar(it)
+            }
             Box(
                 modifier = Modifier.fillMaxWidth()
                     .height(2.dp)

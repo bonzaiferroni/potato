@@ -1,21 +1,23 @@
 package ponder.potato.model.game
 
 import kabinet.utils.random
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 class Outcrop(
-    override val state: OutcropState,
+    override val state: OutcropState = OutcropState(),
 ): StateEntity<OutcropState>() {
     override val components = emptyList<StateComponent<OutcropState>>()
 }
 
+@Serializable
 data class OutcropState(
-    override val isAlive: Boolean,
-    override val position: MutablePosition,
-    override var log: String?,
-    override var intent: Intent?,
+    override val position: MutablePosition = MutablePosition(),
+    override var intent: Intent? = null,
     override var progress: Float = 0f,
     override val hardness: Float = 4f,
 ): MinerTargetState {
+    override val isAlive: Boolean = true
     override val composition: Map<Resource, Float> get() = basicComposition
 }
 

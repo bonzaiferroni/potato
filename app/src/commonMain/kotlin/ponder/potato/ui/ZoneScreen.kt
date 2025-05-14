@@ -9,6 +9,7 @@ import ponder.potato.LaunchedGameUpdate
 import ponder.potato.ZoneRoute
 import pondui.ui.controls.Tab
 import pondui.ui.controls.Tabs
+import pondui.ui.nav.LocalPortal
 import pondui.ui.nav.TopBarSpacer
 
 @Composable
@@ -17,9 +18,11 @@ fun ZoneScreen(
     viewModel: ZoneModel = viewModel { ZoneModel(route.zoneId) }
 ) {
     val state by viewModel.state.collectAsState()
+    val portal = LocalPortal.current
 
     LaunchedEffect(Unit) {
         viewModel.init()
+        portal.setTitle(viewModel.zone.name)
     }
 
     LaunchedGameUpdate(viewModel::update)

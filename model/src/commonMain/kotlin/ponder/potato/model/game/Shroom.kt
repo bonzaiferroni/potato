@@ -17,7 +17,6 @@ class Shroom(
 data class ShroomState(
     override val position: MutablePosition = MutablePosition(),
     override var level: Int = 1,
-    override var log: String? = null,
     override var visitorId: Long? = null,
     override var name: String? = null,
     override var intent: Intent? = null,

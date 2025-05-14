@@ -24,7 +24,6 @@ class Leveler(
             state.levelProgress -= 100
             state.level++
             entity.showEffect { LevelUp(state.level) }
-            entity.state.log = "Reached a new level: ${state.level}"
         }
     }
 }

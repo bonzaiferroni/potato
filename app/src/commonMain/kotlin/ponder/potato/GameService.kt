@@ -20,6 +20,8 @@ import ponder.potato.model.game.generateGame
 import ponder.potato.model.game.Game
 import ponder.potato.model.game.GameEngine
 import ponder.potato.model.game.NamingWay
+import ponder.potato.model.game.OutcropState
+import ponder.potato.model.game.gameSerialModule
 import potato.app.generated.resources.Res
 
 class GameService() {
@@ -65,17 +67,6 @@ class GameService() {
             val namingWay = NamingWay(spriteNames, shroomNames)
             engine = generateGame(gameData, namingWay)
         }
-    }
-}
-
-val gameSerialModule = SerializersModule {
-    polymorphic(EntityState::class) {
-        subclass(PotatoState::class, PotatoState.serializer())
-        subclass(SpriteStateLevel::class, SpriteStateLevel.serializer())
-        subclass(ShroomState::class, ShroomState.serializer())
-        subclass(ImpState::class, ImpState.serializer())
-        subclass(BardState::class, BardState.serializer())
-        // Add all yer other entity state types here
     }
 }
 

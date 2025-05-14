@@ -12,6 +12,7 @@ class Bard(
     )
 
     fun startDigging(): EntityAction? {
+        if (state.targetId != null) return null
         val target = zone.readFirstOrNull<MinerTargetState>() ?: return null
         return EntityAction(
             entityId = id,
@@ -46,7 +47,6 @@ class Bard(
 data class BardState(
     override val isAlive: Boolean = true,
     override val position: MutablePosition = MutablePosition(),
-    override var log: String? = null,
     override var intent: Intent? = null,
     override var targetId: Long? = null,
     override val destination: MutablePosition = MutablePosition(),
