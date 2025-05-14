@@ -5,6 +5,10 @@ import kotlin.math.sqrt
 interface Point {
     val x: Float
     val y: Float
+
+    companion object {
+        val origin = Vector2.origin
+    }
 }
 
 fun Point.squaredDistanceTo(point: Point): Float {
@@ -18,4 +22,8 @@ fun Point.distanceTo(point: Point) = sqrt(this.squaredDistanceTo(point))
 data class Vector2(
     override val x: Float,
     override val y: Float
-): Point
+): Point {
+    companion object {
+        val origin = Vector2(0f, 0f)
+    }
+}

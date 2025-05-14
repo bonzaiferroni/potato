@@ -4,8 +4,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import ponder.potato.GameService
-import ponder.potato.model.game.BOUNDARY_X
-import ponder.potato.model.game.BOUNDARY_Y
+import ponder.potato.model.game.BOUNDARY
 import ponder.potato.model.game.Bard
 import ponder.potato.model.game.read
 import ponder.potato.model.game.EntityAction
@@ -26,7 +25,7 @@ class ZoneModel(
     fun init() {
         val bard = game.entities.read<Bard>()
         if (bard != null && bard.zone != zone) {
-            bard.travelTo(BOUNDARY_X / 2, BOUNDARY_Y / 2, zoneId)
+            bard.travelTo(BOUNDARY / 2, BOUNDARY / 2, zoneId)
         }
     }
 

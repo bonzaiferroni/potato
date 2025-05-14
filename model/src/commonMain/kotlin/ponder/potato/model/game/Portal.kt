@@ -9,16 +9,16 @@ package ponder.potato.model.game
 
 class Portal(
     val destination: GameZone,
-    override val x: Float,
-    override val y: Float,
+    val point: Point,
     override val zoneId: Int,
-    val remoteX: Float,
-    val remoteY: Float,
+    val remotePoint: Point
 ): Position {
+    override val x get() = point.x
+    override val y get() = point.y
 
     fun transport(entity: StateEntity<*>) {
         entity.enter(destination)
-        entity.state.position.x = remoteX
-        entity.state.position.y = remoteY
+        entity.state.position.x = remotePoint.x
+        entity.state.position.y = remotePoint.y
     }
 }

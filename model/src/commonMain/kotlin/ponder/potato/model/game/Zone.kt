@@ -1,7 +1,5 @@
 package ponder.potato.model.game
 
-import kotlin.reflect.KClass
-
 interface Zone {
     val id: Int
     val portals: List<Portal>
@@ -34,19 +32,24 @@ sealed class GameZone(): Zone {
 
     open fun update(delta: Double) { }
 
-    fun <Z : GameZone> addPortal(
-        zone: Z,
-        local: Point,
-        remote: Point,
+    fun addPortal(
+        zone: GameZone,
+        point: Point,
+        remotePoint: Point,
         isBidirectional: Boolean = true
-    ): Z {
-        val portal = Portal(zone, local.x, local.y, this.id, remote.x, remote.y)
+    ) {
+        val portal = Portal(zone, point, this.id, remotePoint)
         portals.add(portal)
         if (isBidirectional) {
-            zone.portals.add(Portal(this, remote.x, remote.y, zone.id,  local.x, local.y))
+            zone.portals.add(Portal(this, remotePoint, zone.id, point))
         }
-        return zone
     }
+
+    fun addPortal(
+        zone: GameZone,
+        direction: Direction,
+        isBidirectional: Boolean = true
+    ) = addPortal(zone, direction.boundaryPoint, direction.opposite.boundaryPoint, isBidirectional)
 
     fun getEntityActions(): List<EntityAction> {
         val actions = mutableListOf<EntityAction>()

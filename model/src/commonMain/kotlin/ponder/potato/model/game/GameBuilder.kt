@@ -10,11 +10,13 @@ fun generateGame(data: GameData, namingWay: NamingWay): GameEngine {
     val dream = Dream(data.dream)
     val game = GameEngine(data.game, data.resources, namingWay)
     val village = Village(cave)
-    val mine = Mine(cave)
+    val mine = Mine()
+    val garden = Garden()
     game.add(dream, data.entityStates)
     game.add(cave, data.entityStates)
     game.add(village, data.entityStates)
     game.add(mine, data.entityStates)
+    game.add(garden, data.entityStates)
     return game
 }
 

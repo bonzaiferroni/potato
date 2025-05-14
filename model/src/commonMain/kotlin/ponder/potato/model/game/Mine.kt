@@ -1,15 +1,14 @@
 package ponder.potato.model.game
 
-class Mine(
-    val cave: Cave,
-) : GameZone() {
+class Mine() : GameZone() {
 
     override fun start() {
-        addPortal(cave, Vector2(BOUNDARY_X, 0f), Vector2(-BOUNDARY_X, 0f))
+        val cave = game.zones.read<Cave>()
+        addPortal(cave, Direction.East)
 
-        game.spawnIfAbsent(1, this, 0f, 0f) { Outcrop() }
-        game.spawnIfAbsent(1, this, -BOUNDARY_X / 2, BOUNDARY_Y / 2) { Vault() }
-        game.spawnIfAbsent(1, this, -BOUNDARY_X / 2, -BOUNDARY_Y / 2) { DirtPile() }
+        game.spawnIfAbsent(1, this, Point.origin) { Outcrop() }
+        game.spawnIfAbsent(1, this, Direction.NorthWest.midPoint) { Vault() }
+        game.spawnIfAbsent(1, this, Direction.SouthWest.midPoint) { DirtPile() }
     }
 
     override fun getStatus() = listOf(

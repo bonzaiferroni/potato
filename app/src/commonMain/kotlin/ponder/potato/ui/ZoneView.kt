@@ -19,8 +19,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ponder.potato.LocalGame
 import ponder.potato.ZoneRoute
-import ponder.potato.model.game.BOUNDARY_X
-import ponder.potato.model.game.BOUNDARY_Y
+import ponder.potato.model.game.BOUNDARY
 import ponder.potato.model.game.Point
 import ponder.potato.model.game.Vector2
 import ponder.potato.model.game.Zone
@@ -78,15 +77,15 @@ fun <T: Zone> ZoneView(
                     drawPath(path = path,  color = Color.Blue.copy(.1f))
 
                     val lineColor = Color.Green.copy(.1f)
-                    for (x in (-BOUNDARY_X.toInt()..BOUNDARY_X.toInt() + 1)) {
-                        val start = projection_perspective(x.toFloat() - .5f, -BOUNDARY_Y - .5f).toZoneViewSpace(boxSize)
-                        val end = projection_perspective(x.toFloat() - .5f, BOUNDARY_Y + .5f).toZoneViewSpace(boxSize)
+                    for (x in (-BOUNDARY.toInt()..BOUNDARY.toInt() + 1)) {
+                        val start = projection_perspective(x.toFloat() - .5f, -BOUNDARY - .5f).toZoneViewSpace(boxSize)
+                        val end = projection_perspective(x.toFloat() - .5f, BOUNDARY + .5f).toZoneViewSpace(boxSize)
                         drawLine(lineColor, Offset(start.x, start.y), Offset(end.x, end.y))
                     }
 
-                    for (y in (-BOUNDARY_Y.toInt()..BOUNDARY_Y.toInt() + 1)) {
-                        val start = projection_perspective(-BOUNDARY_X - .5f, y.toFloat() - .5f).toZoneViewSpace(boxSize)
-                        val end = projection_perspective(BOUNDARY_X + .5f, y.toFloat() - .5f).toZoneViewSpace(boxSize)
+                    for (y in (-BOUNDARY.toInt()..BOUNDARY.toInt() + 1)) {
+                        val start = projection_perspective(-BOUNDARY - .5f, y.toFloat() - .5f).toZoneViewSpace(boxSize)
+                        val end = projection_perspective(BOUNDARY + .5f, y.toFloat() - .5f).toZoneViewSpace(boxSize)
                         drawLine(lineColor, Offset(start.x, start.y), Offset(end.x, end.y))
                     }
                 }
@@ -106,12 +105,12 @@ fun <T: Zone> ZoneView(
     }
 }
 
-val topLeftProjection = projection_perspective(-BOUNDARY_X - .5f, BOUNDARY_Y + .5f)
-val topRightProjection = projection_perspective(BOUNDARY_X + .5f, BOUNDARY_Y + .5f)
-val bottomLeftProjection = projection_perspective(-BOUNDARY_X - .5f, -BOUNDARY_Y - .5f)
-val bottomRightProjection = projection_perspective(BOUNDARY_X + .5f, -BOUNDARY_Y - .5f)
+val topLeftProjection = projection_perspective(-BOUNDARY - .5f, BOUNDARY + .5f)
+val topRightProjection = projection_perspective(BOUNDARY + .5f, BOUNDARY + .5f)
+val bottomLeftProjection = projection_perspective(-BOUNDARY - .5f, -BOUNDARY - .5f)
+val bottomRightProjection = projection_perspective(BOUNDARY + .5f, -BOUNDARY - .5f)
 
 fun Point.toZoneViewSpace(boxSize: IntSize) = Vector2(
-    x = boxSize.width * (x + BOUNDARY_X) / (BOUNDARY_X * 2),
-    y = boxSize.height * (-y + BOUNDARY_Y) / (BOUNDARY_Y * 2),
+    x = boxSize.width * (x + BOUNDARY) / (BOUNDARY * 2),
+    y = boxSize.height * (-y + BOUNDARY) / (BOUNDARY * 2),
 )

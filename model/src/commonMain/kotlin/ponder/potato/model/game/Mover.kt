@@ -23,7 +23,7 @@ class Mover(
     }
 }
 
-fun StateEntity<MoverState>.setRandomDestination(xBound: Float = BOUNDARY_X, yBound: Float = BOUNDARY_Y) {
+fun StateEntity<MoverState>.setRandomDestination(xBound: Float = BOUNDARY, yBound: Float = BOUNDARY) {
     state.destination.x = Random.nextFloat() * (2 * xBound) - xBound
     state.destination.y = Random.nextFloat() * (2 * yBound) - yBound
     state.destination.zoneId = position.zoneId

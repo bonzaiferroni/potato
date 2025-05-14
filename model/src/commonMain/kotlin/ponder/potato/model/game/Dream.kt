@@ -12,7 +12,7 @@ class Dream(
 
     fun dreamBard() {
         val cave = game.zones.readOrNull<Cave>() ?: error("no cave zone")
-        game.spawn(cave, BOUNDARY_X / 2, BOUNDARY_Y / 2) { Bard() }
+        game.spawn(cave, Direction.NorthEast.midPoint) { Bard() }
     }
 
     override fun getZoneActions(): List<ZoneAction> = listOf(

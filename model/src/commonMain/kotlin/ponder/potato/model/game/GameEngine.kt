@@ -37,30 +37,25 @@ class GameEngine(
 
     inline fun <reified S : EntityState, reified E : StateEntity<S>> spawn(
         zone: GameZone,
-        x: Float = Float.random(-BOUNDARY_X, BOUNDARY_X),
-        y: Float = Float.random(-BOUNDARY_Y, BOUNDARY_Y),
+        point: Point,
+        create: () -> E,
+    ) = spawn(zone, point.x, point.y, create)
+
+    inline fun <reified S : EntityState, reified E : StateEntity<S>> spawn(
+        zone: GameZone,
+        x: Float = Float.random(-BOUNDARY, BOUNDARY),
+        y: Float = Float.random(-BOUNDARY, BOUNDARY),
         create: () -> E,
     ) {
         val entity = graveyard.firstNotNullOfOrNull { it as? E } ?: create()
         spawn(zone, entity, x, y)
     }
 
-    inline fun <reified S : EntityState, reified E : StateEntity<S>> spawnIfAbsent(
-        count: Int,
-        zone: GameZone,
-        x: Float = Float.random(-BOUNDARY_X, BOUNDARY_X),
-        y: Float = Float.random(-BOUNDARY_Y, BOUNDARY_Y),
-        create: () -> E,
-    ) {
-        if (entities.count { it is E && it.zone == zone } >= count) return
-        spawn(zone, x, y, create)
-    }
-
     fun spawn(
         zone: GameZone,
         entity: StateEntity<*>,
-        x: Float = Float.random(-BOUNDARY_X, BOUNDARY_X),
-        y: Float = Float.random(-BOUNDARY_Y, BOUNDARY_Y),
+        x: Float = Float.randomInsideBoundary(),
+        y: Float = Float.randomInsideBoundary(),
         id: Long = entityIdSource,
     ) {
         entities[id] = entity
@@ -69,6 +64,21 @@ class GameEngine(
         entity.state.position.y = y
         entity.init(id)
         entityIdSource = maxOf(id + 1, entityIdSource)
+    }
+
+    inline fun <reified S : EntityState, reified E : StateEntity<S>> spawnIfAbsent(
+        count: Int,
+        zone: GameZone,
+        point: Point? = null,
+        create: () -> E,
+    ) {
+        if (entities.count { it is E && it.zone == zone } >= count) return
+        spawn(
+            zone = zone,
+            x = point?.x ?: Float.randomInsideBoundary(),
+            y = point?.y ?: Float.randomInsideBoundary(),
+            create = create
+        )
     }
 
     fun start() {

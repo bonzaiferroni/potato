@@ -17,8 +17,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import ponder.potato.model.game.BOUNDARY_X
-import ponder.potato.model.game.BOUNDARY_Y
+import ponder.potato.model.game.BOUNDARY
 import ponder.potato.model.game.Vector2
 
 @Composable
@@ -29,16 +28,16 @@ fun ZoneScope.ZoneObject(
     content: @Composable () -> Unit
 ) {
     val (xPosition, yPosition) = remember(Vector2(x, y)) { projection_perspective(x, y) }
-    val distance = y + BOUNDARY_Y
+    val distance = y + BOUNDARY
 
     if (zoneBoxSize == IntSize.Zero || xPosition == Float.NaN || yPosition == Float.NaN) return
 
     val animatedX by animatePosition(xPosition, delta)
     val animatedY by animatePosition(-yPosition, delta) // flip y for camera space
-    val animatedScale by animatePosition(1f - y / BOUNDARY_Y * .25f, delta)
+    val animatedScale by animatePosition(1f - y / BOUNDARY * .25f, delta)
 
-    val centerX = zoneBoxSize.width * (animatedX + BOUNDARY_X) / (BOUNDARY_X * 2)
-    val centerY = zoneBoxSize.height * (animatedY + BOUNDARY_Y) / (BOUNDARY_Y * 2)
+    val centerX = zoneBoxSize.width * (animatedX + BOUNDARY) / (BOUNDARY * 2)
+    val centerY = zoneBoxSize.height * (animatedY + BOUNDARY) / (BOUNDARY * 2)
     val entitySize = zoneBoxSize.width / 8
     val radius = entitySize / 2
     val radiusPx = with(LocalDensity.current) { radius.dp.toPx() }

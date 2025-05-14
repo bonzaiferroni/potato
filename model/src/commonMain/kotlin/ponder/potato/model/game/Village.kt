@@ -8,7 +8,7 @@ class Village(
 
     override fun init(id: Int, game: GameEngine) {
         super.init(id, game)
-        addPortal(cave, Vector2(-BOUNDARY_X, 0f), Vector2(BOUNDARY_X, 0f))
+        addPortal(cave, Vector2(-BOUNDARY, 0f), Vector2(BOUNDARY, 0f))
     }
 
     override fun update(delta: Double) {
