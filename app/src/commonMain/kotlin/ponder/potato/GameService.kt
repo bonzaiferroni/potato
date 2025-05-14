@@ -4,6 +4,7 @@ import com.russhwolf.settings.get
 import com.russhwolf.settings.set
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -26,6 +27,7 @@ import potato.app.generated.resources.Res
 
 class GameService() {
     val game: Game get() = engine
+    val messages: List<String> = _messages
 
     fun update(delta: Double) {
         engine.update(delta)
@@ -36,8 +38,16 @@ class GameService() {
     }
 
     suspend fun init() {
+        messageCollection?.cancel()
+
         initEngine()
         engine.start()
+        messageCollection = CoroutineScope(Dispatchers.Default).launch {
+            engine.console.messages.collect {
+                _messages.add(it)
+                if (_messages.size > 100) _messages.removeFirst()
+            }
+        }
     }
 
     fun reset() {
@@ -48,6 +58,8 @@ class GameService() {
 
     companion object {
         private var engine: GameEngine = GameEngine()
+        private val _messages = ArrayDeque<String>()
+        var messageCollection: Job? = null
 
         private suspend fun initEngine() {
             val gameData: GameData = try {

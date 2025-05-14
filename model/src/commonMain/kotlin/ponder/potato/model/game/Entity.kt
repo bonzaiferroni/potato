@@ -11,6 +11,7 @@ interface Entity {
     val isObserved: Boolean
 
     val game get() = zone.game
+    val console get() = game.console
     val position: Position get() = state.position
 
     fun showEffect(effect: Effect)

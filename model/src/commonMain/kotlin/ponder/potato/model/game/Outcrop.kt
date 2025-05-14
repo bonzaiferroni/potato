@@ -14,14 +14,13 @@ class Outcrop(
 data class OutcropState(
     override val position: MutablePosition = MutablePosition(),
     override var intent: Intent? = null,
-    override var progress: Float = 0f,
     override val hardness: Float = 4f,
 ): MinerTargetState {
     override val isAlive: Boolean = true
     override val composition: Map<Resource, Float> get() = basicComposition
 }
 
-interface MinerTargetState: ProgressState {
+interface MinerTargetState: EntityState {
     val hardness: Float
     val composition: Map<Resource, Float>
 }

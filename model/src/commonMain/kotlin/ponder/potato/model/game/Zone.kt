@@ -7,12 +7,14 @@ interface Zone {
     val portals: List<Portal>
     val game: Game
     val name: String
+    val console: GameConsole
 }
 
 sealed class GameZone(): Zone {
 
     private var _id: Int? = null
     private var _game: GameEngine? = null
+    override val console get() = game.console
 
     override val id: Int get() = _id ?: error("id not initialized")
     override val game: GameEngine get() = _game ?: error("game not initialized")

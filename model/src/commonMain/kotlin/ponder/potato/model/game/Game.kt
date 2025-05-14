@@ -6,6 +6,7 @@ interface Game {
     val entities: Map<Long, Entity>
     val storage: Storage
     val namingWay: NamingWay
+    val console: GameConsole
 
     val potato get() = entities.read<Potato>()
 

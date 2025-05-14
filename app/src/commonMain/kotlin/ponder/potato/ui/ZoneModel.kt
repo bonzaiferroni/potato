@@ -40,6 +40,7 @@ class ZoneModel(
             entityActions = zone.getEntityActions().toImmutableList(),
             zoneActions = zone.getZoneActions().toImmutableList(),
             statuses = zone.getStatus().toImmutableList(),
+            messages = service.messages
         ) }
     }
 }
@@ -49,6 +50,7 @@ data class ZoneState(
     val delta: Double = 1.0,
     val entityActions: ImmutableList<EntityAction> = persistentListOf(),
     val zoneActions: ImmutableList<ZoneAction> = persistentListOf(),
-    val statuses: ImmutableList<ZoneStatus> = persistentListOf()
+    val statuses: ImmutableList<ZoneStatus> = persistentListOf(),
+    val messages: List<String> = emptyList()
 )
 

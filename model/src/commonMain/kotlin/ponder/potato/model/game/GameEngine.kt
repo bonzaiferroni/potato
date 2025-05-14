@@ -9,7 +9,7 @@ class GameEngine(
     override var storage: GameStorage = GameStorage(),
     override val namingWay: NamingWay = NamingWay(),
 ) : Game {
-
+    override val console = GameConsole()
     override val zones = mutableListOf<GameZone>()
     override val entities: MutableMap<Long, StateEntity<*>> = mutableMapOf()
 
