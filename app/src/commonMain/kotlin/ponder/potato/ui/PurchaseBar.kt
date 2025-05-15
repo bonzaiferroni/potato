@@ -148,4 +148,5 @@ fun ZoneAbility.toResource() = when (this) {
     ZoneAbility.DreamShroom -> Res.drawable.shroom_card_full
     ZoneAbility.ResolveDream -> Res.drawable.potato_card_full
     ZoneAbility.DreamBard -> Res.drawable.bardfox_card_full
+    else -> Res.drawable.potato_card_full
 }

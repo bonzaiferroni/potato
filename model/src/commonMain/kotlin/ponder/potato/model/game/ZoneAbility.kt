@@ -30,4 +30,10 @@ enum class ZoneAbility(
         description = "Dream of a bard.",
         resource = Resource.Aether
     ),
+    BuySeed(
+        label = "Buy Seed",
+        verb = "Buy",
+        description = "Buy a seed.",
+        resource = Resource.Gold
+    )
 }
