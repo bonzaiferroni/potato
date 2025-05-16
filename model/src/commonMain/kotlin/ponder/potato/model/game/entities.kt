@@ -14,6 +14,7 @@ fun EntityState.toEntity() = when(this) {
     is DirtPileState -> DirtPile(this)
     is GardenBedState -> GardenBed(this)
     is EngineerState -> Engineer(this)
+    is BotState -> Bot(this)
     else -> error("unknown state: ${this::class.simpleName}")
 }
 
@@ -29,6 +30,7 @@ val gameSerialModule = SerializersModule {
         subclass(DirtPileState::class, DirtPileState.serializer())
         subclass(GardenBedState::class, GardenBedState.serializer())
         subclass(EngineerState::class, EngineerState.serializer())
+        subclass(BotState::class, BotState.serializer())
         // Add all yer other entity state types here
     }
 }

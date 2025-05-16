@@ -15,7 +15,7 @@ data class OutcropState(
     override val position: MutablePosition = MutablePosition(),
     override var intent: Intent? = null,
     override val hardness: Float = 4f,
-): MinerTargetState {
+): MinerTargetState, WorkTarget {
     override val isAlive: Boolean = true
     override val composition: Map<Resource, Float> get() = basicComposition
 }
@@ -24,6 +24,8 @@ interface MinerTargetState: EntityState {
     val hardness: Float
     val composition: Map<Resource, Float>
 }
+
+interface WorkTarget: EntityState
 
 val basicComposition = mapOf(
     Resource.Dirt to .9f,

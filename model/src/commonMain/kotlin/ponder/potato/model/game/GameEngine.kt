@@ -8,6 +8,7 @@ class GameEngine(
     override var state: GameState = GameState(),
     override var storage: GameStorage = GameStorage(),
     override val namingWay: NamingWay = NamingWay(),
+    override val programs: MutableMap<Int, Program> = mutableMapOf()
 ) : Game {
     override val console = GameConsole()
     override val zones = mutableListOf<GameZone>()
@@ -98,8 +99,8 @@ class GameEngine(
         storage.limits.clear()
         for (entity in updating) {
             val entityStorage = entity.state as? EntityStorageState ?: continue
-            val resource = entityStorage.storedResource
-            storage.limits[resource] = storage.readLimit(resource) + entityStorage.storedValue
+            val resource = entityStorage.resource
+            storage.limits[resource] = storage.readLimit(resource) + entityStorage.capacity
         }
 
         for (entity in updating) {
@@ -146,3 +147,11 @@ inline fun <reified T : EntityState> Entity.castIfState(): StateEntity<T>? {
 inline fun <reified T : GameZone> List<GameZone>.readOrNull() = this.firstOrNull() { it is T } as T?
 inline fun <reified T : GameZone> List<GameZone>.read() = this.readOrNull<T>()
     ?: error("No zone found: ${T::class.simpleName}")
+
+fun GameEngine.toGameData() = GameData(
+    dream = zones.firstNotNullOf { it as? Dream }.state,
+    game = state,
+    resources = storage,
+    entityStates = entities.map { it.key to it.value.state }.toMap(),
+    programs = programs
+)

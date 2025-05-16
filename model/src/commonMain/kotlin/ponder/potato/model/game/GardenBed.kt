@@ -30,7 +30,25 @@ data class GardenBedState(
     override var intent: Intent? = null,
     override val position: MutablePosition = MutablePosition(),
     var isFullOfDirt: Boolean = false,
-): EntityState {
+    override var stored: Double = 0.0
+): ResourceConsumerState {
     override val isAlive get() = true
-    val capacity get() = 1000.0
+    override val capacity get() = 200.0
+    override val resource get() = Resource.Dirt
+}
+
+interface ResourceConsumerState: EntityState, ResourceInventory {
+    override val capacity: Double
+    override var stored: Double
+    override val resource: Resource
+}
+
+interface ResourceInventory {
+    val capacity: Double
+    val stored: Double
+    val resource: Resource?
+
+    val isFull get () = stored >= capacity
+    val isEmpty get () = stored == 0.0
+    val capacityAvailable get () = capacity - stored
 }

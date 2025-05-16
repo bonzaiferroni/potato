@@ -22,6 +22,6 @@ data class ShroomState(
     override var intent: Intent? = null,
 ) : EntityState, EntityStorageState, LevelState, VisitorState, NameState {
     override val isAlive: Boolean get() = true
-    override val storedValue get() = factorValue(500, level, 1.2)
-    override val storedResource get() = Resource.Aether
+    override val capacity get() = factorValue(500, level, 1.2)
+    override val resource get() = Resource.Aether
 }

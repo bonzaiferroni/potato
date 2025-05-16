@@ -5,8 +5,19 @@ import kotlin.reflect.KClass
 typealias EntityMap = Map<Long, Entity>
 
 inline fun <reified T> EntityMap.read(id: Long) = this[id] as? T
-inline fun <reified T> EntityMap.read() = this.values.firstOrNull() { it is T } as T?
-
+inline fun <reified T> EntityMap.read() = this.values.firstNotNullOfOrNull() { it as? T }
+inline fun <reified T> EntityMap.read(block: (T) -> Boolean) = this.values.firstNotNullOfOrNull {
+    val entity = it as? T ?: return@firstNotNullOfOrNull null
+    if (block(entity)) entity else null
+}
+inline fun <reified T> EntityMap.read(zone: Zone) = this.values.firstNotNullOfOrNull {
+    if (it.zone != zone) null
+    else it as? T
+}
+inline fun <reified T> EntityMap.readWithZoneId(zoneId: Int) = this.values.firstNotNullOfOrNull {
+    if (it.position.zoneId != zoneId) null
+    else it as? T
+}
 
 inline fun <reified T : Entity> EntityMap.findNearest(
     position: Position,

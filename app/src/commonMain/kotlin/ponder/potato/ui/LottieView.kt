@@ -2,6 +2,7 @@ package ponder.potato.ui
 
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import ponder.potato.model.game.Bard
+import ponder.potato.model.game.Bot
 import ponder.potato.model.game.Entity
 import ponder.potato.model.game.Imp
 import ponder.potato.model.game.Potato
@@ -15,5 +16,6 @@ suspend fun Entity?.toLottieResource(isMoving: Boolean) = when (this) {
     is Sprite -> "sprite1"
     is Bard -> "fox1"
     is Potato -> "potato1"
+    is Bot -> "imp"
     else -> "gears"
 } .let { LottieCompositionSpec.JsonString(Res.readBytes("files/${it}_${if (isMoving) "move" else "idle"}.json").decodeToString()) }

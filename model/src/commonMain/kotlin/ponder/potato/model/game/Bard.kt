@@ -43,7 +43,6 @@ class Bard(
 }
 
 @Serializable
-@SerialName("bard")
 data class BardState(
     override val isAlive: Boolean = true,
     override val position: MutablePosition = MutablePosition(),

@@ -8,7 +8,7 @@ class GameBuilder {
 fun generateGame(data: GameData, namingWay: NamingWay): GameEngine {
     val cave = Cave()
     val dream = Dream(data.dream)
-    val game = GameEngine(data.game, data.resources, namingWay)
+    val game = GameEngine(data.game, data.resources, namingWay, data.programs)
     val village = Village(cave)
     val mine = Mine()
     val garden = Garden()
@@ -30,5 +30,6 @@ data class GameData(
     val dream: DreamState = DreamState(),
     val game: GameState = GameState(),
     val resources: GameStorage = GameStorage(),
-    val entityStates: Map<Long, EntityState> = mapOf()
+    val entityStates: Map<Long, EntityState> = mapOf(),
+    val programs: MutableMap<Int, Program> = mutableMapOf(),
 )

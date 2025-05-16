@@ -29,3 +29,7 @@ data class LevelUp(
 data class ExperienceUp(
     val experience: Double
 ): Effect()
+
+data class Exec(
+    val execution: Execution
+): Effect()

@@ -1,9 +1,9 @@
 package ponder.potato.model.game
 
 interface EntityStorageState: EntityState {
-    val storedValue: Double
-    val storedResource: Resource
-    fun isStorageType(resource: Resource) = this.storedResource == resource
+    val capacity: Double
+    val resource: Resource
+    fun isStorageType(resource: Resource) = this.resource == resource
 }
 
 class EntityStorage(
@@ -12,5 +12,5 @@ class EntityStorage(
 }
 
 fun EntityMap.readResourceMax(resource: Resource) = this.sumOf<EntityStorageState> {
-    if (it.isStorageType(resource)) it.storedValue else 0.0
+    if (it.isStorageType(resource)) it.capacity else 0.0
 }

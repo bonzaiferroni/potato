@@ -23,6 +23,7 @@ import ponder.potato.model.game.GameEngine
 import ponder.potato.model.game.NamingWay
 import ponder.potato.model.game.OutcropState
 import ponder.potato.model.game.gameSerialModule
+import ponder.potato.model.game.toGameData
 import potato.app.generated.resources.Res
 
 class GameService() {
@@ -34,7 +35,7 @@ class GameService() {
     }
 
     fun save() {
-        appSettings["game_data"] = json.encodeToString(game.toGameData())
+        appSettings["game_data"] = json.encodeToString(engine.toGameData())
     }
 
     suspend fun init() {

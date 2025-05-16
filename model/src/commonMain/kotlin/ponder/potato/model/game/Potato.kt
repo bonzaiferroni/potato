@@ -18,6 +18,6 @@ data class PotatoState(
 ) : EntityState, LevelState, DreamerState, EntityStorageState {
     override val isAlive get() = true
     override val aetherReward get() = factorValue(30, level, 1.2)
-    override val storedValue get() = factorValue(1000, level, 1.2)
-    override val storedResource get() = Resource.Aether
+    override val capacity get() = factorValue(1000, level, 1.2)
+    override val resource get() = Resource.Aether
 }

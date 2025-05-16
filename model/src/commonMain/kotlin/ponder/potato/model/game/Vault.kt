@@ -10,10 +10,10 @@ class Vault(
 
 @Serializable
 data class VaultState(
-    override var storedValue: Double = 1000.0,
+    override var capacity: Double = 1000.0,
     override val position: MutablePosition = MutablePosition(),
     override var intent: Intent? = null,
 ): EntityStorageState {
     override val isAlive get() = true
-    override val storedResource get() = Resource.Gold
+    override val resource get() = Resource.Gold
 }
