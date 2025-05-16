@@ -5,6 +5,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class Instruction {
     abstract fun execute(game: Game, bot: Bot, delta: Double): Execution
+
+    abstract val name: String
+
+    open fun getScopeName(game: Game): String? = null
+    open fun getParameterName(game: Game): String? = null
 }
 
 @Serializable
@@ -12,6 +17,10 @@ class TakeResource(
     val zoneId: Int,
     val resource: Resource,
 ): Instruction() {
+
+    override val name get() = "take"
+    override fun getParameterName(game: Game) = resource.name
+    override fun getScopeName(game: Game) = game.zones.read<GameZone>(zoneId)?.name
 
     override fun execute(game: Game, bot: Bot, delta: Double): Execution {
         val entity = game.entities.read<StateEntity<EntityStorageState>> {
@@ -38,6 +47,11 @@ class FillResource(
     val zoneId: Int,
     val resource: Resource,
 ): Instruction() {
+
+    override val name get() = "fill"
+    override fun getParameterName(game: Game) = resource.name
+    override fun getScopeName(game: Game) = game.zones.read<GameZone>(zoneId)?.name
+
     override fun execute(game: Game, bot: Bot, delta: Double): Execution {
         val target = game.entities.read<StateEntity<ResourceConsumerState>> {
             it.zone.id == zoneId && it.state.resource == resource
@@ -63,6 +77,10 @@ class FillResource(
 class MineTarget(
     val zoneId: Int,
 ): Instruction() {
+
+    override val name get() = "mine"
+    override fun getScopeName(game: Game) = game.zones.read<GameZone>(zoneId)?.name
+
     override fun execute(game: Game, bot: Bot, delta: Double): Execution {
         val target = game.entities.readWithZoneId<StateEntity<MinerTargetState>>(zoneId)
         if (target == null) return Execution.TargetNotFound

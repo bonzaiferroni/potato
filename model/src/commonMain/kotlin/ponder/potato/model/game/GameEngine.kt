@@ -147,6 +147,7 @@ inline fun <reified T : EntityState> Entity.castIfState(): StateEntity<T>? {
 inline fun <reified T : GameZone> List<GameZone>.readOrNull() = this.firstOrNull() { it is T } as T?
 inline fun <reified T : GameZone> List<GameZone>.read() = this.readOrNull<T>()
     ?: error("No zone found: ${T::class.simpleName}")
+inline fun <reified T : GameZone> List<GameZone>.read(zoneId: Int) = this.firstOrNull { it.id == zoneId }
 
 fun GameEngine.toGameData() = GameData(
     dream = zones.firstNotNullOf { it as? Dream }.state,
