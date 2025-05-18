@@ -1,0 +1,36 @@
+StateEntity.readTarget<T>()
+
+ProgressState
+
+Portal.transport()
+
+Dirt:
+Mine.take(Dirt)
+Garden.fill(Dirt)
+
+Dig:
+Mine.work(DirtPile)
+
+Planter:
+Mine.take(Vault)
+Shop.buy(Seed)
+Garden.plant(GardenBed)
+
+Harvest:
+Garden.harvest(GardenBed)
+Shop.sell(Fruit)
+	NotReady -> Water
+
+Water:
+take(WaterSource)
+fill(GardenBed)
+	OK -> Harvest
+
+Courage
+Love
+Acceptance
+Gratitude
+Curiosity
+Growth
+Liberty
+Service

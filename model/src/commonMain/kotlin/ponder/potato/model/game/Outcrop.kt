@@ -6,8 +6,12 @@ import kotlinx.serialization.Serializable
 
 class Outcrop(
     override val state: OutcropState = OutcropState(),
-): StateEntity<OutcropState>() {
+): StateEntity<OutcropState>(), InstructionSource {
     override val components = emptyList<StateComponent<OutcropState>>()
+
+    override fun addInstructions(list: MutableList<Instruction>) {
+        list.add(MineTarget(zone.id))
+    }
 }
 
 @Serializable

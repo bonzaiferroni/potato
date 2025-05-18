@@ -25,3 +25,12 @@ fun Game.readResourceMax(resource: Resource) =
 fun Game.readResourceQuantity(resource: Resource) = storage.readQuantity(resource)
 fun Game.readResourceStatus(resource: Resource) =
     ResourceStatus(this.readResourceQuantity(resource), this.readResourceMax(resource), resource)
+
+fun Game.readAllInstructions(): List<Instruction> {
+    val instructions = mutableListOf<Instruction>()
+    for ((id, entity) in entities) {
+        val source = entity as? InstructionSource ?: continue
+        source.addInstructions(instructions)
+    }
+    return instructions
+}
