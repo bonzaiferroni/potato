@@ -42,6 +42,18 @@ class ZoneModel(
             messages = service.messages
         ) }
     }
+
+    fun onHoverChange(entityId: Long, isHovered: Boolean) {
+        if (isHovered) {
+            setState { it.copy(highlightedId = entityId) }
+        } else if (entityId == stateNow.highlightedId) {
+            setState { it.copy(highlightedId = null) }
+        }
+    }
+
+    fun selectEntity(entityId: Long?) {
+        setState { it.copy(selectedId = entityId) }
+    }
 }
 
 data class ZoneState(
@@ -50,6 +62,8 @@ data class ZoneState(
     val entityActions: ImmutableList<EntityAction> = persistentListOf(),
     val zoneActions: ImmutableList<ZoneAction> = persistentListOf(),
     val statuses: ImmutableList<ZoneStatus> = persistentListOf(),
-    val messages: List<String> = emptyList()
+    val messages: List<String> = emptyList(),
+    val highlightedId: Long? = null,
+    val selectedId: Long? = null,
 )
 

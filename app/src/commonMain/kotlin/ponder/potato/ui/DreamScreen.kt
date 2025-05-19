@@ -19,7 +19,12 @@ fun DreamScreen(
 
     TopBarSpacer()
 
-    ZoneView(Cave::class)
+    ZoneView(
+        zoneClass = Cave::class,
+        highlightedId = null,
+        onHoverChange = { id, isHovered -> },
+        onClick = { }
+    )
     StatusBar(state.statuses)
 
     Tabs {

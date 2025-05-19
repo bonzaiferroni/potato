@@ -35,23 +35,33 @@ fun ZoneScreen(
 
     TopBarSpacer()
 
-    ZoneView(viewModel.zone::class)
+    ZoneView(
+        zoneClass = viewModel.zone::class,
+        highlightedId = state.highlightedId,
+        onHoverChange = viewModel::onHoverChange,
+        onClick = viewModel::selectEntity
+    )
     StatusBar(state.statuses)
 
-    Tabs("Actions") {
-        Tab("Area") {
-            AreaView(viewModel.zone::class)
-        }
-        Tab("Actions", scrollable = false) {
-            ActionsView(state.entityActions, state.zoneActions) { viewModel.refreshState() }
-            LazyColumn(modifier = Modifier.height(30.dp)) {
-                items(state.messages) {
-                    Text(it)
+    val selectedId = state.selectedId
+    if (selectedId != null) {
+        EntityPanel(selectedId)
+    } else {
+        Tabs("Actions") {
+            Tab("Area") {
+                AreaView(viewModel.zone::class)
+            }
+            Tab("Actions", scrollable = false) {
+                ActionsView(state.entityActions, state.zoneActions) { viewModel.refreshState() }
+                LazyColumn(modifier = Modifier.height(30.dp)) {
+                    items(state.messages) {
+                        Text(it)
+                    }
                 }
             }
-        }
-        Tab("Entities") {
+            Tab("Entities") {
 
+            }
         }
     }
 }

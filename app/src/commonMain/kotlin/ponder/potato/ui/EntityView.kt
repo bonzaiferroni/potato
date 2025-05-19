@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.graphics.toPixelMap
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
@@ -46,6 +47,9 @@ import pondui.utils.lighten
 fun ZoneScope.EntityView(
     entityId: Long,
     fullVisibility: Boolean,
+    isHighlighted: Boolean,
+    onHoverChange: (Long, Boolean) -> Unit,
+    onClick: (Long) -> Unit,
     viewModel: EntityViewModel = viewModel(key = entityId.toString()) { EntityViewModel(entityId) }
 ) {
     val state by viewModel.state.collectAsState()
@@ -147,56 +151,52 @@ fun ZoneScope.EntityView(
                         )
                     }
             )
-            Box(
-                modifier = Modifier
-
-            ) {
-
-            }
             val graphicsLayer = rememberGraphicsLayer()
             val coroutineScope = rememberCoroutineScope()
             var isHovered by remember { mutableStateOf(false) }
+            LaunchedEffect(isHovered) {
+                onHoverChange(entityId, isHovered)
+            }
+
             Image(
                 painter = rememberLottiePainter(
                     composition = composition,
                     iterations = Compottie.IterateForever,
                 ),
                 contentDescription = "Lottie animation",
-                modifier = Modifier      // render content into bitmap cache
+                modifier = Modifier
                     .drawWithContent {
                         graphicsLayer.record { this@drawWithContent.drawContent() }
                         drawLayer(graphicsLayer)
-                        if (isHovered) {
-                            drawRect(Color.Black.copy(.1f))
+                        if (isHighlighted) {
+                            drawCircle(Color.Black.copy(.1f))
                         }
                     }
                     .pointerInput(Unit) {
                         awaitPointerEventScope {
                             while (true) {
-                                val event = awaitPointerEvent()
-                                // event.changes.firstOrNull { it. }
-                                val change = event.changes.firstOrNull()
-
+                                val event = awaitPointerEvent(PointerEventPass.Initial)
+                                val pointer = event.changes.firstOrNull() ?: continue
                                 val up = event.changes.firstOrNull { it.changedToUp() }
 
-                                val e = change ?: up ?: continue
-                                // snapshot layer to bitmap (suspends! OK in this scope)
                                 coroutineScope.launch {
                                     val bmp = graphicsLayer.toImageBitmap()
-                                    // do something with the newly acquired bitmap
                                     val pm  = bmp.toPixelMap()
-                                    val x   = e.position.x.toInt().coerceIn(0, pm.width  - 1)
-                                    val y   = e.position.y.toInt().coerceIn(0, pm.height - 1)
+                                    val x   = pointer.position.x.toInt().coerceIn(0, pm.width  - 1)
+                                    val y   = pointer.position.y.toInt().coerceIn(0, pm.height - 1)
                                     val pix = pm[x, y]
                                     isHovered = pix.alpha > 0
-                                    if (isHovered && up != null) {
-                                        println("clicked ${viewModel.type}")
+                                    if (isHovered) {
+                                        pointer.consume()
+                                        if (up != null) {
+                                            onClick(entityId)
+                                            println("clicked ${viewModel.type}")
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-
             )
         }
     }

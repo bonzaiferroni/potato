@@ -38,6 +38,9 @@ import kotlin.reflect.KClass
 fun <T : Zone> ZoneView(
     zoneClass: KClass<T>,
     modifier: Modifier = Modifier,
+    highlightedId: Long?,
+    onHoverChange: (Long, Boolean) -> Unit,
+    onClick: (Long?) -> Unit,
     viewModel: ZoneViewModel<T> = viewModel { ZoneViewModel(zoneClass) }
 ) {
     val state by viewModel.state.collectAsState()
@@ -69,6 +72,7 @@ fun <T : Zone> ZoneView(
                     detectTapGestures { offset ->
                         val canvasPoint = offset.toCanvasSpace(boxSize)
                         val zonePoint = perspectiveToZone(canvasPoint.x, canvasPoint.y)
+                        onClick(null)
                         // println(zonePoint)
                     }
                 }
@@ -129,7 +133,13 @@ fun <T : Zone> ZoneView(
             val zoneScope = ZoneScope(boxSize)
             for (entityId in state.entityIds) {
                 key(entityId) {
-                    zoneScope.EntityView(entityId, state.fullVisibility)
+                    zoneScope.EntityView(
+                        entityId = entityId,
+                        fullVisibility = state.fullVisibility,
+                        isHighlighted = entityId == highlightedId,
+                        onHoverChange = onHoverChange,
+                        onClick = onClick,
+                    )
                 }
             }
             for (exit in state.exits) {
