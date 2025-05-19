@@ -1,6 +1,9 @@
 package ponder.potato.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -10,10 +13,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -52,10 +57,12 @@ fun ZoneScope.ZoneObject(
             .onGloballyPositioned { coordinates ->
                 boxSize = coordinates.size
             }
+             .offset { IntOffset((centerX - boxSize.width / 2).toInt(), (centerY - boxSize.height).toInt())}
+            // .background(Color.Red.copy(.1f))
             .graphicsLayer {
-                transformOrigin = TransformOrigin(0.5f, 1f) // Bottom center as pivot
-                translationX = centerX - radiusPx
-                translationY = centerY - boxSize.height
+//                 transformOrigin = TransformOrigin(0.5f, 1f) // Bottom center as pivot
+//                 translationX = centerX - radiusPx
+//                 translationY = centerY - boxSize.height
                 scaleX = animatedScale
                 scaleY = animatedScale
             }

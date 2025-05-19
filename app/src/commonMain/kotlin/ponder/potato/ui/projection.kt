@@ -7,7 +7,7 @@ import kotlin.math.sin
 
 data class Projection(override val x: Float, override val y: Float): Point
 
-fun projection(
+fun projection_test(
     x: Float,
     y: Float,
     rotationDegrees: Float = 60f,
@@ -16,7 +16,7 @@ fun projection(
 ): Projection {
     val angle = 90f / rotationDegrees
 
-    val projectedX = x / (y - distance) / (distance)
+    val projectedX = x + ((y - distance) / 6)
     val projectedY = y / angle + height
     return Projection(projectedX, projectedY)
 }

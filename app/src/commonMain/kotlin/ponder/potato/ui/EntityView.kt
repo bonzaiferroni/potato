@@ -14,9 +14,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.rememberGraphicsLayer
+import androidx.compose.ui.graphics.toPixelMap
+import androidx.compose.ui.input.pointer.changedToUp
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -28,6 +34,7 @@ import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import kabinet.utils.random
 import kabinet.utils.toMetricString
+import kotlinx.coroutines.launch
 import ponder.potato.LaunchedGameUpdate
 import ponder.potato.model.game.*
 import ponder.potato.model.game.Imp
@@ -140,12 +147,56 @@ fun ZoneScope.EntityView(
                         )
                     }
             )
+            Box(
+                modifier = Modifier
+
+            ) {
+
+            }
+            val graphicsLayer = rememberGraphicsLayer()
+            val coroutineScope = rememberCoroutineScope()
+            var isHovered by remember { mutableStateOf(false) }
             Image(
                 painter = rememberLottiePainter(
                     composition = composition,
                     iterations = Compottie.IterateForever,
                 ),
-                contentDescription = "Lottie animation"
+                contentDescription = "Lottie animation",
+                modifier = Modifier      // render content into bitmap cache
+                    .drawWithContent {
+                        graphicsLayer.record { this@drawWithContent.drawContent() }
+                        drawLayer(graphicsLayer)
+                        if (isHovered) {
+                            drawRect(Color.Black.copy(.1f))
+                        }
+                    }
+                    .pointerInput(Unit) {
+                        awaitPointerEventScope {
+                            while (true) {
+                                val event = awaitPointerEvent()
+                                // event.changes.firstOrNull { it. }
+                                val change = event.changes.firstOrNull()
+
+                                val up = event.changes.firstOrNull { it.changedToUp() }
+
+                                val e = change ?: up ?: continue
+                                // snapshot layer to bitmap (suspends! OK in this scope)
+                                coroutineScope.launch {
+                                    val bmp = graphicsLayer.toImageBitmap()
+                                    // do something with the newly acquired bitmap
+                                    val pm  = bmp.toPixelMap()
+                                    val x   = e.position.x.toInt().coerceIn(0, pm.width  - 1)
+                                    val y   = e.position.y.toInt().coerceIn(0, pm.height - 1)
+                                    val pix = pm[x, y]
+                                    isHovered = pix.alpha > 0
+                                    if (isHovered && up != null) {
+                                        println("clicked ${viewModel.type}")
+                                    }
+                                }
+                            }
+                        }
+                    }
+
             )
         }
     }

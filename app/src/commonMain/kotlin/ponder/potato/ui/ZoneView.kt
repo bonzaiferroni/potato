@@ -1,5 +1,6 @@
 package ponder.potato.ui
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -14,8 +15,14 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ponder.potato.LocalGame
 import ponder.potato.ZoneRoute
@@ -28,7 +35,7 @@ import pondui.ui.theme.Pond
 import kotlin.reflect.KClass
 
 @Composable
-fun <T: Zone> ZoneView(
+fun <T : Zone> ZoneView(
     zoneClass: KClass<T>,
     modifier: Modifier = Modifier,
     viewModel: ZoneViewModel<T> = viewModel { ZoneViewModel(zoneClass) }
@@ -46,10 +53,25 @@ fun <T: Zone> ZoneView(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Pond.ruler.columnTight,
     ) {
+        val textMeasurer = rememberTextMeasurer()
         Box(
             modifier = modifier.fillMaxWidth()
                 .aspectRatio(1.5f)
                 .clipToBounds()
+                .pointerInput(Unit) {
+//                    awaitPointerEventScope {
+//                        while (true) {
+//                            val event = awaitPointerEvent()
+//                            val position = event.changes.first().position
+//                            println("Hover at: $position")
+//                        }
+//                    }
+                    detectTapGestures { offset ->
+                        val canvasPoint = offset.toCanvasSpace(boxSize)
+                        val zonePoint = perspectiveToZone(canvasPoint.x, canvasPoint.y)
+                        // println(zonePoint)
+                    }
+                }
                 .onGloballyPositioned { coordinates ->
                     boxSize = coordinates.size
                 }
@@ -74,19 +96,33 @@ fun <T: Zone> ZoneView(
                         close()
                     }
 
-                    drawPath(path = path,  color = Color.Blue.copy(.1f))
+                    drawPath(path = path, color = Color.Blue.copy(.1f))
 
                     val lineColor = Color.Green.copy(.1f)
                     for (x in (-BOUNDARY.toInt()..BOUNDARY.toInt() + 1)) {
-                        val start = projection_perspective(x.toFloat() - .5f, -BOUNDARY - .5f).toZoneViewSpace(boxSize)
-                        val end = projection_perspective(x.toFloat() - .5f, BOUNDARY + .5f).toZoneViewSpace(boxSize)
+                        val start = projection(x.toFloat() - .5f, -BOUNDARY - .5f).toZoneViewSpace(boxSize)
+                        val end = projection(x.toFloat() - .5f, BOUNDARY + .5f).toZoneViewSpace(boxSize)
                         drawLine(lineColor, Offset(start.x, start.y), Offset(end.x, end.y))
                     }
 
                     for (y in (-BOUNDARY.toInt()..BOUNDARY.toInt() + 1)) {
-                        val start = projection_perspective(-BOUNDARY - .5f, y.toFloat() - .5f).toZoneViewSpace(boxSize)
-                        val end = projection_perspective(BOUNDARY + .5f, y.toFloat() - .5f).toZoneViewSpace(boxSize)
+                        val start = projection(-BOUNDARY - .5f, y.toFloat() - .5f).toZoneViewSpace(boxSize)
+                        val end = projection(BOUNDARY + .5f, y.toFloat() - .5f).toZoneViewSpace(boxSize)
                         drawLine(lineColor, Offset(start.x, start.y), Offset(end.x, end.y))
+                    }
+
+                    for (xIndex in -1..1) {
+                        for (yIndex in -1..1) {
+                            val x = xIndex * 5f;
+                            val y = yIndex * 5f
+                            val offset = projection(x, y).toZoneViewSpace(boxSize).let { Offset(it.x, it.y) }
+                            val textLayoutResult = textMeasurer.measure(
+                                text = AnnotatedString("(${x.toInt()},${y.toInt()})"),
+                                style = TextStyle(fontSize = 12.sp, color = Color.White)
+                            )
+                            drawCircle(Color.White, radius = 1f, center = offset)
+                            drawText(textLayoutResult, topLeft = offset)
+                        }
                     }
                 }
         ) {
@@ -105,12 +141,20 @@ fun <T: Zone> ZoneView(
     }
 }
 
-val topLeftProjection = projection_perspective(-BOUNDARY - .5f, BOUNDARY + .5f)
-val topRightProjection = projection_perspective(BOUNDARY + .5f, BOUNDARY + .5f)
-val bottomLeftProjection = projection_perspective(-BOUNDARY - .5f, -BOUNDARY - .5f)
-val bottomRightProjection = projection_perspective(BOUNDARY + .5f, -BOUNDARY - .5f)
+val topLeftProjection = projection(-BOUNDARY - .5f, BOUNDARY + .5f)
+val topRightProjection = projection(BOUNDARY + .5f, BOUNDARY + .5f)
+val bottomLeftProjection = projection(-BOUNDARY - .5f, -BOUNDARY - .5f)
+val bottomRightProjection = projection(BOUNDARY + .5f, -BOUNDARY - .5f)
 
 fun Point.toZoneViewSpace(boxSize: IntSize) = Vector2(
     x = boxSize.width * (x + BOUNDARY) / (BOUNDARY * 2),
     y = boxSize.height * (-y + BOUNDARY) / (BOUNDARY * 2),
 )
+
+fun Offset.toCanvasSpace(boxSize: IntSize): Vector2 {
+    val xZone = (x / boxSize.width) * (BOUNDARY * 2) - BOUNDARY
+    val yZone = -((y / boxSize.height) * (BOUNDARY * 2) - BOUNDARY)
+    return Vector2(xZone, yZone)
+}
+
+fun projection(x: Float, y: Float) = zoneToPerspective(x, y)
