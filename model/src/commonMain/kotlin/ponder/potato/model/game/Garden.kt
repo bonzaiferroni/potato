@@ -8,7 +8,7 @@ class Garden(): GameZone(), InstructionSource {
         spawnIfAbsent(Direction.SouthEast.midPoint) { GardenBed() }
     }
 
-    override fun addInstructions(instructions: MutableList<Instruction>) {
-        instructions.add(FillResource(id, Resource.Dirt))
+    override fun addInstructions(list: MutableList<Instruction>) {
+        list.add(FillResource(id, Resource.Dirt))
     }
 }

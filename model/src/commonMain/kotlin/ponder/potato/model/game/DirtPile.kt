@@ -7,8 +7,8 @@ class DirtPile(
 ): StateEntity<DirtPileState>(), InstructionSource {
     override val components = listOf<StateComponent<*>>()
 
-    override fun addInstructions(instructions: MutableList<Instruction>) {
-        instructions.add(TakeResource(zone.id, Resource.Dirt))
+    override fun addInstructions(list: MutableList<Instruction>) {
+        list.add(TakeResource(zone.id, Resource.Dirt))
     }
 }
 

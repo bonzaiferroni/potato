@@ -1,20 +1,24 @@
 package ponder.potato.model.game
 
+import ponder.potato.model.game.castIfState
 import kotlin.reflect.KClass
 
 typealias EntityMap = Map<Long, Entity>
 
 inline fun <reified T> EntityMap.read(id: Long) = this[id] as? T
-inline fun <reified T: EntityState> EntityMap.readAsStateEntity(id: Long) = this[id]?.castIfState<T>()
+inline fun <reified T : EntityState> EntityMap.readAsStateEntity(id: Long) = this[id]?.castIfState<T>()
 inline fun <reified T> EntityMap.read() = this.values.firstNotNullOfOrNull() { it as? T }
-inline fun <reified T> EntityMap.read(block: (T) -> Boolean) = this.values.firstNotNullOfOrNull {
-    val entity = it as? T ?: return@firstNotNullOfOrNull null
-    if (block(entity)) entity else null
-}
+inline fun <reified T : EntityState> EntityMap.read(block: (StateEntity<T>) -> Boolean): StateEntity<T>? =
+    this.firstNotNullOfOrNull { (id, entity) ->
+        val entity = entity.castIfState<T>() ?: return@firstNotNullOfOrNull null
+        if (block(entity)) entity else null
+    }
+
 inline fun <reified T> EntityMap.read(zone: Zone) = this.values.firstNotNullOfOrNull {
     if (it.zone != zone) null
     else it as? T
 }
+
 inline fun <reified T> EntityMap.readWithZoneId(zoneId: Int) = this.values.firstNotNullOfOrNull {
     if (it.position.zoneId != zoneId) null
     else it as? T
@@ -38,7 +42,7 @@ inline fun <reified T : Entity> EntityMap.findNearest(
     return nearest
 }
 
-inline fun <reified S: EntityState> EntityMap.sumOf(block: (S) -> Double): Double {
+inline fun <reified S : EntityState> EntityMap.sumOf(block: (S) -> Double): Double {
     var value = 0.0
     for (entity in this.values) {
         val state = entity.state as? S ?: continue
@@ -47,7 +51,7 @@ inline fun <reified S: EntityState> EntityMap.sumOf(block: (S) -> Double): Doubl
     return value
 }
 
-inline fun <reified S: EntityState> EntityMap.sumOf(where: (StateEntity<S>) -> Boolean, block: (S) -> Double): Double {
+inline fun <reified S : EntityState> EntityMap.sumOf(where: (StateEntity<S>) -> Boolean, block: (S) -> Double): Double {
     var value = 0.0
     for (entity in this.values) {
         val castEntity = entity.castIfState<S>() ?: continue
@@ -64,4 +68,4 @@ inline fun EntityMap.count(block: (Entity) -> Boolean) =
 fun EntityMap.count(kClass: KClass<*>, zoneId: Int) =
     this.values.count { it::class == kClass && it.position.zoneId == zoneId }
 
-inline fun <reified E: StateEntity<*>> EntityMap.count() = this.values.count { it is E }
+inline fun <reified E : StateEntity<*>> EntityMap.count() = this.values.count { it is E }

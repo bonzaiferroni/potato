@@ -23,21 +23,21 @@ class TakeResource(
     override fun getScopeName(game: Game) = game.zones.read<GameZone>(zoneId)?.name
 
     override fun execute(game: Game, bot: Bot, delta: Double): Execution {
-        val entity = game.entities.read<StateEntity<EntityStorageState>> {
+        val target = game.entities.read<EntityStorageState> {
             it.zone.id == zoneId && it.state.resource == resource
         }
-        if (entity == null) return Execution.TargetNotFound
+        if (target == null) return Execution.TargetNotFound
         val heldResource = bot.state.resource
-        if (heldResource != null && heldResource != entity.state.resource || bot.state.capacityAvailable == 0.0)
+        if (heldResource != null && heldResource != target.state.resource || bot.state.capacityAvailable == 0.0)
             return Execution.BotStorageFull
 
-        val isArrived = bot.moveTo(entity.position, delta)
+        val isArrived = bot.moveTo(target.position, delta)
         if (!isArrived) return Execution.Moving
 
         val removed = game.storage.removeQuantity(resource, bot.state.capacityAvailable)
         if (!removed) return Execution.TargetStorageEmpty
         bot.state.stored += bot.state.capacityAvailable
-        bot.state.resource = entity.state.resource
+        bot.state.resource = target.state.resource
         return Execution.Complete
     }
 }
@@ -53,7 +53,7 @@ class FillResource(
     override fun getScopeName(game: Game) = game.zones.read<GameZone>(zoneId)?.name
 
     override fun execute(game: Game, bot: Bot, delta: Double): Execution {
-        val target = game.entities.read<StateEntity<ResourceConsumerState>> {
+        val target = game.entities.read<ResourceConsumerState> {
             it.zone.id == zoneId && it.state.resource == resource
         }
         if (target == null) return Execution.TargetNotFound

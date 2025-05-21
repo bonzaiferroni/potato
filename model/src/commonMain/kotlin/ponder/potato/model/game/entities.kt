@@ -5,7 +5,7 @@ import kotlinx.serialization.modules.polymorphic
 
 fun EntityState.toEntity() = when(this) {
     is PotatoState -> Potato(this)
-    is SpriteStateLevel -> Sprite(this)
+    is SpriteState -> Sprite(this)
     is ShroomState -> Shroom(this)
     is BardState -> Bard(this)
     is ImpState -> Imp(this)
@@ -21,7 +21,7 @@ fun EntityState.toEntity() = when(this) {
 val gameSerialModule = SerializersModule {
     polymorphic(EntityState::class) {
         subclass(PotatoState::class, PotatoState.serializer())
-        subclass(SpriteStateLevel::class, SpriteStateLevel.serializer())
+        subclass(SpriteState::class, SpriteState.serializer())
         subclass(ShroomState::class, ShroomState.serializer())
         subclass(ImpState::class, ImpState.serializer())
         subclass(BardState::class, BardState.serializer())

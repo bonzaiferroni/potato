@@ -5,8 +5,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 class Sprite(
-    override val state: SpriteStateLevel = SpriteStateLevel()
-) : StateEntity<SpriteStateLevel>() {
+    override val state: SpriteState = SpriteState()
+) : StateEntity<SpriteState>() {
 
     override val components = listOf(
         Spirit(this),
@@ -25,7 +25,7 @@ class Sprite(
 
 @Serializable
 @SerialName("sprite")
-data class SpriteStateLevel(
+data class SpriteState(
     override var level: Int = 1,
     override var levelProgress: Int = 0,
     override var spirit: Int = 0,
