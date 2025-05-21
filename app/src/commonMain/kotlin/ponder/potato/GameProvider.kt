@@ -16,19 +16,20 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun ProvideGame(
-    gameModel: GameModel = remember { GameModel() },
     content: @Composable () -> Unit
 ) {
-    CompositionLocalProvider(LocalGame provides gameModel) {
+    val gameHost: GameHost = remember { GameHost() }
+
+    CompositionLocalProvider(LocalGame provides gameHost) {
         content()
     }
 }
 
-val LocalGame = staticCompositionLocalOf<GameModel> {
+val LocalGame = staticCompositionLocalOf<GameHost> {
     error("no game provided")
 }
 
-class GameModel(
+class GameHost(
     private val service: GameService = GameService()
 ) : StateModel<GameState>(GameState()) {
 

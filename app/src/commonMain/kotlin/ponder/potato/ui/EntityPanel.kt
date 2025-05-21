@@ -13,4 +13,6 @@ fun EntityPanel(
     val state by viewModel.state.collectAsState()
 
     H1(state.entityName)
+
+    ProgramPanel(entityId)
 }

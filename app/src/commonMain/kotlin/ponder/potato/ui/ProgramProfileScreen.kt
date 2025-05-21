@@ -53,7 +53,7 @@ fun ProgramProfileScreen(
                 InstructionItemView(instruction)
             }
         }
-        Column(
+        FlowRow(
             spacing = Spacing.Tight,
             modifier = Modifier.background(Color.Black.copy(.1f))
                 .fillMaxWidth()

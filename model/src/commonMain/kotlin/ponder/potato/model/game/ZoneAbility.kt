@@ -35,5 +35,11 @@ enum class ZoneAbility(
         verb = "Buy",
         description = "Buy a seed.",
         resource = Resource.Gold
+    ),
+    DreamBot(
+        label = "Bot",
+        verb = "Dream",
+        description = "Dream of a bot",
+        resource = Resource.Aether
     )
 }

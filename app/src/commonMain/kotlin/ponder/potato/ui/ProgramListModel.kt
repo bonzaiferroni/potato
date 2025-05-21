@@ -3,6 +3,7 @@ package ponder.potato.ui
 import ponder.potato.GameService
 import ponder.potato.model.game.GameState
 import ponder.potato.model.game.Program
+import ponder.potato.model.game.ProgramMap
 import ponder.potato.model.game.add
 import ponder.potato.model.game.getNextId
 import pondui.ui.core.StateModel
@@ -28,14 +29,7 @@ class ProgramListModel(
     }
 
     fun update(gameState: GameState) {
-        val items = game.programs.map {
-            ProgramItem(
-                programId = it.key,
-                programName = it.value.name,
-                instructionCount = it.value.statements.size
-            )
-        }
-        setState { it.copy(items = items) }
+        setState { it.copy(items = game.programs.toProgramItems()) }
     }
 }
 
@@ -52,3 +46,11 @@ data class ProgramItem(
     val programName: String,
     val instructionCount: Int
 )
+
+fun ProgramMap.toProgramItems() = this.map {
+    ProgramItem(
+        programId = it.key,
+        programName = it.value.name,
+        instructionCount = it.value.statements.size
+    )
+}

@@ -190,7 +190,6 @@ fun ZoneScope.EntityView(
                                         pointer.consume()
                                         if (up != null) {
                                             onClick(entityId)
-                                            println("clicked ${viewModel.type}")
                                         }
                                     }
                                 }

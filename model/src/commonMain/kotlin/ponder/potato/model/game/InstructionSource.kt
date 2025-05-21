@@ -1,5 +1,5 @@
 package ponder.potato.model.game
 
 interface InstructionSource {
-    fun addInstructions(list: MutableList<Instruction>)
+    fun addInstructions(instructions: MutableList<Instruction>)
 }

@@ -1,12 +1,15 @@
 package ponder.potato.model.game
 
-import androidx.compose.runtime.State
 import kotlinx.serialization.Serializable
 
 class DirtPile(
     override val state: DirtPileState = DirtPileState()
-): StateEntity<DirtPileState>() {
+): StateEntity<DirtPileState>(), InstructionSource {
     override val components = listOf<StateComponent<*>>()
+
+    override fun addInstructions(instructions: MutableList<Instruction>) {
+        instructions.add(TakeResource(zone.id, Resource.Dirt))
+    }
 }
 
 @Serializable

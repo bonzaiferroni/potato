@@ -32,5 +32,9 @@ fun Game.readAllInstructions(): List<Instruction> {
         val source = entity as? InstructionSource ?: continue
         source.addInstructions(instructions)
     }
+    for (zone in zones) {
+        val source = zone as? InstructionSource ?: continue
+        source.addInstructions(instructions)
+    }
     return instructions
 }

@@ -5,6 +5,7 @@ import kotlin.reflect.KClass
 typealias EntityMap = Map<Long, Entity>
 
 inline fun <reified T> EntityMap.read(id: Long) = this[id] as? T
+inline fun <reified T: EntityState> EntityMap.readAsStateEntity(id: Long) = this[id]?.castIfState<T>()
 inline fun <reified T> EntityMap.read() = this.values.firstNotNullOfOrNull() { it as? T }
 inline fun <reified T> EntityMap.read(block: (T) -> Boolean) = this.values.firstNotNullOfOrNull {
     val entity = it as? T ?: return@firstNotNullOfOrNull null
