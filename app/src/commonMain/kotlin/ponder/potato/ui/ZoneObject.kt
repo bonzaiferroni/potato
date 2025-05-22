@@ -73,5 +73,5 @@ fun ZoneScope.ZoneObject(
 
 @Stable
 class ZoneScope(
-    val zoneBoxSize: IntSize
+    val zoneBoxSize: IntSize,
 )

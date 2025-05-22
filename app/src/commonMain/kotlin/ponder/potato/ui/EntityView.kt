@@ -47,11 +47,12 @@ import pondui.utils.lighten
 @Composable
 fun ZoneScope.EntityView(
     entityId: Long,
+    zoneId: Int,
     fullVisibility: Boolean,
     isHighlighted: Boolean,
     onHoverChange: (Long, Boolean) -> Unit,
     onClick: (Long) -> Unit,
-    viewModel: EntityViewModel = viewModel(key = entityId.toString()) { EntityViewModel(entityId) }
+    viewModel: EntityViewModel = viewModel(key = "EntityView_$entityId") { EntityViewModel(entityId, zoneId) }
 ) {
     val state by viewModel.state.collectAsState()
 

@@ -135,6 +135,7 @@ fun <T : Zone> ZoneView(
                 key(entityId) {
                     zoneScope.EntityView(
                         entityId = entityId,
+                        zoneId = viewModel.zone.id,
                         fullVisibility = state.fullVisibility,
                         isHighlighted = entityId == highlightedId,
                         onHoverChange = onHoverChange,

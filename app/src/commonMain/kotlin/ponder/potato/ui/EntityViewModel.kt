@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import ponder.potato.GameService
+import ponder.potato.model.game.Bot
 import ponder.potato.model.game.Effect
 import ponder.potato.model.game.SpiritState
 import ponder.potato.model.game.StateEntity
@@ -17,6 +18,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class EntityViewModel(
     val entityId: Long,
+    val zoneId: Int,
     val gameService: GameService = GameService()
 ): StateModel<EntityViewState>(EntityViewState()) {
     val game = gameService.game
@@ -44,17 +46,18 @@ class EntityViewModel(
 
     fun refreshState(delta: Double = 0.0) {
         entity?.let { e ->
+            if (e.position.zoneId != zoneId) return@let
             val spiritState = e.state as? SpiritState
-            setState { it.copy(
-                x = e.position.x,
-                y = e.position.y,
-                isVisible = delta > 0,
-                delta = delta,
-                spirit = spiritState?.spirit,
-                spiritMax = spiritState?.maxSpirit,
-                isMoving = e.position.x != stateNow.x || e.position.y != stateNow.y,
-                progress = (e.state as? ProgressState)?.progress
-            ) }
+                setState { it.copy(
+                    x = e.position.x,
+                    y = e.position.y,
+                    isVisible = delta > 0,
+                    delta = delta,
+                    spirit = spiritState?.spirit,
+                    spiritMax = spiritState?.maxSpirit,
+                    isMoving = e.position.x != stateNow.x || e.position.y != stateNow.y,
+                    progress = (e.state as? ProgressState)?.progress
+                ) }
         }
     }
 

@@ -10,7 +10,6 @@ fun EntityPanel(
 ) {
     InflateEntity<EntityState>(entityId) { entity, game ->
         H1(entity.name)
-        println("ey entity name")
     }
 
     ProgramPanel(entityId)
