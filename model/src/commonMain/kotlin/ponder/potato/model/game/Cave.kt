@@ -22,7 +22,7 @@ class Cave : GameZone() {
 //        game.spawn(this, BOUNDARY_X, -BOUNDARY_Y) { Bard() }
 //        game.spawn(this, -BOUNDARY_X, -BOUNDARY_Y) { Bard() }
         repeat(50) {
-            // game.spawn(this, Point.origin) { Sprite() }
+            game.spawn(this, Point.origin) { Sprite() }
         }
     }
 
@@ -54,7 +54,9 @@ class Cave : GameZone() {
         ZoneAction(
             ability = ZoneAbility.DreamShroom,
             status = if (shroomCount > 0 && maxShroomCount > 0) {
-                "You have $shroomCount shrooms that hold ${game.readShroomStorage().toMetricString()} additional Aether."
+                "You have $shroomCount shrooms that hold ${
+                    game.readShroomStorage().toMetricString()
+                } additional Aether."
             } else null,
             cost = 1000.0,
             currentResource = resources.aether,

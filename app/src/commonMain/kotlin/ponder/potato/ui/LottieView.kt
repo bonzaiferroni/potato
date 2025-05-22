@@ -18,4 +18,15 @@ suspend fun Entity?.toLottieResource(isMoving: Boolean) = when (this) {
     is Potato -> "potato1"
     is Bot -> "imp"
     else -> "gears"
-} .let { LottieCompositionSpec.JsonString(Res.readBytes("files/${it}_${if (isMoving) "move" else "idle"}.json").decodeToString()) }
+}.let {
+    val filename = "files/${it}_${if (isMoving) "move" else "idle"}.json"
+    if (lottieCache.contains(filename)) {
+        lottieCache.getValue(filename)
+    } else {
+        val spec = LottieCompositionSpec.JsonString(Res.readBytes(filename).decodeToString())
+        lottieCache[filename] = spec
+        spec
+    }
+}
+
+private val lottieCache = mutableMapOf<String, LottieCompositionSpec>()

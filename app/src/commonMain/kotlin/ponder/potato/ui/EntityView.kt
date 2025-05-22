@@ -58,29 +58,9 @@ fun ZoneScope.EntityView(
 
     LaunchedGameUpdate(viewModel::update)
 
-    val spriteState = rememberSpriteState(
-        totalFrames = 9,
-        framesPerRow = 3,
-        animationSpeed = 50
-    )
-
-    LaunchedEffect(Unit) {
-        spriteState.start()
-    }
-
-    LaunchedEffect(state.isMoving) {
-        if (state.isMoving) {
-            spriteState.start()
-        } else {
-            spriteState.stop()
-        }
-    }
-
     DisposableEffect(Unit) {
         onDispose {
             viewModel.dispose()
-            spriteState.stop()
-            spriteState.cleanup()
         }
     }
 
