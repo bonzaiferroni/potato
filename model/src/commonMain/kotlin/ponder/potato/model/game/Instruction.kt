@@ -23,7 +23,7 @@ class TakeResource(
     override fun getScopeName(game: Game) = game.zones.read<GameZone>(zoneId)?.name
 
     override fun execute(game: Game, bot: Bot, delta: Double): Execution {
-        val target = game.entities.read<EntityStorageState> {
+        val target = game.entities.readWithState<EntityStorageState> {
             it.zone.id == zoneId && it.state.resource == resource
         }
         if (target == null) return Execution.TargetNotFound
@@ -53,7 +53,7 @@ class FillResource(
     override fun getScopeName(game: Game) = game.zones.read<GameZone>(zoneId)?.name
 
     override fun execute(game: Game, bot: Bot, delta: Double): Execution {
-        val target = game.entities.read<ResourceConsumerState> {
+        val target = game.entities.readWithState<ResourceConsumerState> {
             it.zone.id == zoneId && it.state.resource == resource
         }
         if (target == null) return Execution.TargetNotFound
@@ -82,7 +82,7 @@ class MineTarget(
     override fun getScopeName(game: Game) = game.zones.read<GameZone>(zoneId)?.name
 
     override fun execute(game: Game, bot: Bot, delta: Double): Execution {
-        val target = game.entities.readWithZoneId<StateEntity<MinerTargetState>>(zoneId)
+        val target = game.entities.readWithZone<StateEntity<MinerTargetState>>(zoneId)
         if (target == null) return Execution.TargetNotFound
 
         val isArrived = bot.moveTo(target.position, delta)

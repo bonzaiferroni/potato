@@ -3,14 +3,17 @@ package ponder.potato.ui
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import pondui.ui.controls.Text
 
 @Composable
 fun InstructionItemView(
-    item: InstructionItem
+    item: InstructionItem,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
     ) {
         item.scopeName?.let {
             Text("$it.")

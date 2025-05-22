@@ -6,7 +6,7 @@ import kotlinx.collections.immutable.toImmutableList
 import ponder.potato.GameService
 import ponder.potato.model.game.Resource
 import ponder.potato.model.game.Potato
-import ponder.potato.model.game.read
+import ponder.potato.model.game.readEntity
 import ponder.potato.model.game.Cave
 import ponder.potato.model.game.Dream
 import ponder.potato.model.game.GameState
@@ -23,7 +23,7 @@ class DreamModel(
     private val game get() = service.game
     private val dream = game.readZone<Dream>()
     private val cave = game.readZone<Cave>()
-    private val potato get() = game.entities.read<Potato>()
+    private val potato get() = game.entities.readEntity<Potato>()
     val caveId = cave.id
 
     fun update(gameState: GameState) {

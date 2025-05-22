@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ponder.potato.LaunchedGameUpdate
 import ponder.potato.ZoneRoute
+import pondui.ui.controls.ScopedViewModelStore
 import pondui.ui.controls.Tab
 import pondui.ui.controls.Tabs
 import pondui.ui.controls.Text

@@ -24,7 +24,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ponder.potato.LocalGame
+import ponder.potato.LocalGameHost
 import ponder.potato.ZoneRoute
 import ponder.potato.model.game.BOUNDARY
 import ponder.potato.model.game.Point
@@ -44,7 +44,7 @@ fun <T : Zone> ZoneView(
     viewModel: ZoneViewModel<T> = viewModel { ZoneViewModel(zoneClass) }
 ) {
     val state by viewModel.state.collectAsState()
-    val gameState by LocalGame.current.state.collectAsState()
+    val gameState by LocalGameHost.current.state.collectAsState()
 
     LaunchedEffect(gameState) {
         viewModel.update(gameState)

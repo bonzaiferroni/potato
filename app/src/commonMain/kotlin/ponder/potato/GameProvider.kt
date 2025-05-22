@@ -20,18 +20,20 @@ fun ProvideGame(
 ) {
     val gameHost: GameHost = remember { GameHost() }
 
-    CompositionLocalProvider(LocalGame provides gameHost) {
+    CompositionLocalProvider(LocalGameHost provides gameHost) {
         content()
     }
 }
 
-val LocalGame = staticCompositionLocalOf<GameHost> {
+val LocalGameHost = staticCompositionLocalOf<GameHost> {
     error("no game provided")
 }
 
 class GameHost(
     private val service: GameService = GameService()
 ) : StateModel<GameState>(GameState()) {
+
+    val game get() = service.game
 
     init {
         viewModelScope.launch {
@@ -47,7 +49,7 @@ class GameHost(
 
 @Composable
 fun LaunchedGameUpdate(onUpdate: (GameState) -> Unit) {
-    val gameState by LocalGame.current.state.collectAsState()
+    val gameState by LocalGameHost.current.state.collectAsState()
 
     LaunchedEffect(gameState) {
         onUpdate(gameState)

@@ -16,7 +16,7 @@ class ZoneModel(
     val potato get() = game.potato
 
     fun init() {
-        val bard = game.entities.read<Bard>()
+        val bard = game.entities.readEntity<Bard>()
         if (bard != null && bard.zone != zone) {
             bard.travelTo(BOUNDARY / 2, BOUNDARY / 2, zoneId)
         }

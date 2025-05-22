@@ -5,10 +5,13 @@ import kotlinx.serialization.Serializable
 class Bot(
     override val state: BotState = BotState()
 ): StateEntity<BotState>() {
+
     override val components: List<StateComponent<*>> get() = listOf(
         Miner(this),
         Executor(this),
     )
+
+
 }
 
 @Serializable

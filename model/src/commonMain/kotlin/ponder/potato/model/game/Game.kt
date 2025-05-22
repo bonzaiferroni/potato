@@ -9,7 +9,7 @@ interface Game {
     val console: GameConsole
     val programs: Map<Int, Program>
 
-    val potato get() = entities.read<Potato>()
+    val potato get() = entities.readEntity<Potato>()
 
     fun getZone(zoneId: Int) = zones.first { it.id == zoneId }
 

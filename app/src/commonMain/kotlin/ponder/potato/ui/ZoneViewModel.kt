@@ -7,7 +7,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import ponder.potato.GameService
 import ponder.potato.model.game.Bard
-import ponder.potato.model.game.read
+import ponder.potato.model.game.readEntity
 import ponder.potato.model.game.GameState
 import ponder.potato.model.game.Zone
 import pondui.ui.core.StateModel
@@ -23,7 +23,7 @@ class ZoneViewModel<T : Zone>(
 
     fun update(gameState: GameState) {
         val entityIds = game.entities.values.filter { it.position.zoneId == zone.id }.map{ it.id }.toImmutableList()
-        val bardPresent = game.entities.read<Bard>()?.position?.zoneId == zone.id
+        val bardPresent = game.entities.readEntity<Bard>()?.position?.zoneId == zone.id
         val exits = zone.portals.map { ZoneExit(it.destination.id, it.x, it.y) }
         setState { it.copy(entityIds = entityIds, fullVisibility = true, exits = exits) }
     }

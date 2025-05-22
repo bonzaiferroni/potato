@@ -1,28 +1,30 @@
 package ponder.potato.model.game
 
-import ponder.potato.model.game.castIfState
 import kotlin.reflect.KClass
 
 typealias EntityMap = Map<Long, Entity>
 
-inline fun <reified T> EntityMap.read(id: Long) = this[id] as? T
-inline fun <reified T : EntityState> EntityMap.readAsStateEntity(id: Long) = this[id]?.castIfState<T>()
-inline fun <reified T> EntityMap.read() = this.values.firstNotNullOfOrNull() { it as? T }
-inline fun <reified T : EntityState> EntityMap.read(block: (StateEntity<T>) -> Boolean): StateEntity<T>? =
-    this.firstNotNullOfOrNull { (id, entity) ->
+// read entities
+
+inline fun <reified T: Entity> EntityMap.readEntity() = this.firstNotNullOfOrNull() { (_, entity) -> entity as? T }
+inline fun <reified T: Entity> EntityMap.readEntity(id: Long) = this[id] as? T
+
+inline fun <reified T: EntityState> EntityMap.readWithState(id: Long) =
+    this[id]?.castIfState<T>()
+inline fun <reified T: EntityState> EntityMap.readWithState(predicate: (StateEntity<T>) -> Boolean) =
+    this.firstNotNullOfOrNull { (_, entity) ->
         val entity = entity.castIfState<T>() ?: return@firstNotNullOfOrNull null
-        if (block(entity)) entity else null
+        if (predicate(entity)) entity else null
     }
 
-inline fun <reified T> EntityMap.read(zone: Zone) = this.values.firstNotNullOfOrNull {
-    if (it.zone != zone) null
-    else it as? T
-}
+inline fun <reified T> EntityMap.readWithZone(zone: Zone) = this.readWithZone<T>(zone.id)
 
-inline fun <reified T> EntityMap.readWithZoneId(zoneId: Int) = this.values.firstNotNullOfOrNull {
+inline fun <reified T> EntityMap.readWithZone(zoneId: Int) = this.values.firstNotNullOfOrNull {
     if (it.position.zoneId != zoneId) null
     else it as? T
 }
+
+// find nearest
 
 inline fun <reified T : Entity> EntityMap.findNearest(
     position: Position,
@@ -41,6 +43,8 @@ inline fun <reified T : Entity> EntityMap.findNearest(
     }
     return nearest
 }
+
+// sumOf
 
 inline fun <reified S : EntityState> EntityMap.sumOf(block: (S) -> Double): Double {
     var value = 0.0

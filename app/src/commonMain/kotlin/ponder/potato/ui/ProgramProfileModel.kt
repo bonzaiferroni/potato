@@ -5,6 +5,7 @@ import ponder.potato.ProgramProfileRoute
 import ponder.potato.model.game.Game
 import ponder.potato.model.game.GameState
 import ponder.potato.model.game.Instruction
+import ponder.potato.model.game.Statement
 import ponder.potato.model.game.readAllInstructions
 import pondui.ui.core.StateModel
 
@@ -40,10 +41,9 @@ class ProgramProfileModel(
 
     fun load(programId: Int = stateNow.programId) {
         val program = game.programs[programId] ?: return
-        val instructions = program.statements.mapIndexed { id, it -> it.instruction.toItem(id, game) }
         setState { it.copy(
             programName = program.name,
-            instructions = instructions
+            instructions = program.statements.toInstructionItems(game)
         ) }
     }
 }
@@ -71,3 +71,5 @@ fun Instruction.toItem(id: Int, game: Game) = when (this) {
         parameterName = this.getParameterName(game)
     )
 }
+
+fun List<Statement>.toInstructionItems(game: Game) = this.mapIndexed { id, it -> it.instruction.toItem(id, game) }

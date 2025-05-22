@@ -23,7 +23,7 @@ inline fun <reified S : EntityState> StateEntity<TargetState>.readOrFindTarget(
 ) = readOrClearTarget() ?: findTarget(range, isTarget)
 
 inline fun <reified S : EntityState> StateEntity<TargetState>.readOrClearTarget() = state.targetId?.let {
-    val entity = game.entities.read<StateEntity<S>>(it)
+    val entity = game.entities.readEntity<StateEntity<S>>(it)
     if (entity == null) {
         state.targetId = null
     }
