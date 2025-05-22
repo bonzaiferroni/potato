@@ -64,7 +64,6 @@ kotlin {
             implementation(project(":pondui"))
             implementation(project(":model"))
 
-            implementation("com.stevdza-san:sprite:1.1.0")
             implementation("io.github.alexzhirkevich:compottie:2.0.0-rc04")
             implementation("io.github.alexzhirkevich:compottie-dot:2.0.0-rc04")
         }
@@ -80,11 +79,11 @@ kotlin {
 }
 
 android {
-    namespace = "ponder.contemplate"
+    namespace = "potato.app"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "ponder.contemplate"
+        applicationId = "potato.app"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1

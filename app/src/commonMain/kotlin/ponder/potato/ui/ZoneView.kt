@@ -143,11 +143,13 @@ fun <T : Zone> ZoneView(
                     )
                 }
             }
+//             zoneScope.EntitiesView(state.entityIds)
             for (exit in state.exits) {
                 zoneScope.ZoneObject(exit.x, exit.y, 1.0) {
                     NavButton(exit.zoneId.toString(), modifier = Modifier.alpha(.3f)) { ZoneRoute(exit.zoneId) }
                 }
             }
+            FpsIndicator(modifier = Modifier.align(Alignment.TopEnd))
         }
     }
 }

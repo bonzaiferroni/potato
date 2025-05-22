@@ -21,8 +21,7 @@ fun main() {
         }
 
         ProvideAddressContext(
-            path = browserAddress,
-            config = appConfig
+            initialAddress = browserAddress,
         ) {
             App(
                 changeRoute = { navRoute ->

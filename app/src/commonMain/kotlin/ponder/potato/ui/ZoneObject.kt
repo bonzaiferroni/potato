@@ -32,7 +32,7 @@ fun ZoneScope.ZoneObject(
     delta: Double,
     content: @Composable () -> Unit
 ) {
-    val (xPosition, yPosition) = remember(Vector2(x, y)) { projection_perspective(x, y) }
+    val (xPosition, yPosition) = remember(Vector2(x, y)) { zoneToPerspective(x, y) }
     val distance = y + BOUNDARY
 
     if (zoneBoxSize == IntSize.Zero || xPosition == Float.NaN || yPosition == Float.NaN) return
