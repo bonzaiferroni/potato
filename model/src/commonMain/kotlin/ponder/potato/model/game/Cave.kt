@@ -21,7 +21,7 @@ class Cave : GameZone() {
 //        game.spawn(this, -BOUNDARY_X, BOUNDARY_Y) { Bard() }
 //        game.spawn(this, BOUNDARY_X, -BOUNDARY_Y) { Bard() }
 //        game.spawn(this, -BOUNDARY_X, -BOUNDARY_Y) { Bard() }
-        repeat(5) {
+        repeat(10) {
             game.spawn(this, Point.origin) { Sprite() }
         }
     }
